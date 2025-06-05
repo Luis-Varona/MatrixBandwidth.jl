@@ -1,3 +1,3 @@
 var documenterSearchIndex = {"docs":
-[{"location":"#MatrixBandwidth","page":"Home","title":"MatrixBandwidth","text":"","category":"section"},{"location":"","page":"Home","title":"Home","text":"Documentation for MatrixBandwidth.","category":"page"},{"location":"","page":"Home","title":"Home","text":"","category":"page"}]
+[{"location":"#MatrixBandwidth","page":"Home","title":"MatrixBandwidth","text":"","category":"section"},{"location":"","page":"Home","title":"Home","text":"Documentation for MatrixBandwidth.","category":"page"},{"location":"","page":"Home","title":"Home","text":"","category":"page"},{"location":"#MatrixBandwidth.MatrixBandwidth","page":"Home","title":"MatrixBandwidth.MatrixBandwidth","text":"MatrixBandwidth\n\nExact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization in Julia.\n\nFull documentation is available for the latest development version of this package.\n\n\n\n\n\n","category":"module"}]
 }
