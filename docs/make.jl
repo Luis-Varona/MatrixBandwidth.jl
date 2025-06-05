@@ -1,7 +1,9 @@
 using MatrixBandwidth
 using Documenter
 
-DocMeta.setdocmeta!(MatrixBandwidth, :DocTestSetup, :(using MatrixBandwidth); recursive=true)
+DocMeta.setdocmeta!(
+    MatrixBandwidth, :DocTestSetup, :(using MatrixBandwidth); recursive=true
+)
 
 makedocs(;
     modules=[MatrixBandwidth],
@@ -12,12 +14,7 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
-    pages=[
-        "Home" => "index.md",
-    ],
+    pages=["Home" => "index.md"],
 )
 
-deploydocs(;
-    repo="github.com/Luis-Varona/MatrixBandwidth.jl",
-    devbranch="main",
-)
+deploydocs(; repo="github.com/Luis-Varona/MatrixBandwidth.jl", devbranch="main")

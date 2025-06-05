@@ -1,0 +1,7 @@
+exact/mbid
+exact/mbps
+heuristic/cuthill_mckee
+heuristic/reverse_cuthill_mckee
+metaheuristic/simulated_annealing
+metaheuristic/genetic_algorithm
+metaheuristic/grasp
