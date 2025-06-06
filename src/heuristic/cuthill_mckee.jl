@@ -4,4 +4,13 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-# TODO: Write here
+"""
+    CuthillMcKee <: HeuristicSolver <: AbstractSolver
+
+TODO: Write here
+"""
+struct CuthillMcKee <: HeuristicSolver end
+
+Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
+
+# TODO: Define `minimize_bandwidth` method for `CuthillMcKee`

@@ -14,9 +14,24 @@ the latest development version of this package.
 """
 module MatrixBandwidth
 
-# TODO: Exports go here
+export
+    # The main function
+    minimize_bandwidth,
 
-include("minimize_bandwidth.jl")
+    # Exact solvers
+    MBID,
+    MBPS,
+
+    # Heuristic solvers
+    CuthillMcKee,
+    ReverseCuthillMcKee,
+
+    # Metaheuristic solvers
+    SimulatedAnnealing,
+    GeneticAlgorithm,
+    GRASP
+
+include("types.jl")
 
 include("exact/mbid.jl")
 include("exact/mbps.jl")
@@ -27,5 +42,7 @@ include("heuristic/reverse_cuthill_mckee.jl")
 include("metaheuristic/simulated_annealing.jl")
 include("metaheuristic/genetic_algorithm.jl")
 include("metaheuristic/grasp.jl")
+
+include("minimize_bandwidth.jl")
 
 end
