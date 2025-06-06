@@ -1,6 +1,6 @@
 name = "MatrixBandwidth"
 uuid = "075aa41b-24fd-4573-b25f-92cae432c0f8"
-keywords = ["matrix bandwidth", "minimization", "sparse matrices"]
+keywords = ["matrix bandwidth", "minimization", "sparse matrices", "scientific computing"]
 license = "MIT"
 authors = ["Luis M. B. Varona <lbvarona@mta.ca>"]
 description = "Exact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization in Julia."
