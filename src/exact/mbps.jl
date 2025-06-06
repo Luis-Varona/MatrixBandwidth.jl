@@ -4,4 +4,13 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-# TODO: Write here
+"""
+    MBPS <: ExactSolver <: AbstractSolver
+
+TODO: Write here
+"""
+struct MBPS <: ExactSolver end
+
+Base.summary(::MBPS) = "Matrix bandwidth by perimeter search"
+
+# TODO: Define `minimize_bandwidth` method for `MBPS`

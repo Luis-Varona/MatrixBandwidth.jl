@@ -4,4 +4,13 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-# TODO: Write here
+"""
+    SimulatedAnnealing <: MetaheuristicSolver <: AbstractSolver
+
+TODO: Write here
+"""
+struct SimulatedAnnealing <: MetaheuristicSolver end
+
+Base.summary(::SimulatedAnnealing) = "Simulated annealing"
+
+# TODO: Define `minimize_bandwidth` method for `SimulatedAnnealing`
