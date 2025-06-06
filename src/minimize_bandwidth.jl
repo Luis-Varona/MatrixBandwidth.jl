@@ -7,14 +7,24 @@
 const DEFAULT_SOLVER = ReverseCuthillMcKee()
 
 """
-    minimize_bandwidth(A::AbstractMatrix) -> BandwidthResult
-    minimize_bandwidth(A::AbstractMatrix, solver::AbstractSolver) -> BandwidthResult
+    minimize_bandwidth(A, solver=ReverseCuthillMcKee()) -> BandwidthResult
 
 TODO: Write here
 """
-minimize_bandwidth(A::AbstractMatrix{<:Number}) = minimize_bandwidth(A, DEFAULT_SOLVER)
+function minimize_bandwidth(
+    A::AbstractMatrix{<:Bool}, solver::AbstractSolver=DEFAULT_SOLVER
+)
+    if !allequal(size(A))
+        throw(ArgumentError("Matrix bandwidth is not defined for non-square matrices"))
+    end
 
-function minimize_bandwidth(A::AbstractMatrix{<:Number}, solver::AbstractSolver)
+    A_copy = copy(A)
+    return _minimize_bandwidth_safe(A_copy, solver)
+end
+
+function minimize_bandwidth(
+    A::AbstractMatrix{<:Number}, solver::AbstractSolver=DEFAULT_SOLVER
+)
     A_bool::AbstractMatrix{Bool} = (!iszero).(A)
     return minimize_bandwidth(A_bool, solver)
 end

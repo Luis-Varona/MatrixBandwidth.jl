@@ -13,4 +13,6 @@ struct MBID <: ExactSolver end
 
 Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
 
-# TODO: Define `minimize_bandwidth` method for `MBID`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, ::MBID)
+    # TODO: Implement
+end

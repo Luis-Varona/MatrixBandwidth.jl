@@ -9,8 +9,12 @@
 
 TODO: Write here
 """
-struct GeneticAlgorithm <: MetaheuristicSolver end
+struct GeneticAlgorithm <: MetaheuristicSolver
+    # TODO: Define fields and constructor (for default values)
+end
 
 Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
-# TODO: Define `minimize_bandwidth` method for `GeneticAlgorithm`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, solver::GeneticAlgorithm)
+    # TODO: Implement
+end

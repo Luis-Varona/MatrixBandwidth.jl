@@ -13,4 +13,6 @@ struct CuthillMcKee <: HeuristicSolver end
 
 Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
 
-# TODO: Define `minimize_bandwidth` method for `CuthillMcKee`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, ::CuthillMcKee)
+    # TODO: Implement
+end
