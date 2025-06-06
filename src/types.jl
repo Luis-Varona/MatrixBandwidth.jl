@@ -33,7 +33,7 @@ TODO: Write here
 abstract type MetaheuristicSolver <: AbstractSolver end
 
 """
-    approach(solver::AbstractSolver) -> Symbol
+    approach(::AbstractSolver) -> Symbol
 
 TODO: Write here
 """

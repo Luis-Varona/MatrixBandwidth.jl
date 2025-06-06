@@ -9,8 +9,12 @@
 
 TODO: Write here
 """
-struct MBPS <: ExactSolver end
+struct MBPS <: ExactSolver
+    depth::Int
+end
 
 Base.summary(::MBPS) = "Matrix bandwidth by perimeter search"
 
-# TODO: Define `minimize_bandwidth` method for `MBPS`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, solver::MBPS)
+    # TODO: Implement
+end

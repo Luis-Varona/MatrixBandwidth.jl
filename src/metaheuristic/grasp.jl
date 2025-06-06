@@ -9,8 +9,12 @@
 
 TODO: Write here
 """
-struct GRASP <: MetaheuristicSolver end
+struct GRASP <: MetaheuristicSolver
+    # TODO: Define fields and constructor (for default values)
+end
 
 Base.summary(::GRASP) = "Greedy randomized adaptive search procedure"
 
-# TODO: Define `minimize_bandwidth` method for `GRASP`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, Solver::GRASP)
+    # TODO: Implement
+end

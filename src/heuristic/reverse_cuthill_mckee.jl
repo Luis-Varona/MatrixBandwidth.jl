@@ -13,4 +13,6 @@ struct ReverseCuthillMcKee <: HeuristicSolver end
 
 Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee algorithm"
 
-# TODO: Define `minimize_bandwidth` method for `ReverseCuthillMcKee`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, ::ReverseCuthillMcKee)
+    # TODO: Implement
+end

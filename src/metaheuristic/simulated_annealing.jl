@@ -9,8 +9,18 @@
 
 TODO: Write here
 """
-struct SimulatedAnnealing <: MetaheuristicSolver end
+struct SimulatedAnnealing <: MetaheuristicSolver
+    initial_temp::Float64
+    cooling_rate::Float64
+    max_iterations::Int
+    max_no_improve::Int
+    seed::Union{Nothing,Int}
+
+    # TODO: Make constructor with default values
+end
 
 Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 
-# TODO: Define `minimize_bandwidth` method for `SimulatedAnnealing`
+function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, solver::SimulatedAnnealing)
+    # TODO: Implement
+end
