@@ -1,9 +1,12 @@
 using MatrixBandwidth
 using Documenter
+using DocumenterCitations
 
 DocMeta.setdocmeta!(
     MatrixBandwidth, :DocTestSetup, :(using MatrixBandwidth); recursive=true
 )
+
+bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"); style=:alpha)
 
 makedocs(;
     modules=[MatrixBandwidth],
@@ -14,6 +17,7 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
+    plugins=[bib],
     pages=["Home" => "index.md"],
 )
 
