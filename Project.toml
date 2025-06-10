@@ -9,5 +9,9 @@ readme = "README.md"
 repository = "https://github.com/Luis-Varona/MatrixBandwidth.jl"
 version = "0.1.0-dev"
 
+[deps]
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+
 [compat]
+DataStructures = ">=0.18.15, <1.0"
 julia = "1.10"

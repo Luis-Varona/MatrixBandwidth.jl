@@ -27,7 +27,14 @@
     <td>
       <a href="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl"><img src="https://img.shields.io/codecov/c/gh/Luis-Varona/MatrixBandwidth.jl.svg?label=codecov" alt="Test coverage from codecov"></a>
     </td>
-  </tr>
+    </tr>
+    <tr>
+      <td>Static analysis with</td>
+      <td>
+        <a href="https://github.com/JuliaTesting/Aqua.jl"><img src="https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg" alt="Aqua QA"></a>
+        <a href="https://github.com/aviatesk/JET.jl"><img src="https://img.shields.io/badge/%E2%9C%88%20tested%20with-JET.jl%EF%B8%8F-9cf.svg" alt="JET static analysis"></a>
+      </td>
+    </tr>
 </table>
 
 ## Overview
