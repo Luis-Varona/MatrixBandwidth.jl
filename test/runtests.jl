@@ -7,18 +7,21 @@
 using MatrixBandwidth
 using Test
 
+# Run static analysis
 for analyzer in readlines(joinpath(@__DIR__, "staticanalyzers"))
     @info "Running static analysis with $analyzer"
     include("static_analysis/$(lowercase(analyzer)).jl")
     println()
 end
 
+# Run unit tests
 for file in readlines(joinpath(@__DIR__, "testgroups"))
     @info "Testing $file"
     include("$file.jl")
     println()
 end
 
+# Check that all public names in the package are documented
 @testset "Docstrings" begin
     if VERSION >= v"1.11" # `Docs.undocumented_names` was introduced in Julia 1.11
         @test isempty(Docs.undocumented_names(MatrixBandwidth))

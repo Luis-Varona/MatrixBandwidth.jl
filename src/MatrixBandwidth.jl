@@ -24,7 +24,7 @@ include("metaheuristic/Metaheuristic.jl")
 
 using .Exact, .Heuristic, .Metaheuristic
 
-export minimize_bandwidth # The main function
+export minimize_bandwidth, BandwidthResult # The main function and output struct
 export MBID, MBPS # Exact solvers
 export CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
 export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers

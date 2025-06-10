@@ -36,14 +36,14 @@ TODO: Write here
 struct BandwidthResult{M<:AbstractMatrix{<:Number},S<:AbstractSolver}
     matrix::M
     bandwidth::Int
-    perm::Vector{Int}
+    ordering::Vector{Int}
     solver::S
     approach::Symbol # :exact, :heuristic, or :metaheuristic
 
     function BandwidthResult(
-        matrix::M, bandwidth::Int, perm::Vector{Int}, solver::S
+        matrix::M, bandwidth::Int, ordering::Vector{Int}, solver::S
     ) where {M<:AbstractMatrix{<:Number},S<:AbstractSolver}
-        return new{M,S}(matrix, bandwidth, perm, solver, approach(solver))
+        return new{M,S}(matrix, bandwidth, ordering, solver, approach(solver))
     end
 end
 
