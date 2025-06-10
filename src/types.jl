@@ -12,34 +12,21 @@ TODO: Write here
 abstract type AbstractSolver end
 
 """
-    ExactSolver <: AbstractSolver
+    approach(solver::AbstractSolver) -> Symbol
 
 TODO: Write here
 """
-abstract type ExactSolver <: AbstractSolver end
+function approach(::T) where {T<:AbstractSolver}
+    S = supertype(T)
 
-"""
-    HeuristicSolver <: AbstractSolver
+    if S === AbstractSolver
+        subtype = T
+    else
+        subtype = S
+    end
 
-TODO: Write here
-"""
-abstract type HeuristicSolver <: AbstractSolver end
-
-"""
-    MetaheuristicSolver <: AbstractSolver
-
-TODO: Write here
-"""
-abstract type MetaheuristicSolver <: AbstractSolver end
-
-"""
-    approach(::AbstractSolver) -> Symbol
-
-TODO: Write here
-"""
-approach(::ExactSolver) = :exact
-approach(::HeuristicSolver) = :heuristic
-approach(::MetaheuristicSolver) = :metaheuristic
+    throw(NotImplementedError(approach, :solver, subtype, AbstractSolver))
+end
 
 """
     BandwidthResult

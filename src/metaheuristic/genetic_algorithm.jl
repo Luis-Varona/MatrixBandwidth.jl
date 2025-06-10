@@ -15,6 +15,6 @@ end
 
 Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
-function _minimize_bandwidth_safe(A::AbstractMatrix{<:Bool}, solver::GeneticAlgorithm)
+function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GeneticAlgorithm)
     # TODO: Implement
 end

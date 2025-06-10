@@ -14,35 +14,21 @@ the latest development version of this package.
 """
 module MatrixBandwidth
 
-export
-    # The main function
-    minimize_bandwidth,
-
-    # Exact solvers
-    MBID,
-    MBPS,
-
-    # Heuristic solvers
-    CuthillMcKee,
-    ReverseCuthillMcKee,
-
-    # Metaheuristic solvers
-    SimulatedAnnealing,
-    GeneticAlgorithm,
-    GRASP
-
+include("utils.jl")
 include("types.jl")
-
-include("exact/mbid.jl")
-include("exact/mbps.jl")
-
-include("heuristic/cuthill_mckee.jl")
-include("heuristic/reverse_cuthill_mckee.jl")
-
-include("metaheuristic/simulated_annealing.jl")
-include("metaheuristic/genetic_algorithm.jl")
-include("metaheuristic/grasp.jl")
-
 include("minimize_bandwidth.jl")
+
+include("exact/Exact.jl")
+include("heuristic/Heuristic.jl")
+include("metaheuristic/Metaheuristic.jl")
+
+using .Exact, .Heuristic, .Metaheuristic
+
+export minimize_bandwidth # The main function
+export MBID, MBPS # Exact solvers
+export CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
+export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
+
+const DEFAULT_SOLVER = ReverseCuthillMcKee()
 
 end

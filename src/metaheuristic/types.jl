@@ -5,14 +5,10 @@
 # distributed except according to those terms.
 
 """
-    MBID <: ExactSolver <: AbstractSolver
+    MetaheuristicSolver <: AbstractSolver
 
 TODO: Write here
 """
-struct MBID <: ExactSolver end
+abstract type MetaheuristicSolver <: AbstractSolver end
 
-Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
-
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
-    # TODO: Implement
-end
+approach(::MetaheuristicSolver) = :metaheuristic

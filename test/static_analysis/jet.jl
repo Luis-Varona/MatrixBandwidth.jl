@@ -18,7 +18,7 @@ using JET
     @show rep
 
     @test length(jet_reports) < 30
-    @test length(jet_reports) == 0 # TODO: Change to `@test_broken` when development starts
+    @test_broken length(jet_reports) == 0
 end
 
 end

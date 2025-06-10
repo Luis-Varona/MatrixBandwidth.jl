@@ -10,5 +10,5 @@ Documentation for [MatrixBandwidth](https://github.com/Luis-Varona/MatrixBandwid
 ```
 
 ```@autodocs
-Modules = [MatrixBandwidth]
+Modules = [MatrixBandwidth, MatrixBandwidth.Exact, MatrixBandwidth.Heuristic, MatrixBandwidth.Metaheuristic]
 ```
