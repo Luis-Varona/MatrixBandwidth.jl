@@ -14,4 +14,8 @@ Modules = [MatrixBandwidth, MatrixBandwidth.Exact, MatrixBandwidth.Heuristic, Ma
 Public = false
 ```
 
-<!-- TODO: Insert a References section here once citations are added -->
+## References
+
+```@bibliography
+Pages = [@__FILE__]
+```
