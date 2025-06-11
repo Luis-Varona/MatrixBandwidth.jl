@@ -5,3 +5,5 @@ heuristic/reverse_cuthill_mckee
 metaheuristic/simulated_annealing
 metaheuristic/genetic_algorithm
 metaheuristic/grasp
+core
+utils
