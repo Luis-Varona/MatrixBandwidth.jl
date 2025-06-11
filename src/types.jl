@@ -11,12 +11,9 @@ TODO: Write here
 """
 abstract type AbstractSolver end
 
-"""
-    approach(solver::AbstractSolver) -> Symbol
-
-TODO: Write here
-"""
-function approach(::T) where {T<:AbstractSolver}
+#= Indicate the category of solver (e.g., heuristic). Each concrete `AbstractSolver` subtype
+must implement its own `_approach` method for use in `BandwidthResult` instantiation. =#
+function _approach(::T) where {T<:AbstractSolver}
     S = supertype(T)
 
     if S === AbstractSolver
@@ -25,7 +22,7 @@ function approach(::T) where {T<:AbstractSolver}
         subtype = S
     end
 
-    throw(NotImplementedError(approach, :solver, subtype, AbstractSolver))
+    throw(NotImplementedError(_approach, :solver, subtype, AbstractSolver))
 end
 
 """
@@ -43,7 +40,7 @@ struct BandwidthResult{M<:AbstractMatrix{<:Number},S<:AbstractSolver}
     function BandwidthResult(
         matrix::M, bandwidth::Int, ordering::Vector{Int}, solver::S
     ) where {M<:AbstractMatrix{<:Number},S<:AbstractSolver}
-        return new{M,S}(matrix, bandwidth, ordering, solver, approach(solver))
+        return new{M,S}(matrix, bandwidth, ordering, solver, _approach(solver))
     end
 end
 

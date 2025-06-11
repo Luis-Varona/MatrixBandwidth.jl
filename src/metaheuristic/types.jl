@@ -11,4 +11,4 @@ TODO: Write here
 """
 abstract type MetaheuristicSolver <: AbstractSolver end
 
-approach(::MetaheuristicSolver) = :metaheuristic
+_approach(::MetaheuristicSolver) = :metaheuristic

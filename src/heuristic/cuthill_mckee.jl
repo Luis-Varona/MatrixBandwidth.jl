@@ -7,7 +7,98 @@
 """
     CuthillMcKee <: HeuristicSolver <: AbstractSolver
 
-TODO: Write here
+The *Cuthill–McKee algorithm* is a heuristic method for minimizing the bandwidth of a
+symmetric matrix ``A``. It considers the graph ``G(A)`` whose adjacency matrix is ``A``
+(ignoring self-loops) and performs a breadth-first search of each connected component of
+``G(A)``, starting from a low-degree node then visiting its neighbors in order of increasing
+degree. Particularly effective when ``A`` is sparse, this heuristic typically produces an
+ordering which induces a matrix bandwidth either equal to or very close to the true minimum
+[CM69; pp. 157--58](@cite).
+
+We also extend the algorithm to work more generally when ``A`` is not symmetric by applying
+it to ``A + Aᵀ`` instead, as suggested in [RS06; p. 808](@cite). This approach still tends
+to produce a fairly good ordering, but it is not guaranteed to be as optimal as directly
+applying Cuthill–McKee to a symmetric input.
+
+# Fields
+- `node_selector::Function`: a function that selects a node from some connected component of
+    the input matrix from which to start the breadth-first search. If no custom heuristic is
+    specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
+    "farthest" from the others in the component (not necessarily the lowest-degree node).
+
+# Examples
+Cuthill–McKee finds an optimal ordering for an asymmetric ``35×35`` matrix with bandwidth
+``3`` whose rows and columns have been shuffled:
+```jldoctest
+julia> using Random
+
+julia> Random.seed!(13);
+
+julia> (n, k) = (35, 3);
+
+julia> perm = randperm(n);
+
+julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+
+julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
+false
+
+julia> bandwidth_unpermuted(A)
+3
+
+julia> bandwidth_unpermuted(A_shuffled)
+33
+
+julia> res.bandwidth # The true minimum bandwidth
+3
+```
+
+Cuthill–McKee finds a near-optimal ordering for an asymmetric ``200×200`` matrix with
+bandwidth ``10`` whose rows and columns have been shuffled:
+```jldoctest
+julia> using Random
+
+julia> Random.seed!(37452);
+
+julia> (n, k) = (200, 10);
+
+julia> perm = randperm(n);
+
+julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+
+julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
+false
+
+julia> bandwidth_unpermuted(A)
+10
+
+julia> bandwidth_unpermuted(A_shuffled)
+194
+
+julia> res.bandwidth # Close to the true minimum
+14
+```
+
+# Notes
+It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
+Cuthill–McKee tends to produce a better ordering; this variant is known as the *reverse
+Cuthill–McKee algorithm*. See [`ReverseCuthillMcKee`](@ref) and the associated method of
+`_bool_minimal_band_ordering` for our implementation of this algorithm.
+
+Note also that the `node_selector` field must be of the form
+`(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
+an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+
+See also the documentation for supertypes [`HeuristicSolver`](@ref) and
+[`AbstractSolver`](@ref).
 """
 struct CuthillMcKee <: HeuristicSolver
     node_selector::Function
@@ -20,7 +111,7 @@ end
 
 Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
 
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
     if A != A'
         A_sym = (!iszero).(A + A') # TODO: Check performance later
     else
@@ -44,11 +135,7 @@ function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKe
     return ordering
 end
 
-"""
-    _connected_cuthill_mckee_ordering(A, node_selector) -> Vector{Int}
-
-TODO: Write here
-"""
+# Cuthill–McKee performs a breadth-first search on each connected component independently
 function _connected_cuthill_mckee_ordering(A::AbstractMatrix{Bool}, node_selector::Function)
     n = size(A, 1)
     ordering = Vector{Int}(undef, n)
@@ -74,11 +161,7 @@ function _connected_cuthill_mckee_ordering(A::AbstractMatrix{Bool}, node_selecto
     return ordering
 end
 
-"""
-    _connected_components(A) -> Vector{Vector{Int}}
-
-TODO: Write here
-"""
+# Find the indices of all connected components in an adjacency matrix
 function _connected_components(A::AbstractMatrix{Bool})
     n = size(A, 1)
     visited = falses(n)

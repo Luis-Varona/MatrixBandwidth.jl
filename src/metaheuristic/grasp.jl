@@ -15,6 +15,6 @@ end
 
 Base.summary(::GRASP) = "Greedy randomized adaptive search procedure"
 
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
     # TODO: Implement
 end

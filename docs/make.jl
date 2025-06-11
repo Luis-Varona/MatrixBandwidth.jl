@@ -1,3 +1,9 @@
+# Copyright 2025 Luis M. B. Varona and Nathaniel Johnston
+#
+# Licensed under the MIT license <LICENSE or
+# http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
+# distributed except according to those terms.
+
 using MatrixBandwidth
 using Documenter
 using DocumenterCitations
@@ -15,10 +21,14 @@ makedocs(;
     format=Documenter.HTML(;
         canonical="https://Luis-Varona.github.io/MatrixBandwidth.jl",
         edit_link="main",
-        assets=String[],
+        assets=["assets/styles.css"],
     ),
     plugins=[bib],
-    pages=["Home" => "index.md"],
+    pages=[
+        "Home" => "index.md",
+        "Public API" => "public_api.md",
+        "Private API" => "private_api.md",
+    ],
 )
 
 deploydocs(; repo="github.com/Luis-Varona/MatrixBandwidth.jl", devbranch="main")

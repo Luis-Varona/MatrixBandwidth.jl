@@ -15,7 +15,7 @@ This submodule is part of the
 module Exact
 
 #! format: off
-import ..AbstractSolver, ..NotImplementedError, ..approach, .._sym_minimal_band_ordering
+import ..AbstractSolver, ..NotImplementedError, .._approach, .._bool_minimal_band_ordering
 #! format: on
 
 export MBID, MBPS

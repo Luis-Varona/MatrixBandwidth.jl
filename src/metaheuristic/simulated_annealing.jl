@@ -21,6 +21,6 @@ end
 
 Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::SimulatedAnnealing)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::SimulatedAnnealing)
     # TODO: Implement
 end

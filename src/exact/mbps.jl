@@ -15,6 +15,6 @@ end
 
 Base.summary(::MBPS) = "Matrix bandwidth by perimeter search"
 
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::MBPS)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::MBPS)
     # TODO: Implement
 end
