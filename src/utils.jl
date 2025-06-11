@@ -57,3 +57,54 @@ function Base.showerror(io::IO, e::NotImplementedError)
         Try defining method dispatch manually if this is a newly created subtype.""",
     )
 end
+
+"""
+    random_sparse_banded_matrix(n, k; p=0.75, rng=default_rng()) -> Matrix{Float64}
+
+TODO: Write here
+"""
+function random_sparse_banded_matrix(
+    n::Int, k::Int; p::Float64=0.75, rng::AbstractRNG=Random.default_rng()
+)
+    if n <= 0
+        throw(ArgumentError("Matrix order must be positive, got $n"))
+    end
+
+    if k < 0
+        throw(ArgumentError("Matrix bandwidth must be non-negative, got $k"))
+    end
+
+    if n <= k
+        throw(ArgumentError("Matrix order must be greater than bandwidth, got $n and $k"))
+    end
+
+    if !(0 < p <= 1)
+        throw(ArgumentError("Band density must be in (0, 1], got $p"))
+    end
+
+    A = zeros(Float64, n, n)
+
+    #= Ensure that each band has at least one nonzero entry. (The `is_upper` flag indicates
+    whether we are filling a superdiagonal or subdiagonal.) =#
+    for offset in 0:k, is_upper in (true, false)
+        rows = ((1 + offset):n) .- is_upper * offset
+        cols = (1:(n - offset)) .+ is_upper * offset
+        idx = rand(rng, 1:length(rows))
+        A[rows[idx], cols[idx]] = rand(rng)
+    end
+
+    for i in 1:n, j in max(1, i - k):(min(n, i + k))
+        if rand(rng) < p
+            A[i, j] = rand(rng)
+        end
+    end
+
+    return A
+end
+
+# TODO: Add comment above
+function _assert_matrix_is_square(A::AbstractMatrix{T}) where {T<:Number}
+    if !allequal(size(A))
+        throw(ArgumentError("Matrix bandwidth is not defined for non-square matrices"))
+    end
+end

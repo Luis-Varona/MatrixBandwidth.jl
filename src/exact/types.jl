@@ -11,4 +11,4 @@ TODO: Write here
 """
 abstract type ExactSolver <: AbstractSolver end
 
-approach(::ExactSolver) = :exact
+_approach(::ExactSolver) = :exact

@@ -9,13 +9,17 @@
 
 Heuristic solvers for matrix bandwidth minimization.
 
+The following heuristic algorithms are currently supported:
+- [`CuthillMcKee`](@ref): Cuthill–McKee algorithm
+- [`ReverseCuthillMcKee`](@ref): Reverse Cuthill–McKee algorithm
+
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
 """
 module Heuristic
 
 #! format: off
-import ..AbstractSolver, ..NotImplementedError, ..approach, .._sym_minimal_band_ordering
+import ..AbstractSolver, ..NotImplementedError, .._approach, .._bool_minimal_band_ordering
 #! format: on
 
 using DataStructures: Queue, enqueue!, dequeue!

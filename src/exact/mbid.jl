@@ -13,6 +13,6 @@ struct MBID <: ExactSolver end
 
 Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
 
-function _sym_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
     # TODO: Implement
 end

@@ -43,16 +43,21 @@
 
 ## Algorithms
 
-- Exact
+The following algorithms are currently supported:
+
+- **Exact**
   - Minimum bandwidth by iterative deepening (MB-ID)
   - Minimum bandwidth by perimeter search (MB-PS)
-- Heuristic
+- **Heuristic**
   - Cuthill&ndash;McKee algorithm
   - Reverse Cuthill&ndash;McKee algorithm
-- Metaheuristic
+- **Metaheuristic**
   - Simulated annealing
   - Genetic algorithm
   - Greedy randomized adaptive search procedure (GRASP)
+
+(As we remain in the early stages of development, some of these may not yet be fully
+implememnted and/or tested.)
 
 ## Installation
 
