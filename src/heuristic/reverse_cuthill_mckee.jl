@@ -41,8 +41,8 @@ indeed consider supporting this more performant implementation for sparse matric
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Examples
-Reverse Cuthill–McKee finds an optimal ordering for an asymmetric ``45×45`` matrix with
-bandwidth ``4`` whose rows and columns have been shuffled:
+Reverse Cuthill–McKee finds an optimal ordering for an asymmetric ``45×45`` matrix whose
+rows and columns have been shuffled:
 ```jldoctest
 julia> using Random
 
@@ -52,7 +52,7 @@ julia> (n, k) = (45, 4);
 
 julia> perm = randperm(n);
 
-julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+julia> A = random_banded_matrix(n, k);
 
 julia> A_shuffled = A[perm, perm];
 
@@ -64,41 +64,90 @@ false
 julia> bandwidth(A)
 4
 
-julia> bandwidth(A_shuffled)
+julia> bandwidth(A_shuffled) # Much larger after shuffling
 43
 
-julia> res.bandwidth # The true minimum bandwidth
+julia> res.bandwidth # Back to the true minimum bandwidth!
 4
 ```
 
-Reverse Cuthill–McKee finds a near-optimal ordering for an asymmetric ``250×250`` matrix
-with bandwidth ``14`` whose rows and columns have been shuffled:
+Reverse Cuthill–McKee finds a near-optimal ordering for an asymmetric ``251×251`` matrix
+with multiple (separate) connected components whose rows and columns have been shuffled:
 ```jldoctest
-julia> using Random
+julia> using Random, SparseArrays
 
 julia> Random.seed!(5747);
 
-julia> (n, k) = (250, 14);
+julia> (max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 8);
 
-julia> perm = randperm(n);
+julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
 
-julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+julia> for i in 1:num_ccs # Some components may themselves be disconnected
+           cc_size = rand(0:max_cc_size);
+           cc_band = rand(1:min(max_band, cc_size - 1));
+           components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+       end
 
-julia> A_shuffled = A[perm, perm];
+julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
 
-julia> res = minimize_bandwidth(A_shuffled, ReverseCuthillMcKee());
+julia> A = blockdiag(components...) # `A` has least 8 connected components
+251×251 SparseMatrixCSC{Float64, Int64} with 617 stored entries:
+⎡⢛⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⢿⣇⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠘⠻⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠉⢿⣶⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠘⠹⣢⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢿⣷⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠬⣣⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⣵⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢛⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢾⣳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⡓⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⡥⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠾⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⡆⡀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣡⡄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⣤⡀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣆⡀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣆⎦
+julia> A_shuffled = A[perm, perm]
+251×251 SparseMatrixCSC{Float64, Int64} with 617 stored entries:
+⎡⠑⢅⠀⠀⡠⠁⡀⠀⠨⢀⠀⠀⠄⠀⠀⡂⠀⡁⠒⢄⠀⠂⢀⠀⠀⠐⣁⢀⠀⢂⠠⠁⡠⠢⢀⡂⠀⠀⢀⡀⎤
+⎢⠀⠀⠩⢂⠀⠀⠀⣀⠈⠈⠁⠀⠀⠠⠈⠀⠀⠀⠄⠀⠀⠒⠀⠀⠀⠀⠀⠈⠀⠁⠈⡀⠀⠀⠠⡀⠀⠀⠄⠀⎥
+⎢⡀⠦⠀⠀⠑⠄⠀⠀⠠⠀⠠⠄⠀⠀⢀⠌⠀⠀⠀⠈⢠⠀⠁⡀⠢⠀⠀⠠⡁⠂⡔⡀⠁⠀⢂⠀⠠⢁⠀⠁⎥
+⎢⠠⠈⠄⣠⠐⠀⠐⢄⡁⠀⠀⡀⢰⠀⠁⠀⠈⠀⠀⠀⢀⠂⡀⠀⢀⠀⠁⠂⢂⠈⠀⢀⠀⠀⠀⠈⠀⠈⡀⡠⎥
+⎢⠀⠀⠀⠄⠀⡈⠀⠀⠵⠂⠀⠀⠀⢠⠀⠂⠒⠀⠀⠀⠐⠠⠀⠀⢄⠀⣐⠆⠀⠐⠀⠠⠀⠀⠨⠄⠦⡀⠀⡀⎥
+⎢⠠⠀⢀⠀⠀⠀⠀⠠⠀⠈⡐⢌⠀⠂⠂⠈⠀⠔⠀⠁⣀⠀⢀⠀⠠⠀⠀⠐⠀⠀⠐⠁⠀⠄⠀⠂⠀⠀⠂⢀⎥
+⎢⢨⢁⠀⠠⠀⠀⠀⠄⡀⡀⠀⠁⠂⠂⠁⠐⢀⠀⠀⢁⠐⠘⢂⠀⠀⠀⡀⠀⠔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⎥
+⎢⠢⠂⠂⡀⠀⠔⠀⢂⠀⠀⢨⠀⢀⠀⠐⠐⠀⠀⠀⠂⠐⠄⠈⠀⡀⠂⠁⠤⢀⠂⢀⠀⡀⢀⠀⠀⠀⠀⠀⠀⎥
+⎢⠂⠀⠀⠀⠀⠀⠂⠀⠄⠂⢀⠁⠀⠰⡀⠀⢕⢐⠀⠀⠀⠀⠂⡀⠠⠄⠀⠁⠂⠈⠀⠄⠚⠀⠐⠀⠀⠀⢀⠁⎥
+⎢⠀⠄⠀⠁⠁⠀⡀⠀⠀⠀⠁⠀⠄⠘⡀⠠⡊⠀⠒⠄⠐⠂⠀⡂⠁⠀⠂⠀⠀⠀⠀⢄⠁⠀⠀⠀⠀⠀⠠⡀⎥
+⎢⠈⠘⠀⠂⠀⠀⠀⠐⠀⠃⠀⠀⠀⡀⠀⠄⠁⠀⠄⠀⠎⢑⠀⢂⠀⠈⠁⠀⠀⢀⠀⢀⠀⢀⠰⡁⠀⠢⠀⠀⎥
+⎢⢄⠀⡀⢀⠃⠀⠁⡈⠁⠀⠠⠀⠀⠄⠄⠠⠠⠀⠄⠀⠒⠁⠱⠆⠀⠀⠀⠀⡀⠀⠀⠄⠁⠁⢀⠀⠀⠊⠁⠀⎥
+⎢⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠐⠂⠀⠀⡄⠀⠠⠀⠂⠀⠀⠀⠘⠈⠔⠀⠀⠀⠀⠀⠀⠁⠐⢁⢀⠈⡀⠠⠐⎥
+⎢⠀⠐⡀⠀⠠⢠⠠⠀⠒⢀⠀⠀⠀⠈⠀⡄⠀⠄⠀⠀⠈⠀⠁⠀⠀⠀⢶⢐⠄⠀⠀⠤⠀⠀⠐⡐⡘⠀⡁⠄⎥
+⎢⠁⠀⠒⠀⠀⡀⠐⠁⡂⠀⠀⠀⠔⢀⠈⠀⠈⠀⠀⠒⠀⠄⠂⠀⠒⠀⠀⠀⠀⠄⡀⢐⠐⢄⡄⠀⢀⠀⡄⠈⎥
+⎢⠀⠀⠀⠀⠑⠀⠀⠀⠀⠀⠄⠀⠀⠀⠐⠸⠀⠄⠀⢄⠀⠀⡀⡄⠁⠆⢀⠀⠠⠀⠑⠀⠅⢁⠀⠀⠨⠄⠀⠐⎥
+⎢⠠⡂⠀⠀⠀⠂⡀⡀⠀⠁⠀⠀⠀⡠⠀⠀⠐⠀⠀⡉⠀⠀⠀⢀⠐⠀⠉⠀⠀⢄⠀⠁⠐⢔⢀⡀⢂⠀⠀⠀⎥
+⎢⢀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠐⠀⠐⠀⠀⢄⠠⠀⠀⠀⠰⢀⡐⠂⢐⠀⠁⠀⠁⠀⠀⢀⠐⠅⢅⠄⢀⠂⠈⎥
+⎢⠀⠀⠀⠀⠢⢀⠠⠀⠈⠂⠀⠀⡀⠐⡀⠀⠑⠐⠂⠈⠪⠐⠈⠂⠀⠀⠂⠈⠀⠐⠀⠄⠀⠄⠀⠐⠑⢀⠐⠀⎥
+⎣⠀⠀⡀⠁⠐⠀⠀⠈⠀⠉⠉⢀⡀⠀⠁⠀⡈⠀⠀⠂⠀⡀⠀⠀⠀⠂⠀⡀⡄⠀⠁⠂⠁⠀⠀⠀⠀⠀⠑⢆⎦
 
-julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
-false
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+
+julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+true
 
 julia> bandwidth(A)
-14
+7
 
-julia> bandwidth(A_shuffled)
-245
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+239
 
-julia> res.bandwidth # Close to the true minimum
-17
+julia> res.bandwidth # Very close to the true minimum once again!
+10
 ```
 
 # Notes

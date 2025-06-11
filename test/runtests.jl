@@ -9,15 +9,15 @@ using Test
 
 # Run static analysis
 for analyzer in readlines(joinpath(@__DIR__, "staticanalyzers"))
-    @info "Running static analysis with $analyzer"
+    @info "Running static analysis with $analyzer.jl"
     include("static_analysis/$(lowercase(analyzer)).jl")
     println()
 end
 
 # Run unit tests
-for file in readlines(joinpath(@__DIR__, "testgroups"))
-    @info "Testing $file"
-    include("$file.jl")
+for group in readlines(joinpath(@__DIR__, "testgroups"))
+    @info "Testing `$group`"
+    include("$group.jl")
     println()
 end
 
