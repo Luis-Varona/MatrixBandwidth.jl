@@ -61,7 +61,31 @@ end
 """
     random_sparse_banded_matrix(n, k; p=0.75, rng=default_rng()) -> Matrix{Float64}
 
+Generate a random `n×n` matrix with bandwidth exactly `k` and sparse bands with density `p`.
+
+All entries from this matrix will be from the interval `[0, 1]`. Entries up to the `k`-th
+superdiagonal and down to the `k`-th subdiagonal are nonzero with probability `p`, and each
+band has at least one nonzero entry to ensure that the bandwidth is precisely `k`.
+
+# Arguments
+- `n::Int`: the order of the matrix to generate. Must be positive.
+- `k::Int`: the desired matrix bandwidth. Must satisfy `0 ≤ k < n`.
+
+# Keyword Arguments
+- `p::Float64=0.75`: the band density. Must satisfy `0 < p ≤ 1`.
+- `rng::AbstractRNG=Random.default_rng()`: the random number generator to use. Defaults to
+    `Random.default_rng()`.
+
+# Returns
+- `::Matrix{Float64}`: a random `n×n` matrix with bandwidth exactly `k` and sparse bands
+    with density `p`.
+
+# Examples
 TODO: Write here
+
+# Notes
+Users of [`MatrixBandwidth`](@ref) may find this function useful when generating random test
+data for whatever frameworks, algorithms, etc. they are implementing.
 """
 function random_sparse_banded_matrix(
     n::Int, k::Int; p::Float64=0.75, rng::AbstractRNG=Random.default_rng()
@@ -102,7 +126,7 @@ function random_sparse_banded_matrix(
     return A
 end
 
-# TODO: Add comment above
+# Validate that some matrix is square before attempting to minimize/compute its bandwidth
 function _assert_matrix_is_square(A::AbstractMatrix{T}) where {T<:Number}
     if !allequal(size(A))
         throw(ArgumentError("Matrix bandwidth is not defined for non-square matrices"))

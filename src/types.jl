@@ -7,7 +7,7 @@
 """
     AbstractSolver
 
-TODO: Write here
+Abstract base type for all matrix bandwidth minimization solvers.
 """
 abstract type AbstractSolver end
 
@@ -28,7 +28,20 @@ end
 """
     BandwidthResult
 
-TODO: Write here
+Output struct for matrix bandwidth minimization results.
+
+# Fields
+- `matrix::M`: the original matrix whose bandwidth is minimized.
+- `bandwidth::Int`: the minimized bandwidth of the matrix.
+- `ordering::Vector{Int}`: the (near-)optimal ordering of the rows and columns.
+- `solver::S`: the algorithm used to minimize the bandwidth.
+- `approach::Symbol`: the approach used by the solver. (Should be one of `:exact`,
+    `:heuristic`, and `:metaheuristic`.)
+
+# Constructors
+- `BandwidthResult(matrix, bandwidth, ordering, solver)`: constructs a new `BandwidthResult`
+    instance with the given fields. The `approach` field is automatically determined based
+    on the solver type.
 """
 struct BandwidthResult{M<:AbstractMatrix{<:Number},S<:AbstractSolver}
     matrix::M

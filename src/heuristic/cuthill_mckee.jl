@@ -26,6 +26,22 @@ applying Cuthill–McKee to a symmetric input.
     specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
+# Performance
+Given an ``n×n`` input matrix ``A``, our implementation of Cuthill–McKee runs in ``O(n^2)``
+time, where ``n`` is the number of rows/columns of the input matrix.
+
+[CG80](@cite) provide a linear-time implementation in the number of nonzero entries of
+``A``, which is still quadratic when ``A`` is dense but often much faster when dealing with
+sparse matrices. However, this would require that ``A`` be stored as a graph or a sparse
+matrix, which runs counter to our desire to provide a bandwidth minimization API for all
+`AbstractMatrix{<:Number}` types, including dense matrices. (In the future, however, we may
+indeed consider supporting this more performant implementation for sparse matrices.)
+
+It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
+Cuthill–McKee tends to induce a more optimal bandwidth. This so-called *reverse
+Cuthill–McKee* variant is preferred in almost all cases—see [`ReverseCuthillMcKee`](@ref)
+and the associated method of `_bool_minimal_band_ordering` for our implementation.
+
 # Examples
 Cuthill–McKee finds an optimal ordering for an asymmetric ``35×35`` matrix with bandwidth
 ``3`` whose rows and columns have been shuffled:
@@ -47,10 +63,10 @@ julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
 julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
 false
 
-julia> bandwidth_unpermuted(A)
+julia> bandwidth(A)
 3
 
-julia> bandwidth_unpermuted(A_shuffled)
+julia> bandwidth(A_shuffled)
 33
 
 julia> res.bandwidth # The true minimum bandwidth
@@ -77,10 +93,10 @@ julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
 julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
 false
 
-julia> bandwidth_unpermuted(A)
+julia> bandwidth(A)
 10
 
-julia> bandwidth_unpermuted(A_shuffled)
+julia> bandwidth(A_shuffled)
 194
 
 julia> res.bandwidth # Close to the true minimum
@@ -88,12 +104,7 @@ julia> res.bandwidth # Close to the true minimum
 ```
 
 # Notes
-It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
-Cuthill–McKee tends to produce a better ordering; this variant is known as the *reverse
-Cuthill–McKee algorithm*. See [`ReverseCuthillMcKee`](@ref) and the associated method of
-`_bool_minimal_band_ordering` for our implementation of this algorithm.
-
-Note also that the `node_selector` field must be of the form
+Note that the `node_selector` field must be of the form
 `(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
 
