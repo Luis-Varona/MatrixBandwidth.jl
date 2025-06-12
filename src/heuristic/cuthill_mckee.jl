@@ -43,8 +43,8 @@ Cuthill–McKee* variant is preferred in almost all cases—see [`ReverseCuthill
 and the associated method of `_bool_minimal_band_ordering` for our implementation.
 
 # Examples
-Cuthill–McKee finds an optimal ordering for an asymmetric ``35×35`` matrix with bandwidth
-``3`` whose rows and columns have been shuffled:
+Cuthill–McKee finds an optimal ordering for an asymmetric ``35×35`` matrix whose rows and
+columns have been shuffled:
 ```jldoctest
 julia> using Random
 
@@ -54,53 +54,103 @@ julia> (n, k) = (35, 3);
 
 julia> perm = randperm(n);
 
-julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+julia> A = random_banded_matrix(n, k);
 
 julia> A_shuffled = A[perm, perm];
 
 julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
 
-julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
-false
+julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+true
 
 julia> bandwidth(A)
 3
 
-julia> bandwidth(A_shuffled)
-33
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+31
 
-julia> res.bandwidth # The true minimum bandwidth
+julia> res.bandwidth # Back to the true minimum bandwidth!
 3
 ```
 
-Cuthill–McKee finds a near-optimal ordering for an asymmetric ``200×200`` matrix with
-bandwidth ``10`` whose rows and columns have been shuffled:
+Cuthill–McKee finds a near-optimal ordering for an asymmetric ``183×183`` matrix with
+multiple (separate) connected components whose rows and columns have been shuffled:
 ```jldoctest
-julia> using Random
+julia> using Random, SparseArrays
 
 julia> Random.seed!(37452);
 
-julia> (n, k) = (200, 10);
+julia> (max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 7);
 
-julia> perm = randperm(n);
+julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
 
-julia> A = MatrixBandwidth.random_sparse_banded_matrix(n, k);
+julia> for i in 1:num_ccs # Some components may themselves be disconnected
+           cc_size = rand(1:max_cc_size);
+           cc_band = rand(0:min(max_band, cc_size - 1));
+           components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+       end
 
-julia> A_shuffled = A[perm, perm];
+julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
+
+julia> A = blockdiag(components...) # `A` has least 7 connected components
+183×183 SparseMatrixCSC{Float64, Int64} with 408 stored entries:
+⎡⣜⣹⡤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠪⣿⣭⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠁⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⢆⢠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⢽⡇⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠽⡺⠦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⣷⣇⣂⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠣⣏⣾⣂⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠲⣻⣾⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠋⡏⢷⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠾⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢽⣟⣀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⠾⠶⡤⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠊⠾⡻⣦⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⡟⣵⢄⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⢹⣣⎦
+
+julia> A_shuffled = A[perm, perm]
+183×183 SparseMatrixCSC{Float64, Int64} with 408 stored entries:
+⎡⠁⢄⡂⠀⠀⢀⠀⠀⠀⠂⠂⢀⠀⢀⠀⠀⠀⠀⠀⢀⠐⠠⠂⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⠁⠤⠀⠄⠀⠀⠀⠀⠠⠀⢀⠀⠀⠁⠡⠀⠀⠀⠈⠀⠀⡀⠀⡀⠒⠀⠀⠘⠀⠀⠀⠀⡀⠀⠀⠀⠀⡄⎥
+⎢⠀⢠⠀⠀⠁⢄⠈⠀⠀⠀⠀⠀⠄⠀⠀⠀⠠⠀⠐⠁⠀⠠⠁⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠤⠀⠀⎥
+⎢⠀⠀⠀⠀⠢⠀⠁⠅⠀⠀⠐⢐⠀⠂⠀⠀⠀⠀⠐⠐⠀⠐⠀⠀⠀⠀⠀⠀⠀⠄⠠⠀⠀⠐⠐⠀⠀⠀⠀⠂⎥
+⎢⠀⠀⠀⠀⠉⢀⢀⠁⠁⢀⠀⡈⠁⠐⠀⠀⠐⠀⠈⠀⠀⡀⠀⠀⠀⠀⠈⠀⠀⠈⠀⠀⠂⠀⠀⠐⠐⠀⠐⠀⎥
+⎢⠀⢀⢀⠀⡀⠁⠀⠀⠈⠀⠑⣀⡀⠀⠀⠀⠐⠀⠀⠈⠀⠀⠈⠇⠀⠀⠐⠀⠀⠀⠀⠀⠠⠀⠀⠄⠁⠂⠁⠐⎥
+⎢⠀⠀⠀⠐⠀⠈⠠⠀⠀⠈⡀⠀⢐⠌⠀⡁⡀⠐⠀⠰⠀⢀⠀⠄⠀⠄⡀⠀⠀⠀⠐⠔⡁⠀⠀⠀⠀⠀⡀⠄⎥
+⎢⠀⠀⠀⠠⠄⠀⠀⠀⠀⠀⠁⠀⠀⠀⠐⢈⠤⡀⠀⠄⠈⠀⠀⠀⠀⠄⠀⠁⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⢀⠀⎥
+⎢⠈⠀⠁⢀⠀⠀⠀⠀⠐⠀⢀⠀⠀⠂⠀⠠⠑⠀⠀⠀⠈⠂⠀⠂⠐⡀⢀⠤⠂⠀⠐⠀⠀⠀⠐⡠⠀⠂⠀⠀⎥
+⎢⢀⠀⠀⢀⠆⡠⠂⠀⠂⠀⠀⠀⠄⠀⠀⠂⠀⠁⠀⢀⠀⠔⠀⠀⠀⡀⠀⠀⠂⢂⠀⠀⠀⢀⠀⠀⠀⢀⠀⠃⎥
+⎢⠐⡀⠂⡀⠀⠀⢀⠀⢄⠠⡀⠀⠀⠀⠀⠀⠀⠈⡁⡀⠀⢤⠒⡀⠀⠀⠀⠈⠀⠀⠠⠀⠀⠐⠀⠁⠀⠀⡀⠀⎥
+⎢⠀⠀⠀⠠⠠⠀⠀⠀⠁⠀⠂⠈⠀⠀⠀⡀⠁⢤⠄⠈⠈⠠⠀⠄⠈⠀⠀⠠⠀⠀⠀⠀⠈⠀⠠⠌⡀⠈⠠⠀⎥
+⎢⠀⠐⠀⠀⠀⠀⠠⠀⠀⠀⠠⠀⠀⠀⠀⠀⠄⠁⠀⠲⠀⠀⠀⠀⠐⠀⠂⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠠⠀⠀⠐⠀⠀⠀⠈⠀⠀⠀⠀⠀⡀⠀⠀⡀⠀⠀⡄⠀⠀⠐⠄⠀⠀⠐⠀⠊⠀⠐⡢⠈⠀⠀⢀⎥
+⎢⠀⠀⡠⠀⠁⡀⠌⠄⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠌⠀⠀⠀⠀⠀⠀⠀⣀⠀⠑⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⡐⢂⠀⠅⠀⠂⠀⠀⠀⠀⠀⠀⠄⠀⠀⢀⠀⠠⡀⠂⠄⡀⠀⠀⠂⠀⠀⠘⠑⠀⠀⠀⠀⠀⠠⠢⠀⠀⎥
+⎢⠀⠀⠂⠀⠠⢀⠀⠀⠀⠀⠀⢀⠀⠄⠀⠄⠀⠄⠄⠠⢀⠀⠀⠀⠀⠀⠁⠠⠀⢘⠀⠠⠐⠀⠁⠀⠀⢀⠠⠀⎥
+⎢⠀⢂⠀⠀⠀⠀⠀⠀⠐⠀⠀⡀⡀⠀⠀⢀⠀⠈⠀⠀⠀⠀⡀⠂⠐⠀⠸⠨⡀⠀⠀⠀⢀⡀⠱⠄⠈⠀⠀⠈⎥
+⎢⢀⠐⠀⠠⠀⠂⠈⠀⠀⠀⠀⠀⠂⠡⠀⠄⠀⠀⠀⢠⠀⠠⡀⠀⠀⠀⠀⠀⠀⢐⠀⠀⠀⠐⠂⠀⠁⢐⠂⠀⎥
+⎣⠀⠀⠀⠄⠀⢀⠀⠀⠀⠀⠁⠀⠠⠀⠀⠤⠀⠂⠤⠀⠀⠀⠀⠂⠈⠀⠀⠐⠀⠀⠀⠀⠀⠀⠠⠠⠈⠄⠀⠄⎦
 
 julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
 
-julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
-false
+julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+true
 
 julia> bandwidth(A)
+7
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+170
+
+julia> res.bandwidth # Very close to the true minimum once again!
 10
-
-julia> bandwidth(A_shuffled)
-194
-
-julia> res.bandwidth # Close to the true minimum
-14
 ```
 
 # Notes
@@ -124,7 +174,7 @@ Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
     if A != A'
-        A_sym = (!iszero).(A + A') # TODO: Check performance later
+        A_sym = A .|| A'
     else
         A_sym = A
     end
@@ -140,7 +190,10 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcK
     for component in components
         submatrix = A_sym[component, component]
         component_ordering = _connected_cuthill_mckee_ordering(submatrix, node_selector)
-        ordering[k:(k += length(component) - 1)] = component[component_ordering]
+
+        component_size = length(component)
+        ordering[k:(k + component_size - 1)] = component[component_ordering]
+        k += component_size
     end
 
     return ordering

@@ -60,8 +60,8 @@ function pseudo_peripheral_node(A::AbstractMatrix{Bool})
 
     function _min_degree_node!(degrees::Vector{Int}, farthest::Vector{Int})
         degrees .= vec(sum(A; dims=1))
-        index = argmin(degrees[farthest])
-        return farthest[index]
+        idx = argmin(degrees[farthest])
+        return farthest[idx]
     end
 
     v = findfirst(!iszero, eachcol(A))

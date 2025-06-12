@@ -6,4 +6,4 @@ metaheuristic/simulated_annealing
 metaheuristic/genetic_algorithm
 metaheuristic/grasp
 core
-utils
+random_banded_matrix

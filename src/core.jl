@@ -115,16 +115,16 @@ julia> (n, k) = (8, 2);
 
 julia> perm = randperm(n);
 
-julia> A = (!iszero).(random_sparse_banded_matrix(8, 2))
+julia> A = (!iszero).(random_banded_matrix(8, 2))
 8×8 BitMatrix:
- 0  1  1  0  0  0  0  0
- 0  1  1  1  0  0  0  0
+ 1  0  1  0  0  0  0  0
+ 1  0  1  1  0  0  0  0
  1  1  1  1  1  0  0  0
- 0  0  1  1  1  0  0  0
- 0  0  1  1  1  1  1  0
+ 0  1  0  1  1  1  0  0
+ 0  0  0  1  1  1  1  0
  0  0  0  1  1  1  1  1
  0  0  0  0  1  1  1  1
- 0  0  0  0  0  0  1  0
+ 0  0  0  0  0  1  0  1
 
 julia> bandwidth(A)
 2
@@ -133,12 +133,12 @@ julia> A_shuffled = A[perm, perm]
 8×8 BitMatrix:
  1  1  1  0  0  0  1  1
  1  1  1  0  0  0  0  1
- 1  1  1  1  0  0  1  0
+ 1  1  1  0  0  0  1  0
  0  0  1  1  1  1  1  0
- 0  0  0  1  0  1  0  0
- 0  0  0  1  0  1  1  0
- 0  0  1  1  0  0  1  0
- 0  1  0  0  0  0  0  0
+ 0  0  0  1  1  0  0  0
+ 0  0  0  1  1  0  1  0
+ 1  0  1  0  0  1  1  0
+ 1  0  0  0  0  0  0  1
 
 julia> bandwidth(A_shuffled)
 7
@@ -186,5 +186,7 @@ function _bool_minimal_band_ordering(::AbstractMatrix{Bool}, ::T) where {T<:Abst
         subtype = S
     end
 
-    throw(NotImplementedError(approach, :solver, subtype, AbstractSolver))
+    throw(
+        NotImplementedError(_bool_minimal_band_ordering, :solver, subtype, AbstractSolver)
+    )
 end

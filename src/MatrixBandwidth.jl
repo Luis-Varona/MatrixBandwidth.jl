@@ -55,7 +55,7 @@ export BandwidthResult, minimize_bandwidth, bandwidth
 export MBID, MBPS # Exact solvers
 export CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
 export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
-export random_sparse_banded_matrix # Random banded matrices for test data
+export random_banded_matrix # Random banded matrices for test data
 
 const DEFAULT_SOLVER = ReverseCuthillMcKee()
 
