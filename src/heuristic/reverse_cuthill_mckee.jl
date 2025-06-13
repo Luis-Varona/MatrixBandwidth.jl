@@ -50,25 +50,28 @@ julia> Random.seed!(87);
 
 julia> (n, k) = (45, 4);
 
-julia> perm = randperm(n);
-
 julia> A = random_banded_matrix(n, k);
+
+julia> perm = randperm(n);
 
 julia> A_shuffled = A[perm, perm];
 
-julia> res = minimize_bandwidth(A_shuffled, ReverseCuthillMcKee());
-
-julia> iszero.(A_shuffled) == iszero.(A_shuffled') # Works even for asymmetric matrices
-false
+julia> iszero.(A) != iszero.(A') # Proof that the algorithm works for asymmetric input
+true
 
 julia> bandwidth(A)
 4
 
 julia> bandwidth(A_shuffled) # Much larger after shuffling
-43
+44
 
-julia> res.bandwidth # Back to the true minimum bandwidth!
-4
+julia> res = minimize_bandwidth(A_shuffled, ReverseCuthillMcKee()) # Finds the true minimum!
+Results of Matrix Bandwidth Minimization
+ * Algorithm: Reverse Cuthill–McKee algorithm
+ * Approach: Heuristic
+ * Minimum bandwidth: 4
+ * Original bandwidth: 44
+ * Matrix size: 45×45
 ```
 
 Reverse Cuthill–McKee finds a near-optimal ordering for an asymmetric ``251×251`` matrix
@@ -88,9 +91,15 @@ julia> for i in 1:num_ccs # Some components may themselves be disconnected
            components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
        end
 
+julia> A = blockdiag(components...); # `A` has least 8 connected components
+
 julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
 
-julia> A = blockdiag(components...) # `A` has least 8 connected components
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, ReverseCuthillMcKee());
+
+julia> A # The original matrix
 251×251 SparseMatrixCSC{Float64, Int64} with 617 stored entries:
 ⎡⢛⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
 ⎢⠀⠈⢿⣇⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
@@ -112,7 +121,8 @@ julia> A = blockdiag(components...) # `A` has least 8 connected components
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⣤⡀⠀⠀⠀⎥
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣆⡀⠀⎥
 ⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣆⎦
-julia> A_shuffled = A[perm, perm]
+
+julia> A_shuffled # A far-from-optimal ordering of `A`
 251×251 SparseMatrixCSC{Float64, Int64} with 617 stored entries:
 ⎡⠑⢅⠀⠀⡠⠁⡀⠀⠨⢀⠀⠀⠄⠀⠀⡂⠀⡁⠒⢄⠀⠂⢀⠀⠀⠐⣁⢀⠀⢂⠠⠁⡠⠢⢀⡂⠀⠀⢀⡀⎤
 ⎢⠀⠀⠩⢂⠀⠀⠀⣀⠈⠈⠁⠀⠀⠠⠈⠀⠀⠀⠄⠀⠀⠒⠀⠀⠀⠀⠀⠈⠀⠁⠈⡀⠀⠀⠠⡀⠀⠀⠄⠀⎥
@@ -135,9 +145,30 @@ julia> A_shuffled = A[perm, perm]
 ⎢⠀⠀⠀⠀⠢⢀⠠⠀⠈⠂⠀⠀⡀⠐⡀⠀⠑⠐⠂⠈⠪⠐⠈⠂⠀⠀⠂⠈⠀⠐⠀⠄⠀⠄⠀⠐⠑⢀⠐⠀⎥
 ⎣⠀⠀⡀⠁⠐⠀⠀⠈⠀⠉⠉⢀⡀⠀⠁⠀⡈⠀⠀⠂⠀⡀⠀⠀⠀⠂⠀⡀⡄⠀⠁⠂⠁⠀⠀⠀⠀⠀⠑⢆⎦
 
-julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
+251×251 SparseMatrixCSC{Float64, Int64} with 617 stored entries:
+⎡⠑⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠈⢿⣷⣠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠈⠹⢷⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠈⢻⡶⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣾⣧⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣧⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢛⣟⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⢿⣲⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⡦⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠫⣶⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⢻⣴⡆⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢱⢶⡄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣦⣄⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠾⣷⡀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠯⣆⎦
 
-julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+julia> iszero.(A) != iszero.(A') # Proof that the algorithm works for asymmetric input
 true
 
 julia> bandwidth(A)
@@ -146,8 +177,13 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 239
 
-julia> res.bandwidth # Very close to the true minimum once again!
-10
+julia> res = minimize_bandwidth(A_shuffled, ReverseCuthillMcKee()) # Nearly the true minimum
+Results of Matrix Bandwidth Minimization
+ * Algorithm: Reverse Cuthill–McKee algorithm
+ * Approach: Heuristic
+ * Minimum bandwidth: 10
+ * Original bandwidth: 239
+ * Matrix size: 251×251
 ```
 
 # Notes

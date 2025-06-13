@@ -59,4 +59,16 @@ end
 
 Base.summary(res::BandwidthResult) = summary(res.solver)
 
-# TODO: Override `Base.show(io::IO, res::BandwidthResult)`
+# The `Base.show` override here takes heavy inspiration from the `Optim.jl` package
+function Base.show(io::IO, res::BandwidthResult)
+    n = size(res.matrix, 1)
+
+    println(io, "Results of Matrix Bandwidth Minimization")
+    println(io, " * Algorithm: $(summary(res.solver))")
+    println(io, " * Approach: $(titlecase(string(res.approach)))")
+    println(io, " * Minimum bandwidth: $(res.bandwidth)")
+    println(io, " * Original bandwidth: $(bandwidth(res.matrix))")
+    print(io, " * Matrix size: $n×$n")
+
+    return nothing
+end
