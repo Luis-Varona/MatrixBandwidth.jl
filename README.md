@@ -41,7 +41,7 @@
 
 *MatrixBandwidth.jl* offers several exact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization.
 
-The *bandwidth* of a square matrix *A* is the minimum non-negative integer *k* &isin; ℕ such that *A<sub>i,j</sub> = 0* whenever *|i - j| > k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
+The *bandwidth* of a square matrix *A* is the minimum non-negative integer *k* &isin; **N** such that *A<sub>i,j</sub> = 0* whenever *|i - j| > k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
 
 *Matrix bandwidth minimization* is the problem of finding a permutation matrix *P* so that the bandwidth of *PAP*<sup>T</sup> is minimized; this is known to be NP-complete. Several heuristic algorithms (such as reverse Cuthill&ndash;McKee) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like MB-PS) are exponential in time complexity and thus only feasible for relatively small matrices.
 
