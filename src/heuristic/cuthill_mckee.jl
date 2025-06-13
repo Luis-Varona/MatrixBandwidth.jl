@@ -67,7 +67,7 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 31
 
-julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee()) # Finds the true minimum!
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee()) # Finds the true minimum
 Results of Matrix Bandwidth Minimization
  * Algorithm: Cuthill–McKee algorithm
  * Approach: Heuristic
@@ -179,7 +179,7 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 170
 
-julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee()) # Nearly the true minimum
+julia> res # Gets very close to the true minimum
 Results of Matrix Bandwidth Minimization
  * Algorithm: Cuthill–McKee algorithm
  * Approach: Heuristic
