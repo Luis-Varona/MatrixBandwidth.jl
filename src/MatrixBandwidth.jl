@@ -44,9 +44,9 @@ include("utils.jl")
 include("types.jl")
 include("core.jl")
 
-include("exact/Exact.jl")
-include("heuristic/Heuristic.jl")
-include("metaheuristic/Metaheuristic.jl")
+include("Exact/Exact.jl")
+include("Heuristic/Heuristic.jl")
+include("Metaheuristic/Metaheuristic.jl")
 
 using .Exact, .Heuristic, .Metaheuristic
 
