@@ -1,9 +1,9 @@
-exact/mbid
-exact/mbps
-heuristic/cuthill_mckee
-heuristic/reverse_cuthill_mckee
-metaheuristic/simulated_annealing
-metaheuristic/genetic_algorithm
-metaheuristic/grasp
+Exact/mbid
+Exact/mbps
+Heuristic/cuthill_mckee
+Heuristic/reverse_cuthill_mckee
+Metaheuristic/simulated_annealing
+Metaheuristic/genetic_algorithm
+Metaheuristic/grasp
 core
 random_banded_matrix
