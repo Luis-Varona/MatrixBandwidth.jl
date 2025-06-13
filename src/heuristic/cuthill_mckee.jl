@@ -52,15 +52,13 @@ julia> Random.seed!(13);
 
 julia> (n, k) = (35, 3);
 
-julia> perm = randperm(n);
-
 julia> A = random_banded_matrix(n, k);
+
+julia> perm = randperm(n);
 
 julia> A_shuffled = A[perm, perm];
 
-julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
-
-julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+julia> iszero.(A) != iszero.(A') # Proof that the algorithm works for asymmetric input
 true
 
 julia> bandwidth(A)
@@ -69,8 +67,13 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 31
 
-julia> res.bandwidth # Back to the true minimum bandwidth!
-3
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee()) # Finds the true minimum!
+Results of Matrix Bandwidth Minimization
+ * Algorithm: Cuthill–McKee algorithm
+ * Approach: Heuristic
+ * Minimum bandwidth: 3
+ * Original bandwidth: 31
+ * Matrix size: 35×35
 ```
 
 Cuthill–McKee finds a near-optimal ordering for an asymmetric ``183×183`` matrix with
@@ -90,9 +93,15 @@ julia> for i in 1:num_ccs # Some components may themselves be disconnected
            components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
        end
 
+julia> A = blockdiag(components...); # `A` has least 7 connected components
+
 julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
 
-julia> A = blockdiag(components...) # `A` has least 7 connected components
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+
+julia> A # The original matrix
 183×183 SparseMatrixCSC{Float64, Int64} with 408 stored entries:
 ⎡⣜⣹⡤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
 ⎢⠀⠪⣿⣭⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
@@ -115,7 +124,7 @@ julia> A = blockdiag(components...) # `A` has least 7 connected components
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⡟⣵⢄⠀⎥
 ⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⢹⣣⎦
 
-julia> A_shuffled = A[perm, perm]
+julia> A_shuffled # A far-from-optimal ordering of `A`
 183×183 SparseMatrixCSC{Float64, Int64} with 408 stored entries:
 ⎡⠁⢄⡂⠀⠀⢀⠀⠀⠀⠂⠂⢀⠀⢀⠀⠀⠀⠀⠀⢀⠐⠠⠂⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⎤
 ⎢⠀⠈⠁⠤⠀⠄⠀⠀⠀⠀⠠⠀⢀⠀⠀⠁⠡⠀⠀⠀⠈⠀⠀⡀⠀⡀⠒⠀⠀⠘⠀⠀⠀⠀⡀⠀⠀⠀⠀⡄⎥
@@ -138,9 +147,30 @@ julia> A_shuffled = A[perm, perm]
 ⎢⢀⠐⠀⠠⠀⠂⠈⠀⠀⠀⠀⠀⠂⠡⠀⠄⠀⠀⠀⢠⠀⠠⡀⠀⠀⠀⠀⠀⠀⢐⠀⠀⠀⠐⠂⠀⠁⢐⠂⠀⎥
 ⎣⠀⠀⠀⠄⠀⢀⠀⠀⠀⠀⠁⠀⠠⠀⠀⠤⠀⠂⠤⠀⠀⠀⠀⠂⠈⠀⠀⠐⠀⠀⠀⠀⠀⠀⠠⠠⠈⠄⠀⠄⎦
 
-julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee());
+julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
+183×183 SparseMatrixCSC{Float64, Int64} with 408 stored entries:
+⎡⢱⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠹⡵⣉⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠈⠢⡤⡤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⢳⡺⣺⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠛⡗⡻⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⡎⣽⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣟⣎⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠘⠬⢅⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢳⣓⠆⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢼⣥⣒⢂⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢲⣫⣾⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠳⣜⡼⡤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠃⣽⠳⣲⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠐⠛⢄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣘⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠃⢦⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠄⠀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠀⎦
 
-julia> iszero.(A) != iszero.(A') # Works despite `A` (and `A_shuffled`) being asymmetric
+julia> iszero.(A) != iszero.(A') # Proof that the algorithm works for asymmetric input
 true
 
 julia> bandwidth(A)
@@ -149,8 +179,13 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 170
 
-julia> res.bandwidth # Very close to the true minimum once again!
-10
+julia> res = minimize_bandwidth(A_shuffled, CuthillMcKee()) # Nearly the true minimum
+Results of Matrix Bandwidth Minimization
+ * Algorithm: Cuthill–McKee algorithm
+ * Approach: Heuristic
+ * Minimum bandwidth: 10
+ * Original bandwidth: 170
+ * Matrix size: 183×183
 ```
 
 # Notes
