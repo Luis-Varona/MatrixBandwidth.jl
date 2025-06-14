@@ -10,9 +10,9 @@
 Minimize the matrix bandwidth of `A` using the algorithm defined by `solver`.
 
 The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k ∈ ℕ`` such
-that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most*
+that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth **at most**
 ``k`` if all entries above the ``k``-th superdiagonal and below the ``k``-th subdiagonal are
-zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
+zero, and ``A`` has bandwidth **at least** ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
 This function computes a (near-)optimal ordering ``π`` of the rows and columns of ``A`` so
@@ -89,9 +89,9 @@ end
 Compute the bandwidth of `A` without any permutations.
 
 The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k ∈ ℕ`` such
-that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most*
+that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth **at most**
 ``k`` if all entries above the ``k``-th superdiagonal and below the ``k``-th subdiagonal are
-zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
+zero, and ``A`` has bandwidth **at least** ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
 In contrast to [`minimize_bandwidth`](@ref), this function does not attempt to minimize the
