@@ -11,10 +11,49 @@ TODO: Write here
 """
 struct MBPS <: ExactSolver
     depth::Int
+
+    MBPS() = new(0)
+
+    function MBPS(depth::Int)
+        if depth < 0
+            throw(ArgumentError("MB-PS depth parameter must be positive, got $depth"))
+        end
+
+        return new(depth)
+    end
 end
 
 Base.summary(::MBPS) = "Matrix bandwidth by perimeter search"
 
+function _optimal_mbps_depth(A::AbstractMatrix{Bool})
+    n = size(A, 1)
+
+    # I'm really not sure about this... let's check the original paper again
+    if n <= 2
+        return 1
+    elseif n <= 10
+        return 3
+    elseif n <= 20
+        return 4
+    elseif n <= 50
+        return 5
+    elseif n <= 60
+        return 7
+    elseif n <= 80
+        return 6
+    else
+        # TODO: Maybe implement sparsity-based heuristics?
+    end
+end
+
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::MBPS)
+    depth = solver.depth
+
+    if depth == 0
+        depth = _optimal_mbps_depth(A)
+    end
+
     # TODO: Implement
+
+    return Int[] # Just a placeholder
 end
