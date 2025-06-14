@@ -14,5 +14,16 @@ struct MBID <: ExactSolver end
 Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
-    # TODO: Implement
+    n = size(A, 1)
+    max_degree = maximum(sum(A, dims=1))
+    bandwidth = ceil(Int, max_degree / 2)
+    found = false
+
+    while !found
+        unselected = Set(1:n)
+        adjacency_list = Set{Int}()
+    end
+end
+
+function _add_node!(unselected::Set{Int}, adjacency_list::Set{Int}, i::Int)
 end
