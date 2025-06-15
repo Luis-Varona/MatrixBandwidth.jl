@@ -28,7 +28,7 @@ CurrentModule = MatrixBandwidth
   <tr>
     <td>Code coverage</td>
     <td>
-      <a href="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl"><img src="https://img.shields.io/codecov/c/gh/Luis-Varona/MatrixBandwidth.jl.svg?label=codecov" alt="Test coverage from codecov"></a>
+      <a href="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl"><img src="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl/branch/main/graph/badge.svg" alt="Test coverage from codecov"></a>
     </td>
     </tr>
     <tr>
