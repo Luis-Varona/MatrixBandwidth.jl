@@ -16,7 +16,8 @@ effective when ``A`` is sparse, this heuristic typically produces an ordering wh
 a matrix bandwidth either equal to or very close to the true minimum
 [CM69; pp. 157--58](@cite). The reverse Cuthill–McKee algorithm simply reverses the ordering
 produced by application of Cuthill–McKee; it was found in [Geo71; pp. 114--15](@cite) that
-this tends to induce an even more optimal bandwidth.
+although the bandwidth remains the same, this tends to produce a more optimal *matrix
+profile* (a measure of how far, on average, nonzero entries are from the diagonal).
 
 We also extend the algorithm to work more generally when ``A`` is not symmetric by applying
 it to ``A + Aᵀ`` instead, as suggested in [RS06; p. 808](@cite). This approach still tends
