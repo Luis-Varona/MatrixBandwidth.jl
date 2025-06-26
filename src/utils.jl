@@ -188,3 +188,14 @@ function _assert_matrix_is_square(A::AbstractMatrix{T}) where {T<:Number}
         throw(ArgumentError("Matrix bandwidth is not defined for non-square matrices"))
     end
 end
+
+# TODO: Summarize here
+function _symmetrize(A::AbstractMatrix{Bool})
+    if A != A'
+        A_sym = A .|| A'
+    else
+        A_sym = A
+    end
+
+    return A_sym
+end

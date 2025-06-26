@@ -208,13 +208,8 @@ end
 Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
-    if A != A'
-        A_sym = A .|| A'
-    else
-        A_sym = A
-    end
-
-    n = size(A_sym, 1)
+    n = size(A, 1)
+    A_sym = _symmetrize(A)
     A_sym[1:(n + 1):end] .= false
 
     node_selector = solver.node_selector

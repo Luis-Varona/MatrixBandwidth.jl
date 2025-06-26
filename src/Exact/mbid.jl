@@ -13,9 +13,10 @@ struct MBID <: ExactSolver end
 
 Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
+function _bool_minimal_band_ordering(S::AbstractMatrix{Bool}, ::MBID)
     n = size(A, 1)
-    adj_lists = map(node -> findall(A[:, node]), 1:n)
+    A_sym = _symmetrize(A)
+    adj_lists = map(node -> findall(A_sym[:, node]), 1:n)
 
     function _add_node!(
         ordering_buf::Vector{Int},
@@ -43,7 +44,7 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
                     adj_list_new = union(adj_list, adj_lists[node])
                     adj_list_new = intersect(adj_list_new, unselected_new)
 
-                    if _is_compatible(A, ordering_buf, adj_list_new, bandwidth, depth)
+                    if _is_compatible(A_sym, ordering_buf, adj_list_new, bandwidth, depth)
                         ordering = _add_node!(
                             ordering_buf, unselected_new, adj_list_new, bandwidth, depth + 1
                         )
@@ -72,7 +73,7 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
 end
 
 function _is_compatible(
-    A::AbstractMatrix{Bool},
+    A_sym::AbstractMatrix{Bool},
     ordering::Vector{Int},
     adj_list::Set{Int},
     bandwidth::Int,
