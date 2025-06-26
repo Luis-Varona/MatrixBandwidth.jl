@@ -38,9 +38,10 @@ matrix, which runs counter to our desire to provide a bandwidth minimization API
 indeed consider supporting this more performant implementation for sparse matrices.)
 
 It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
-Cuthill–McKee tends to induce a more optimal bandwidth. This so-called *reverse
-Cuthill–McKee* variant is preferred in almost all cases—see [`ReverseCuthillMcKee`](@ref)
-and the associated method of `_bool_minimal_band_ordering` for our implementation.
+Cuthill–McKee tends to induce a more optimal *matrix profile* (a measure of how far, on
+average, nonzero entries are from the diagonal). This so-called *reverse Cuthill–McKee*
+variant is preferred in almost all cases—see [`ReverseCuthillMcKee`](@ref) and the
+associated method of `_bool_minimal_band_ordering` for our implementation.
 
 # Examples
 Cuthill–McKee finds an optimal ordering for an asymmetric ``35×35`` matrix whose rows and
