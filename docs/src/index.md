@@ -88,7 +88,7 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-I aim to release the first stable version of *MatrixBandwidth.jl* in late June 2025. The current version is a work-in-progress, with much of the API still under development.
+I aim to release the first stable version of *MatrixBandwidth.jl* in early July 2025. The current version is a work-in-progress, with much of the API still under development.
 
 ## Index
 
