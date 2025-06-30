@@ -59,6 +59,11 @@ function minimize_bandwidth(
         A_bool = (!iszero).(A)
     end
 
+    #= Any simultaneous row and column permutation preserves diagonal entries, so we set the
+    diagonal of `A_bool` to false for simplicity and for consistency with any solvers (e.g.,
+    MB-ID) that utilize an assumed adjacency matrix structure. =#
+    foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
+
     bandwidth_orig = bandwidth(A_bool)
 
     # If `A` is already diagonal/empty, no possible ordering can improve its bandwidth

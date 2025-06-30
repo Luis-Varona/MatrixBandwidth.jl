@@ -13,7 +13,7 @@ struct MBID <: ExactSolver end
 
 Base.summary(::MBID) = "Matrix bandwidth by iterative deepening"
 
-function _bool_minimal_band_ordering(S::AbstractMatrix{Bool}, ::MBID)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::MBID)
     n = size(A, 1)
     A_sym = _symmetrize(A)
     adj_lists = map(node -> findall(A_sym[:, node]), 1:n)
@@ -26,21 +26,20 @@ function _bool_minimal_band_ordering(S::AbstractMatrix{Bool}, ::MBID)
         depth::Int,
     )
         if depth == n
-            ordering = ordering_buf
-        else
-            if depth == 0
-                starting_node = minimum(unselected)
-            end
+            return ordering_buf
+        end
 
-            ordering = nothing
-            res = iterate(unselected)
+        ordering = nothing
+        res = iterate(unselected)
 
-            while (isnothing(ordering) && !isnothing(res))
-                (node, state) = res
+        while (isnothing(ordering) && !isnothing(res))
+            (node, state) = res
+            ordering_buf[depth + 1] = node
 
-                if depth > 0 || node == starting_node
-                    ordering_buf[depth + 1] = node
-                    unselected_new = setdiff(unselected, [node])
+            if !any(i -> A_sym[node, ordering_buf[i]] && bandwidth + i <= depth, 1:depth)
+                unselected_new = setdiff(unselected, [node])
+
+                if ordering_buf[1] < maximum(unselected_new)
                     adj_list_new = union(adj_list, adj_lists[node])
                     adj_list_new = intersect(adj_list_new, unselected_new)
 
@@ -79,6 +78,27 @@ function _is_compatible(
     bandwidth::Int,
     depth::Int,
 )
-    # TODO: Implement
-    return true # Just a placeholder
+    if length(adj_list) > bandwidth
+        return false
+    end
+
+    l = length(adj_list)
+    latest_positions = Vector{Int}(undef, l)
+
+    for (i, neighbour) in enumerate(adj_list)
+        latest_position = typemax(Int)
+
+        for (j, placed_node) in enumerate(view(ordering, 1:depth))
+            if A_sym[neighbour, placed_node]
+                latest_position = min(latest_position, bandwidth + j)
+            end
+        end
+
+        latest_positions[i] = latest_position
+    end
+
+    sort!(latest_positions)
+    constraints = (1:l) .+ depth
+
+    return all(latest_positions .>= constraints)
 end
