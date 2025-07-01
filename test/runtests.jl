@@ -9,16 +9,20 @@ using Test
 
 # Run static analysis
 for analyzer in readlines(joinpath(@__DIR__, "staticanalyzers"))
-    @info "Running static analysis with $analyzer.jl"
-    include("static_analysis/$(lowercase(analyzer)).jl")
-    println()
+    if !isempty(analyzer)
+        @info "Running static analysis with $analyzer.jl"
+        include("$analyzer.jl")
+        println()
+    end
 end
 
 # Run unit tests
 for group in readlines(joinpath(@__DIR__, "testgroups"))
-    @info "Testing `$group`"
-    include("$group.jl")
-    println()
+    if !isempty(group)
+        @info "Testing `$group`"
+        include("$group.jl")
+        println()
+    end
 end
 
 # Check that all public names in the package are documented

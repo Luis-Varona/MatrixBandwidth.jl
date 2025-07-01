@@ -43,26 +43,36 @@ CurrentModule = MatrixBandwidth
 
 ## Overview
 
-*MatrixBandwidth.jl* offers several exact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization.
+*MatrixBandwidth.jl* offers several algorithms for matrix bandwidth minimization and matrix bandwidth recognition.
 
 The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k \in \mathbb{N}`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k^\text{th}`` superdiagonal and below the ``k^\text{th}`` subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the ``k^\text{th}`` superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like MB-PS) are exponential in time complexity and thus are only feasible for relatively small matrices.
 
+On the other hand, the *matrix bandwidth recognition problem* [TODO: Write here]
+
 ## Algorithms
 
 The following algorithms are currently supported:
 
-- **Exact**
-  - Minimum bandwidth by iterative deepening (MB-ID)
-  - Minimum bandwidth by perimeter search (MB-PS)
-- **Heuristic**
-  - Cuthill–McKee algorithm
-  - Reverse Cuthill–McKee algorithm
-- **Metaheuristic**
-  - Simulated annealing
-  - Genetic algorithm
-  - Greedy randomized adaptive search procedure (GRASP)
+- **Minimization**
+  - *Exact*
+    - Caprara&ndash;Salazar-González algorithm
+    - Del Corso&ndash;Manzini algorithm
+    - Del Corso&ndash;Manzini algorithm with perimeter search
+    - Saxe&ndash;Gurari&ndash;Sudborough algorithm
+  - *Heuristic*
+    - Cuthill&ndash;McKee algorithm
+    - Reverse Cuthill&ndash;McKee algorithm
+  - *Metaheuristic*
+    - Greedy randomized adaptive search procedure (GRASP)
+    - Simulated annealing
+    - Genetic algorithm
+- **Recognition**
+  - Caprara&ndash;Salazar-González algorithm
+  - Del Corso&ndash;Manzini algorithm
+  - Del Corso&ndash;Manzini algorithm with perimeter search
+  - Saxe&ndash;Gurari&ndash;Sudborough algorithm
 
 (As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested.)
 
@@ -88,7 +98,7 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-I aim to release the first stable version of *MatrixBandwidth.jl* in early July 2025. The current version is a work-in-progress, with much of the API still under development.
+I aim to release the first stable version of *MatrixBandwidth.jl* in mid-July 2025. The current version is a work-in-progress, with much of the API still under development.
 
 ## Index
 

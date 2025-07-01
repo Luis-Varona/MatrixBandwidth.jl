@@ -4,9 +4,10 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module TestCore
+module MinTestCore
 
 using MatrixBandwidth
+using MatrixBandwidth.Minimization
 using Test
 
 # TODO: Write here
