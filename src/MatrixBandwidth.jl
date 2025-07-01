@@ -7,7 +7,9 @@
 """
     MatrixBandwidth
 
-Exact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization in Julia.
+[TODO: Update to reflect recognition algorithms too]
+
+Fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition in Julia.
 
 The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k ∈ ℕ`` such
 that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most*
@@ -18,20 +20,33 @@ zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry
 The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
-producing near-optimal orderings in practice, but exact methods (like MB-PS) are exponential
-in time complexity and thus are only feasible for relatively small matrices.
+producing near-optimal orderings in practice, but exact methods (like
+Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
+relatively small matrices.
 
-The following algorithms are currently supported:
-- **Exact**
-    - [`MBID`](@ref): Minimum bandwidth by iterative deepening (MB-ID)
-    - [`MBPS`](@ref): Minimum bandwidth by perimeter search (MB-PS)
-- **Heuristic**
-    - [`CuthillMcKee`](@ref): Cuthill–McKee algorithm
-    - [`ReverseCuthillMcKee`](@ref): Reverse Cuthill–McKee algorithm
-- **Metaheuristic**
-    - [`SimulatedAnnealing`](@ref): Simulated annealing
-    - [`GeneticAlgorithm`](@ref): Genetic algorithm
-    - [`GRASP`](@ref): Greedy randomized adaptive search procedure (GRASP)
+On the other hand, the *matrix bandwidth recognition problem* [TODO: Write here]
+
+The following algorithms are currently supported [TODO: Add refs for `Recognition` later]:
+- **Minimization**
+    - *Exact*
+        - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
+        - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
+        - Del Corso–Manzini algorithm with perimeter search
+          ([`DelCorsoManziniWithPS`](@ref))
+        - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+    - *Heuristic*
+        - Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
+        - Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
+        - Reverse Cuthill–McKee algorithm ([`ReverseCuthillMcKee`](@ref))
+    - *Metaheuristic*
+        - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
+        - Simulated annealing ([`SimulatedAnnealing`](@ref))
+        - Genetic algorithm ([`GeneticAlgorithm`](@ref))
+- **Recognition**
+    - Caprara–Salazar-González algorithm
+    - Del Corso–Manzini algorithm
+    - Del Corso–Manzini algorithm with perimeter search
+    - Saxe–Gurari–Sudborough algorithm
 
 [Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
 the latest development version of this package.
@@ -41,22 +56,17 @@ module MatrixBandwidth
 using Random
 
 include("utils.jl")
-include("types.jl")
 include("core.jl")
 
-include("Exact/Exact.jl")
-include("Heuristic/Heuristic.jl")
-include("Metaheuristic/Metaheuristic.jl")
+include("Minimization/Minimization.jl")
+include("Recognition/Recognition.jl")
 
-using .Exact, .Heuristic, .Metaheuristic
+using .Minimization, .Recognition
 
-# The output struct, main minimization function, and raw matrix bandwidth function
-export BandwidthResult, minimize_bandwidth, bandwidth
-export MBID, MBPS # Exact solvers
-export CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
-export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
-export random_banded_matrix # Random banded matrices for test data
-
-const DEFAULT_SOLVER = ReverseCuthillMcKee()
+export Minimization, Recognition # TODO: Comment here
+export bandwidth # Raw matrix bandwidth computation (with the current permutation)
+export BandMinResult, minimize_bandwidth # Matrix bandwidth minimization
+# export BandRecogResult, has_bandwidth_k_ordering # Matrix bandwidth recognition
+export random_banded_matrix # Random banded matrix generation for test data
 
 end

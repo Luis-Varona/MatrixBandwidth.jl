@@ -15,7 +15,7 @@ DocMeta.setdocmeta!(
 bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"); style=:alpha)
 
 makedocs(;
-    modules=[MatrixBandwidth],
+    modules=[MatrixBandwidth, MatrixBandwidth.Minimization, MatrixBandwidth.Recognition],
     authors="Luis M. B. Varona <lbvarona@mta.ca>",
     sitename="MatrixBandwidth.jl",
     format=Documenter.HTML(;

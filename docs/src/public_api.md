@@ -10,7 +10,14 @@ Documentation for [MatrixBandwidth](https://github.com/Luis-Varona/MatrixBandwid
     The following documentation covers only the public API of the package. For internal details, see the [private API documentation](private_api.md).
 
 ```@autodocs
-Modules = [MatrixBandwidth, MatrixBandwidth.Exact, MatrixBandwidth.Heuristic, MatrixBandwidth.Metaheuristic]
+Modules = [
+    MatrixBandwidth,
+    MatrixBandwidth.Minimization,
+    MatrixBandwidth.Minimization.Exact,
+    MatrixBandwidth.Minimization.Heuristic,
+    MatrixBandwidth.Minimization.Metaheuristic,
+    MatrixBandwidth.Recognition,
+]
 Private = false
 ```
 
