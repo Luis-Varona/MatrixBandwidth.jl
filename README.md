@@ -58,6 +58,7 @@ The following algorithms are currently supported:
     - Del Corso&ndash;Manzini algorithm with perimeter search
     - Saxe&ndash;Gurari&ndash;Sudborough algorithm
   - *Heuristic*
+    - Gibbs&ndash;Poole&ndash;Stockmeyer algorithm
     - Cuthill&ndash;McKee algorithm
     - Reverse Cuthill&ndash;McKee algorithm
   - *Metaheuristic*
