@@ -57,23 +57,23 @@ The following algorithms are currently supported:
 
 - **Minimization**
   - *Exact*
-    - Caprara&ndash;Salazar-González algorithm
-    - Del Corso&ndash;Manzini algorithm
-    - Del Corso&ndash;Manzini algorithm with perimeter search
-    - Saxe&ndash;Gurari&ndash;Sudborough algorithm
+    - Caprara–Salazar-González algorithm
+    - Del Corso–Manzini algorithm
+    - Del Corso–Manzini algorithm with perimeter search
+    - Saxe–Gurari–Sudborough algorithm
   - *Heuristic*
-    - Gibbs&ndash;Poole&ndash;Stockmeyer algorithm
-    - Cuthill&ndash;McKee algorithm
-    - Reverse Cuthill&ndash;McKee algorithm
+    - Gibbs–Poole–Stockmeyer algorithm
+    - Cuthill–McKee algorithm
+    - Reverse Cuthill–McKee algorithm
   - *Metaheuristic*
     - Greedy randomized adaptive search procedure (GRASP)
     - Simulated annealing
     - Genetic algorithm
 - **Recognition**
-  - Caprara&ndash;Salazar-González algorithm
-  - Del Corso&ndash;Manzini algorithm
-  - Del Corso&ndash;Manzini algorithm with perimeter search
-  - Saxe&ndash;Gurari&ndash;Sudborough algorithm
+  - Caprara–Salazar-González algorithm
+  - Del Corso–Manzini algorithm
+  - Del Corso–Manzini algorithm with perimeter search
+  - Saxe–Gurari–Sudborough algorithm
 
 (As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested.)
 
