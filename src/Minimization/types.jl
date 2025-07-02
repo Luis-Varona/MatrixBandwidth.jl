@@ -63,12 +63,12 @@ Base.summary(res::BandMinResult) = summary(res.solver)
 function Base.show(io::IO, res::BandMinResult)
     n = size(res.matrix, 1)
 
-    println(io, "Results of Matrix Bandwidth Minimization")
+    println(io, "Results of Bandwidth Minimization Algorithm")
     println(io, " * Algorithm: $(summary(res.solver))")
-    println(io, " * Approach: $(titlecase(string(res.approach)))")
-    println(io, " * Minimum bandwidth: $(res.bandwidth)")
-    println(io, " * Original bandwidth: $(bandwidth(res.matrix))")
-    print(io, " * Matrix size: $n×$n")
+    println(io, " * Approach: $(string(res.approach))")
+    println(io, " * Minimum Bandwidth: $(res.bandwidth)")
+    println(io, " * Original Bandwidth: $(bandwidth(res.matrix))")
+    print(io, " * Matrix Size: $n×$n")
 
     return nothing
 end

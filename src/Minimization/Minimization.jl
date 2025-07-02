@@ -45,7 +45,7 @@ module Minimization
 #! format: off
 import ..NotImplementedError
 import ..bandwidth
-import .._assert_matrix_is_square, .._symmetrize
+import .._assert_matrix_is_square, .._isolate_nonzero_support, .._symmetrize
 #! format: on
 
 include("types.jl")

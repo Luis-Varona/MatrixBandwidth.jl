@@ -26,27 +26,28 @@ relatively small matrices.
 
 On the other hand, the *matrix bandwidth recognition problem* [TODO: Write here]
 
-The following algorithms are currently supported [TODO: Add refs for `Recognition` later]:
+The following algorithms are currently supported:
 - **Minimization**
     - *Exact*
-        - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
-        - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
+        - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
+        - Del Corso–Manzini algorithm ([`Minimization.DelCorsoManzini`](@ref))
         - Del Corso–Manzini algorithm with perimeter search
-          ([`DelCorsoManziniWithPS`](@ref))
-        - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+          ([`Minimization.DelCorsoManziniWithPS`](@ref))
+        - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
     - *Heuristic*
-        - Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
-        - Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
-        - Reverse Cuthill–McKee algorithm ([`ReverseCuthillMcKee`](@ref))
+        - Gibbs–Poole–Stockmeyer algorithm ([`Minimization.GibbsPooleStockmeyer`](@ref))
+        - Cuthill–McKee algorithm ([`Minimization.CuthillMcKee`](@ref))
+        - Reverse Cuthill–McKee algorithm ([`Minimization.ReverseCuthillMcKee`](@ref))
     - *Metaheuristic*
-        - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
-        - Simulated annealing ([`SimulatedAnnealing`](@ref))
-        - Genetic algorithm ([`GeneticAlgorithm`](@ref))
+        - Greedy randomized adaptive search procedure (GRASP) ([`Minimization.GRASP`](@ref))
+        - Simulated annealing ([`Minimization.SimulatedAnnealing`](@ref))
+        - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
-    - Caprara–Salazar-González algorithm
-    - Del Corso–Manzini algorithm
+    - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
+    - Del Corso–Manzini algorith ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search
-    - Saxe–Gurari–Sudborough algorithm
+      ([`Recognition.DelCorsoManziniWithPS`](@ref))
+    - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
 
 [Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
 the latest development version of this package.

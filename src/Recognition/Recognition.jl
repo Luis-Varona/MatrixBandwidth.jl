@@ -17,38 +17,38 @@ zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry
 
 The *matrix bandwidth recognition problem* [TODO: Write here]
 
-The following algorithms are currently supported [TODO: Add refs later]:
-- Caprara–Salazar-González algorithm
-- Del Corso–Manzini algorithm
-- Del Corso–Manzini algorithm with perimeter search
-- Saxe–Gurari–Sudborough algorithm
+The following algorithms are currently supported:
+- Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
+- Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
+- Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+- Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
 
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
 """
 module Recognition
-# TODO: Add comments
 
 #! format: off
 import ..NotImplementedError
 import ..bandwidth
-import .._symmetrize
+import .._assert_matrix_is_square, .._isolate_nonzero_support, .._symmetrize
 #! format: on
 
-# include("types.jl")
-# include("core.jl")
+include("types.jl")
+include("core.jl")
 
-# include("deciders/caprara_salazar_gonzalez.jl")
-# include("deciders/del_corso_manzini.jl")
-# include("deciders/del_corso_manzini_with_ps.jl")
-# include("deciders/saxe_gurari_sudborough.jl")
+include("deciders/caprara_salazar_gonzalez.jl")
+include("deciders/del_corso_manzini.jl")
+include("deciders/del_corso_manzini_with_ps.jl")
+include("deciders/saxe_gurari_sudborough.jl")
 
-# export BandRecogResult, has_bandwidth_k_ordering
-# export CapraraSalazarGonzalez, # Recognition algorithms
-#     DelCorsoManzini,
-#     DelCorsoManziniWithPS,
-#     SaxeGurariSudborough
+# THe output struct and core recognition function
+export BandRecogResult, has_bandwidth_k_ordering
+export CapraraSalazarGonzalez, # Recognition algorithms
+    DelCorsoManzini,
+    DelCorsoManziniWithPS,
+    SaxeGurariSudborough
 
-# const DEFAULT_DECIDER = CapraraSalazarGonzalez()
+const DEFAULT_DECIDER = CapraraSalazarGonzalez()
 
 end

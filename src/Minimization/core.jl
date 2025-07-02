@@ -50,19 +50,10 @@ function minimize_bandwidth(
 ) where {T<:Number}
     _assert_matrix_is_square(A) # Bandwidth is not defined for non-square matrices
 
-    #= Converting entries to booleans can improve performance via cache optimizations,
-    bitwise operations, etc. (If `A` is already an `AbstractMatrix{Bool}`, we simply alias
-    to `A_bool` rather than copying to avoid reallocation overhead.) =#
-    if T === Bool
-        A_bool = A
-    else
-        A_bool = (!iszero).(A)
-    end
-
-    #= Any simultaneous row and column permutation preserves diagonal entries, so we set the
-    diagonal of `A_bool` to false for simplicity and for consistency with any solvers (e.g.,
-    MB-ID) that utilize an assumed adjacency matrix structure. =#
-    foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
+    #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
+    values. We also set every diagonal entry to `false` for consistency with any algorithms
+    that assume an adjacency matrix structure. =#
+    A_bool = _isolate_nonzero_support(A)
 
     bandwidth_orig = bandwidth(A_bool)
 

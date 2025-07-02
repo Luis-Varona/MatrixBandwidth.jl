@@ -42,5 +42,30 @@ bandwidth of an empty matrix is simply ``0``.)
 function has_bandwidth_k_ordering(
     A::AbstractMatrix{T}, k::Int, decider::AbstractDecider=DEFAULT_DECIDER
 ) where {T<:Number}
-    # TODO: Implement
+    _assert_matrix_is_square(A) # Bandwidth is not defined for non-square matrices
+
+    # We are only concerned with which entries are nonzero, not the corresponding values
+    A_bool = _cast_to_bool_matrix(A)
+
+    # TODO: Add also degree bound from Sax80 and density bound from CSG05 as preliminaries
+
+    bandwidth_orig = bandwidth(A_bool)
+
+    #= If the bandwidth of `A` is already less than or equal to `k`, then the current
+    row/column ordering suffices. =#
+    if bandwidth_orig <= k
+        bandwidth_k_ordering = collect(axes(A_bool, 1)) # The original ordering
+    else
+        # TODO: Comment here
+        bandwidth_k_ordering = _bool_bandwidth_k_ordering(A_bool, k, decider)
+    end
+
+    return BandRecogResult(A_bool, k, bandwidth_k_ordering, decider)
+end
+
+# TODO: Summarize here. Returns either `nothing` or a `Vector{Int}`.
+function _bool_bandwidth_k_ordering(
+    ::AbstractMatrix{Bool}, ::Int, ::T
+) where {T<:AbstractDecider}
+    throw(NotImplementedError(_bool_bandwidth_k_ordering, :decider, T, AbstractSolver))
 end

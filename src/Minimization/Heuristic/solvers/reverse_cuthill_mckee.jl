@@ -67,12 +67,12 @@ julia> bandwidth(A_shuffled) # Much larger after shuffling
 44
 
 julia> res = minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee())
-Results of Matrix Bandwidth Minimization
+Results of Bandwidth Minimization Algorithm
  * Algorithm: Reverse Cuthill–McKee algorithm
- * Approach: Heuristic
- * Minimum bandwidth: 4
- * Original bandwidth: 44
- * Matrix size: 45×45
+ * Approach: heuristic
+ * Minimum Bandwidth: 4
+ * Original Bandwidth: 44
+ * Matrix Size: 45×45
 ```
 
 Reverse Cuthill–McKee finds a near-optimal ordering for an asymmetric ``251×251`` matrix
@@ -179,12 +179,12 @@ julia> bandwidth(A_shuffled) # Much larger after shuffling
 239
 
 julia> res # Gets very close to the true minimum
-Results of Matrix Bandwidth Minimization
+Results of Bandwidth Minimization Algorithm
  * Algorithm: Reverse Cuthill–McKee algorithm
- * Approach: Heuristic
- * Minimum bandwidth: 10
- * Original bandwidth: 239
- * Matrix size: 251×251
+ * Approach: heuristic
+ * Minimum Bandwidth: 10
+ * Original Bandwidth: 239
+ * Matrix Size: 251×251
 ```
 
 # Notes

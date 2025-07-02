@@ -189,6 +189,24 @@ function _assert_matrix_is_square(A::AbstractMatrix{T}) where {T<:Number}
     end
 end
 
+#= Converting entries to booleans can improve performance via cache optimizations, bitwise
+operations, etc. (If `A` is already an `AbstractMatrix{Bool}`, we simply alias to `A_bool`
+rather than copying to avoid reallocation overhead.) =#
+function _isolate_nonzero_support(A::AbstractMatrix{T}) where {T<:Number}
+    if T === Bool
+        A_bool = A
+    else
+        A_bool = (!iszero).(A)
+    end
+
+    #= Any simultaneous row and column permutation preserves diagonal entries, so we set the
+    diagonal of `A_bool` to false for simplicity and for consistency with any solvers (e.g.,
+    Caprara–Salazar-González) that assume an adjacency matrix structure. =#
+    foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
+
+    return A_bool
+end
+
 # TODO: Summarize here
 function _symmetrize(A::AbstractMatrix{Bool})
     if A != A'
@@ -198,4 +216,9 @@ function _symmetrize(A::AbstractMatrix{Bool})
     end
 
     return A_sym
+end
+
+# TODO: Summarize here
+function _bandwidth_lower_bound(A::AbstractMatrix{Bool})
+    # TODO: Implement (based on CSG05). Compute alpha and gamma together, not separately.
 end
