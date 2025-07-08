@@ -43,9 +43,12 @@ This submodule is part of the
 module Minimization
 
 #! format: off
-import ..NotImplementedError
-import ..bandwidth
-import .._assert_matrix_is_square, .._isolate_nonzero_support, .._symmetrize
+import ..Recognition
+import ..AbstractAlgorithm, ..AbstractProblemResult
+import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
+import ..bandwidth, ..bandwidth_lower_bound
+import .._requires_symmetry, .._problem
+import .._find_direct_subtype, .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
 include("types.jl")
@@ -58,7 +61,7 @@ include("Metaheuristic/Metaheuristic.jl")
 using .Exact, .Heuristic, .Metaheuristic
 
 # The output struct and core minimization function
-export BandMinResult, minimize_bandwidth
+export MinimizationResult, minimize_bandwidth
 export CapraraSalazarGonzalez, # Exact solvers
     DelCorsoManzini,
     DelCorsoManziniWithPS,

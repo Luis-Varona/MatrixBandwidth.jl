@@ -11,7 +11,9 @@ TODO: Write here
 """
 struct CapraraSalazarGonzalez <: ExactSolver end
 
-Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González algorithm"
+Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
+
+_requires_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez)
     # TODO: Implement

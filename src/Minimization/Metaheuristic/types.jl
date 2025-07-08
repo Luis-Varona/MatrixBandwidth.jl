@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    MetaheuristicSolver <: AbstractSolver
+    MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 TODO: Write here
 """

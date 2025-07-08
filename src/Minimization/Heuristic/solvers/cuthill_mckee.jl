@@ -15,10 +15,7 @@ degree. Particularly effective when ``A`` is sparse, this heuristic typically pr
 ordering which induces a matrix bandwidth either equal to or very close to the true minimum
 [CM69; pp. 157--58](@cite).
 
-We also extend the algorithm to work more generally when ``A`` is not symmetric by applying
-it to ``A + Aᵀ`` instead, as suggested in [RS06; p. 808](@cite). This approach still tends
-to produce a fairly good ordering, but it is not guaranteed to be as optimal as directly
-applying Cuthill–McKee to a symmetric input.
+As noted above, the input matrix must be symmetric for Cuthill–McKee to work.
 
 # Fields
 - `node_selector::Function`: a function that selects a node from some connected component of
@@ -27,8 +24,7 @@ applying Cuthill–McKee to a symmetric input.
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Performance
-Given an ``n×n`` input matrix ``A``, our implementation of Cuthill–McKee runs in ``O(n^2)``
-time, where ``n`` is the number of rows/columns of the input matrix.
+Given an ``n×n`` input matrix ``A``, the Cuthill–McKee algorithm runs in ``O(n²)`` time.
 
 [CG80](@cite) provide a linear-time implementation in the number of nonzero entries of
 ``A``, which is still quadratic when ``A`` is dense but often much faster when dealing with
@@ -206,20 +202,18 @@ struct CuthillMcKee <: HeuristicSolver
     end
 end
 
-Base.summary(::CuthillMcKee) = "Cuthill–McKee algorithm"
+Base.summary(::CuthillMcKee) = "Cuthill–McKee"
+
+_requires_symmetry(::CuthillMcKee) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
-    n = size(A, 1)
-    A_sym = _symmetrize(A)
-    A_sym[1:(n + 1):end] .= false
-
     node_selector = solver.node_selector
-    components = _connected_components(A_sym)
-    ordering = Vector{Int}(undef, n)
+    components = _connected_components(A)
+    ordering = Vector{Int}(undef, size(A, 1))
     k = 1
 
     for component in components
-        submatrix = A_sym[component, component]
+        submatrix = A[component, component]
         component_ordering = _connected_cuthill_mckee_ordering(submatrix, node_selector)
 
         component_size = length(component)

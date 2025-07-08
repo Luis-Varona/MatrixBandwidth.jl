@@ -19,14 +19,11 @@ produced by application of Cuthill–McKee; it was found in [Geo71; pp. 114--15]
 although the bandwidth remains the same, this tends to produce a more optimal *matrix
 profile* (a measure of how far, on average, nonzero entries are from the diagonal).
 
-We also extend the algorithm to work more generally when ``A`` is not symmetric by applying
-it to ``A + Aᵀ`` instead, as suggested in [RS06; p. 808](@cite). This approach still tends
-to produce a fairly good ordering, but it is not guaranteed to be as optimal as directly
-applying reverse Cuthill–McKee to a symmetric input.
+As noted above, the input matrix must be symmetric for reverse Cuthill–McKee to work.
 
 # Performance
-Given an ``n×n`` input matrix ``A``, our implementation of Cuthill–McKee runs in ``O(n^2)``
-time, where ``n`` is the number of rows/columns of the input matrix.
+Given an ``n×n`` input matrix ``A``, the reverse Cuthill–McKee algorithm runs in ``O(n²)``
+time.
 
 [CG80](@cite) provide a linear-time implementation in the number of nonzero entries of
 ``A``, which is still quadratic when ``A`` is dense but often much faster when dealing with
@@ -206,7 +203,9 @@ struct ReverseCuthillMcKee <: HeuristicSolver
     end
 end
 
-Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee algorithm"
+Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee"
+
+_requires_symmetry(::ReverseCuthillMcKee) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee)
     return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_selector)))

@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    minimize_bandwidth(A, solver=ReverseCuthillMcKee()) -> BandMinResult
+    minimize_bandwidth(A, solver=ReverseCuthillMcKee()) -> MinimizationResult
 
 Minimize the bandwidth of `A` using the algorithm defined by `solver`.
 
@@ -24,14 +24,14 @@ still producing near-optimal orderings in practice. Exact methods like
 complexity and thus only feasible for relatively small matrices.
 
 # Arguments
-- `A::AbstractMatrix{T}`: the (square) matrix whose bandwidth is to be minimized.
+- `A::AbstractMatrix{<:Number}`: the (square) matrix whose bandwidth is minimized.
 - `solver::AbstractSolver`: the matrix bandwidth minimization algorithm to use; defaults to
     [`ReverseCuthillMcKee`](@ref). (See the [`Minimization`](@ref) module documentation for
     a full list of supported solvers.)
 
 # Returns
-- `::BandMinResult`: a struct containing the original matrix `A`, the minimized bandwidth,
-    the (near-)optimal ordering of the rows and columns, and the algorithm used.
+- `::MinimizationResult`: a struct containing the original matrix `A`, the minimized
+    bandwidth, the (near-)optimal ordering of the rows and columns, and the algorithm used.
 
 # Examples
 [TODO: Add here once more solvers are implemented]
@@ -46,14 +46,20 @@ tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that 
 bandwidth of an empty matrix is simply ``0``.)
 """
 function minimize_bandwidth(
-    A::AbstractMatrix{T}, solver::AbstractSolver=DEFAULT_SOLVER
-) where {T<:Number}
-    _assert_matrix_is_square(A) # Bandwidth is not defined for non-square matrices
+    A::AbstractMatrix{<:Number}, solver::AbstractSolver=DEFAULT_SOLVER
+)
+    if !allequal(size(A))
+        throw(RectangularMatrixError(A))
+    end
+
+    if _requires_symmetry(solver) && !_is_structurally_symmetric(A)
+        throw(StructuralAsymmetryError(A, solver))
+    end
 
     #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
     values. We also set every diagonal entry to `false` for consistency with any algorithms
     that assume an adjacency matrix structure. =#
-    A_bool = _isolate_nonzero_support(A)
+    A_bool = _offdiag_nonzero_support(A)
 
     bandwidth_orig = bandwidth(A_bool)
 
@@ -76,23 +82,13 @@ function minimize_bandwidth(
         end
     end
 
-    return BandMinResult(A, bandwidth_min, ordering, solver)
+    return MinimizationResult(solver, A, ordering, bandwidth_min)
 end
 
 #= Compute a minimal bandwidth ordering for a preprocessed `AbstractMatrix{Bool}`.
 Restricting entries to booleans can improve performance via cache optimizations, bitwise
-operations, etc. Each concrete `AbstractSolver` subtype must implement its own
+operations, etc. Each concrete subtype of `AbstractSolver` must implement its own
 `_bool_minimal_band_ordering` method to define the corresponding algorithm logic. =#
 function _bool_minimal_band_ordering(::AbstractMatrix{Bool}, ::T) where {T<:AbstractSolver}
-    S = supertype(T)
-
-    if S === AbstractSolver
-        subtype = T
-    else
-        subtype = S
-    end
-
-    throw(
-        NotImplementedError(_bool_minimal_band_ordering, :solver, subtype, AbstractSolver)
-    )
+    throw(NotImplementedError(_bool_minimal_band_ordering, :solver, T, AbstractSolver))
 end

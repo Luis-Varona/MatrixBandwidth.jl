@@ -11,7 +11,9 @@ TODO: Write here
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 
-Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González algorithm"
+Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
+
+_requires_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Int, ::CapraraSalazarGonzalez

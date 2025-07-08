@@ -11,7 +11,9 @@ TODO: Write here
 """
 struct SaxeGurariSudborough <: ExactSolver end
 
-Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough algorithm"
+Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
+
+_requires_symmetry(::SaxeGurariSudborough) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::SaxeGurariSudborough)
     # TODO: Implement

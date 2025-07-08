@@ -57,17 +57,28 @@ module MatrixBandwidth
 using Random
 
 include("utils.jl")
+include("types.jl")
 include("core.jl")
 
-include("Minimization/Minimization.jl")
 include("Recognition/Recognition.jl")
+include("Minimization/Minimization.jl")
 
 using .Minimization, .Recognition
 
-export Minimization, Recognition # TODO: Comment here
-export bandwidth # Raw matrix bandwidth computation (with the current permutation)
-export BandMinResult, minimize_bandwidth # Matrix bandwidth minimization
-# export BandRecogResult, has_bandwidth_k_ordering # Matrix bandwidth recognition
-export random_banded_matrix # Random banded matrix generation for test data
+#= Module exports: allows users to call solvers like `Minimization.ReverseCuthillMcKee` and
+deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exported at the
+top level due to name conflicts between `Minimization` and `Recognition`. =#
+export Minimization, Recognition
+
+#= Core exports: the original bandwidth (before any reordering) and an `O(n³)` lower bound
+from Caprara and Salazar-González (2005). (This bound is not tight.) =#
+export bandwidth, bandwidth_lower_bound
+
+#= `Minimization` and `Recognition` exports: the core bandwidth minimization and recognition
+functions. =#
+export minimize_bandwidth, has_bandwidth_k_ordering
+
+# Utility exports: just a random banded matrix generator for now. Useful for test data.
+export random_banded_matrix
 
 end

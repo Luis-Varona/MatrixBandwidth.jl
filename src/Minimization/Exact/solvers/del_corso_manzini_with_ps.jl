@@ -23,7 +23,9 @@ struct DelCorsoManziniWithPS <: ExactSolver
     end
 end
 
-Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini algorithm with perimeter search"
+Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
+
+_requires_symmetry(::DelCorsoManziniWithPS) = true
 
 function _optimal_mbps_depth(A::AbstractMatrix{Bool})
     n = size(A, 1)

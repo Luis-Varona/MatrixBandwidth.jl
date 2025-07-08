@@ -23,7 +23,9 @@ struct DelCorsoManziniWithPS <: AbstractDecider
     end
 end
 
-Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini algorithm with perimeter search"
+Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
+
+_requires_symmetry(::DelCorsoManziniWithPS) = true
 
 # TODO: Implement the rest. Might need to extract stuff out from the minimization version.
 

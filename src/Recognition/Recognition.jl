@@ -29,9 +29,11 @@ This submodule is part of the
 module Recognition
 
 #! format: off
-import ..NotImplementedError
-import ..bandwidth
-import .._assert_matrix_is_square, .._isolate_nonzero_support, .._symmetrize
+import ..AbstractAlgorithm, ..AbstractProblemResult
+import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
+import ..bandwidth, ..bandwidth_lower_bound
+import .._problem
+import .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
 include("types.jl")
@@ -43,7 +45,7 @@ include("deciders/del_corso_manzini_with_ps.jl")
 include("deciders/saxe_gurari_sudborough.jl")
 
 # THe output struct and core recognition function
-export BandRecogResult, has_bandwidth_k_ordering
+export RecognitionResult, has_bandwidth_k_ordering
 export CapraraSalazarGonzalez, # Recognition algorithms
     DelCorsoManzini,
     DelCorsoManziniWithPS,

@@ -5,60 +5,6 @@
 # distributed except according to those terms.
 
 """
-    NotImplementedError(f, arg, subtype, abstracttype)
-
-An exception indicating that a function lacks dispatch to handle a specific argument type.
-
-Semantically, this differs from `MethodError` in that it connotes a developer-side failure
-to implement a method rather than erroneous user input. Throughout this package, it is often
-used to warn when an existing function with multiple dispatch on some abstract type is
-called on a newly created subtype for which no method has been defined.
-
-# Fields
-- `f::Function`: the function called.
-- `arg::Symbol`: the name of the argument with the unsupported type.
-- `subtype::Type`: the type of the argument. May be the actual concrete type or some
-    intermediate supertype. (For instance, if the relevant input has concrete type `A` with
-    hierarchy `A <: B <: C` and the `abstracttype` field is `C`, then both `A` and `B` are
-    perfectly valid choices for `subtype`.)
-- `abstracttype::Type`: the abstract type under which the argument is meant to fall.
-
-# Constructors
-- `NotImplementedError(::Function, ::Symbol, ::Type, ::Type)`: constructs a new
-    `NotImplementedError` instance. Throws an error if the second type is not abstract or
-    the first type is not a subtype of the second.
-"""
-struct NotImplementedError <: Exception
-    f::Function
-    arg::Symbol
-    subtype::Type
-    abstracttype::Type
-
-    function NotImplementedError(
-        f::Function, arg::Symbol, subtype::Type, abstracttype::Type
-    )
-        if !isabstracttype(abstracttype)
-            throw(ArgumentError("Expected an abstract type, got $abstracttype"))
-        end
-
-        if !(subtype <: abstracttype)
-            throw(ArgumentError("Expected a subtype of $abstracttype, got $subtype"))
-        end
-
-        return new(f, arg, subtype, abstracttype)
-    end
-end
-
-function Base.showerror(io::IO, e::NotImplementedError)
-    return print(
-        io,
-        """NotImplementedError with argument $(e.arg)::$(e.subtype):
-        $(e.f) is not yet implemented for this subtype of $(e.abstracttype).
-        Try defining method dispatch manually if this is a newly created subtype.""",
-    )
-end
-
-"""
     random_banded_matrix(n, k; p=0.75, rng=default_rng()) -> Matrix{Float64}
 
 Generate a random `n×n` matrix with bandwidth exactly `k` and sparse bands with density `p`.
@@ -182,43 +128,47 @@ function random_banded_matrix(
     return A
 end
 
-# Validate that some matrix is square before attempting to minimize/compute its bandwidth
-function _assert_matrix_is_square(A::AbstractMatrix{T}) where {T<:Number}
-    if !allequal(size(A))
-        throw(ArgumentError("Matrix bandwidth is not defined for non-square matrices"))
+# Identify the highest supertype of `subtype` that is a subtype of `abstracttype`
+function _find_direct_subtype(abstracttype::Type, subtype::Type)
+    if !isabstracttype(abstracttype)
+        throw(ArgumentError("Expected an abstract type, got $abstracttype"))
     end
+
+    if !(subtype <: abstracttype)
+        throw(ArgumentError("Expected a subtype of $abstracttype, got $subtype"))
+    end
+
+    parent = supertype(subtype)
+
+    if parent === abstracttype
+        child = subtype
+    else
+        child = _find_direct_subtype(abstracttype, parent)
+    end
+
+    return child
 end
 
-#= Converting entries to booleans can improve performance via cache optimizations, bitwise
-operations, etc. (If `A` is already an `AbstractMatrix{Bool}`, we simply alias to `A_bool`
-rather than copying to avoid reallocation overhead.) =#
-function _isolate_nonzero_support(A::AbstractMatrix{T}) where {T<:Number}
+#= Check whether `A[i, j]` is nonzero if and only if `A[j, i]` is nonzero for all `i` and
+`j`. Instead of transposing `A` and allocating a new matrix, it suffices to iterate over all
+opposing pairs of off-diagonal entries. (`A` is assumed to be square.) =#
+function _is_structurally_symmetric(A::AbstractMatrix{<:Number})
+    n = size(A, 1)
+    return all((A[i, j] != 0) == (A[j, i] != 0) for i in 1:(n - 1) for j in (i + 1):n)
+end
+
+#= Convert `A` to a  to improve performance via cache optimizations, bitwise
+operations, etc. Any symmetric permutation preserves diagonal entries, so the diagonal of
+the output matrix is set to `false` for consistency with any algorithms that require an
+adjacency matrix structure. =#
+function _offdiag_nonzero_support(A::AbstractMatrix{T}) where {T<:Number}
     if T === Bool
-        A_bool = A
+        A_bool = BitMatrix(A) # Copy to avoid shared mutability
     else
         A_bool = (!iszero).(A)
     end
 
-    #= Any simultaneous row and column permutation preserves diagonal entries, so we set the
-    diagonal of `A_bool` to false for simplicity and for consistency with any solvers (e.g.,
-    Caprara–Salazar-González) that assume an adjacency matrix structure. =#
     foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
 
     return A_bool
-end
-
-# TODO: Summarize here
-function _symmetrize(A::AbstractMatrix{Bool})
-    if A != A'
-        A_sym = A .|| A'
-    else
-        A_sym = A
-    end
-
-    return A_sym
-end
-
-# TODO: Summarize here
-function _bandwidth_lower_bound(A::AbstractMatrix{Bool})
-    # TODO: Implement (based on CSG05). Compute alpha and gamma together, not separately.
 end

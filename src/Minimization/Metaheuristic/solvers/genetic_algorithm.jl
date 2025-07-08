@@ -15,6 +15,8 @@ end
 
 Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
+_requires_symmetry(::GeneticAlgorithm) = false
+
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GeneticAlgorithm)
     # TODO: Implement
 end
