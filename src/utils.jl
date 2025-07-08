@@ -5,20 +5,26 @@
 # distributed except according to those terms.
 
 """
-    random_banded_matrix(n, k; p=0.75, rng=default_rng()) -> Matrix{Float64}
+    random_banded_matrix(n, k; p=0.5, rng=default_rng()) -> Matrix{Float64}
 
-Generate a random `n×n` matrix with bandwidth exactly `k` and sparse bands with density `p`.
+Generate a random `n×n` structurally symmetric `k`-banded matrix with band density `≈ p`.
 
-All entries from this matrix will be from the interval `[0, 1]`. Entries up to the `k`-th
-superdiagonal and down to the `k`-th subdiagonal are nonzero with probability `p`, and each
-band has at least one nonzero entry to ensure that the bandwidth is precisely `k`.
+By definition of structural symmetry, the ``(i, j)``-th entry of the matrix is nonzero if
+and only if the ``(j, i)``-th entry is nonzero as well. All entries from this matrix are
+from the interval `[0, 1]`. Entries up to the `k`-th superdiagonal and down to the `k`-th
+subdiagonal are nonzero with probability `p`.
+
+It is also guaranteed that each of these bands (besides the main diagonal) has at least one
+nonzero entry (even when `p` is very small), thus ensuring that th matrix has bandwidth
+precisely `k` before any reordering. (There may, however, still exist a symmetric
+permutation inducing a minimum bandwidth less than `k`, especially for small values of `p`.)
 
 # Arguments
 - `n::Int`: the order of the matrix to generate. Must be positive.
 - `k::Int`: the desired matrix bandwidth. Must satisfy `0 ≤ k < n`.
 
 # Keyword Arguments
-- `p::Real=0.75`: the band density. Must satisfy `0 < p ≤ 1`.
+- `p::Real=0.5`: the band density. Must satisfy `0 < p ≤ 1`. Defaults to `0.5`.
 - `rng::AbstractRNG=Random.default_rng()`: the random number generator to use. Defaults to
     `Random.default_rng()`.
 
@@ -33,49 +39,49 @@ julia> using Random
 
 julia> A = random_banded_matrix(6, 1; p=1, rng=MersenneTwister(1228))
 6×6 Matrix{Float64}:
- 0.918835  0.816296   0.0       0.0        0.0       0.0
- 0.182127  0.782844   0.616169  0.0        0.0       0.0
- 0.0       0.0445171  0.916205  0.730272   0.0       0.0
- 0.0       0.0        0.966811  0.414062   0.210912  0.0
- 0.0       0.0        0.0       0.0150353  0.135984  0.558082
- 0.0       0.0        0.0       0.0        0.428772  0.329567
+ 0.310239  0.346413  0.0       0.0        0.0       0.0
+ 0.509981  0.917073  0.390771  0.0        0.0       0.0
+ 0.0       0.760045  0.808396  0.0195686  0.0       0.0
+ 0.0       0.0       0.222338  0.853164   0.806888  0.0
+ 0.0       0.0       0.0       0.421603   0.132165  0.805813
+ 0.0       0.0       0.0       0.0        0.305339  0.0799183
 
 julia> bandwidth(A)
 1
 ```
 
-Generate a ``7×7`` matrix with bandwidth ``3`` and band density `0.3`:
+Generate a ``7×7`` matrix with bandwidth ``3`` and band density ``0.3``:
 ```jldoctest
 julia> using Random
 
 julia> A = random_banded_matrix(7, 3; p=0.3, rng=MersenneTwister(0402))
 7×7 Matrix{Float64}:
- 0.856072  0.720893  0.0       0.0       0.0       0.0        0.0
- 0.0       0.0       0.0       0.646516  0.845229  0.0        0.0
- 0.997473  0.773515  0.854375  0.926462  0.21636   0.0        0.0
- 0.0       0.516052  0.220979  0.844818  0.0       0.0395003  0.568892
- 0.0       0.402696  0.499802  0.0       0.304168  0.237423   0.0
- 0.0       0.0       0.0       0.0       0.0       0.0        0.877917
- 0.0       0.0       0.0       0.101071  0.0       0.0        0.829221
+ 0.0       0.132699  0.0       0.0       0.0  0.0       0.0
+ 0.869352  0.0       0.324319  0.926496  0.0  0.0       0.0
+ 0.0       0.891878  0.0       0.658102  0.0  0.0       0.0
+ 0.0       0.88859   0.399559  0.0       0.0  0.284285  0.703377
+ 0.0       0.0       0.0       0.0       0.0  0.0       0.0
+ 0.0       0.0       0.0       0.489594  0.0  0.0       0.393573
+ 0.0       0.0       0.0       0.412412  0.0  0.47063   0.0
 
 julia> bandwidth(A)
 3
 ```
 
-Generate an ``8×8`` diagonal (bandwidth ``0``) matrix with default band density (``0.75``):
+Generate an ``8×8`` diagonal (bandwidth ``0``) matrix with default band density (``0.5``):
 ```jldoctest
 julia> using Random
 
 julia> A = random_banded_matrix(8, 0; rng=MersenneTwister(0102))
 8×8 Matrix{Float64}:
- 0.781618  0.0      0.0       0.0  0.0        0.0      0.0       0.0
- 0.0       0.56589  0.0       0.0  0.0        0.0      0.0       0.0
- 0.0       0.0      0.966643  0.0  0.0        0.0      0.0       0.0
- 0.0       0.0      0.0       0.0  0.0        0.0      0.0       0.0
- 0.0       0.0      0.0       0.0  0.0412729  0.0      0.0       0.0
- 0.0       0.0      0.0       0.0  0.0        0.70196  0.0       0.0
- 0.0       0.0      0.0       0.0  0.0        0.0      0.494806  0.0
- 0.0       0.0      0.0       0.0  0.0        0.0      0.0       0.227507
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0762399  0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.373113  0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.726309  0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.41974  0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.293132
 
 julia> bandwidth(A)
 0
@@ -86,7 +92,7 @@ Users of the [`MatrixBandwidth`](@ref) package may find this function useful whe
 random test data for whatever frameworks, algorithms, etc. they are implementing.
 """
 function random_banded_matrix(
-    n::Int, k::Int; p::Real=0.75, rng::AbstractRNG=Random.default_rng()
+    n::Int, k::Int; p::Real=0.5, rng::AbstractRNG=Random.default_rng()
 )
     if n <= 0
         throw(ArgumentError("Matrix order must be positive, got $n"))
@@ -106,22 +112,33 @@ function random_banded_matrix(
 
     A = zeros(Float64, n, n)
 
-    # Ensure that the main diagonal has at least one nonzero entry
-    diag_idx = rand(rng, 1:n)
-    A[diag_idx, diag_idx] = rand(rng)
-
-    #= Ensure that each superdiagonal and subdiagonal has at least one nonzero entry. (The
-    `is_upper` flag indicates whether we are filling a superdiagonal or subdiagonal.) =#
-    for offset in 1:k, is_upper in (true, false)
-        rows = ((1 + offset):n) .- is_upper * offset
-        cols = (1:(n - offset)) .+ is_upper * offset
-        idx = rand(rng, 1:length(rows))
-        A[rows[idx], cols[idx]] = rand(rng)
+    #= The main diagonal is handled separately to halve the number of operations and avoid
+    the need to ensure at least one nonzero entry (as this would not affect bandwidth). =#
+    for i in 1:n
+        if rand(rng) < p
+            A[i, i] = rand(rng)
+        end
     end
 
-    for i in 1:n, j in max(1, i - k):(min(n, i + k))
-        if rand(rng) < p
-            A[i, j] = rand(rng)
+    #= Conditionally add entries to the superdiagonals and subdiagonals (up to the `k`-th)
+    based on the band density `p`. =#
+    for d in 1:k
+        feasible_indices = 1:(n - d)
+
+        for i in feasible_indices
+            if rand(rng) < p
+                A[i, i + d] = rand(rng)
+                A[i + d, i] = rand(rng)
+            end
+        end
+
+        #= Ensure that the `d`-th superdiagonal and subdiagonal each have at least one
+        nonzero entry for `1 ≤ d ≤ k`, making a `bandwidth < k` symmetric permutation less
+        likely. (Given structural symmetry, we need only check for empty superdiagonals.) =#
+        if iszero(map(i -> A[i, i + d], feasible_indices))
+            i = rand(rng, feasible_indices)
+            A[i, i + d] = rand(rng)
+            A[i + d, i] = rand(rng)
         end
     end
 
