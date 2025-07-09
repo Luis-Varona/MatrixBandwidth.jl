@@ -95,11 +95,11 @@ function _is_compatible(
     l = length(adj_list)
     latest_positions = Vector{Int}(undef, l)
 
-    for (i, neighbour) in enumerate(adj_list)
+    for (i, neighbor) in enumerate(adj_list)
         latest_position = typemax(Int)
 
         for (j, placed_node) in enumerate(view(ordering, 1:depth))
-            if A[neighbour, placed_node]
+            if A[neighbor, placed_node]
                 latest_position = min(latest_position, k + j)
             end
         end
