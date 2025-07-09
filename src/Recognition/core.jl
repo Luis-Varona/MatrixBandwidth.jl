@@ -9,13 +9,23 @@
 
 Determine whether `A` has bandwidth at most `k` using the algorithm defined by `decider`.
 
-The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k ∈ ℕ`` such
-that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most*
-``k`` if all entries above the ``k``-th superdiagonal and below the ``k``-th subdiagonal are
-zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
-``k``-th superdiagonal or subdiagonal.
+The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
+``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
+has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
+``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 
-This function [TODO: Write here]
+Given some fixed non-negative integer `k`, this function determines (with 100% certainty)
+whether there exists some ordering ``π`` of the rows and columns of ``A`` such that the
+bandwidth of ``PAPᵀ`` is at most `k`, where ``P`` is the permutation matrix corresponding to
+``π``. This is known to be decidable in ``O(nᵏ)`` time, although some deciders (e.g.,
+[`CapraraSalazarGonzalez`](@ref)) run in exponential time instead to produce even quicker
+runtimes in practice.
+
+If ``k ≥ n - 1``, then this function immediately answers in the affirmative, since the
+maximum possible bandwidth of an ``n×n`` matrix is ``n - 1``. After this initial check, a
+preliminary lower bound on the bandwidth is computed in ``O(n³)`` time using results from
+Caprara and Salazar-González (2005). If this lower bound is greater than ``k```
 
 # Arguments
 - `A::AbstractMatrix{<:Number}`: the (square) matrix whose bandwidth is tested.
@@ -25,7 +35,9 @@ This function [TODO: Write here]
     for a full list of supported deciders.)
 
 # Returns
-- `::RecognitionResult`: TODO: Write here
+- `::RecognitionResult`: a struct containing the algorithm used, the original matrix `A`,
+    the identified ordering of the rows and columns (if one exists), the threshold bandwidth
+    `k`, and a boolean indicating whether the ordering exists.
 
 # Examples
 [TODO: Add here once more deciders are implemented]

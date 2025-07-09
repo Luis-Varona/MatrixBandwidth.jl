@@ -9,11 +9,11 @@
 
 Minimize the bandwidth of `A` using the algorithm defined by `solver`.
 
-The *bandwidth* of a square matrix ``A`` is the minimum non-negative integer ``k ∈ ℕ`` such
-that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most*
-``k`` if all entries above the ``k``-th superdiagonal and below the ``k``-th subdiagonal are
-zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
-``k``-th superdiagonal or subdiagonal.
+The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
+``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
+has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
+``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 
 This function computes a (near-)optimal ordering ``π`` of the rows and columns of ``A`` so
 that the bandwidth of ``PAPᵀ`` is minimized, where ``P`` is the permutation matrix
@@ -30,8 +30,8 @@ complexity and thus only feasible for relatively small matrices.
     a full list of supported solvers.)
 
 # Returns
-- `::MinimizationResult`: a struct containing the original matrix `A`, the minimized
-    bandwidth, the (near-)optimal ordering of the rows and columns, and the algorithm used.
+- `::MinimizationResult`: a struct containing the algorithm used, the original matrix `A`,
+    the (near-)optimal ordering of the rows and columns, and the minimized bandwidth.
 
 # Examples
 [TODO: Add here once more solvers are implemented]
