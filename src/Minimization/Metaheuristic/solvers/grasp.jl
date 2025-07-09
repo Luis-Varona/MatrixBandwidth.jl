@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    GRASP <: MetaheuristicSolver <: AbstractSolver
+    GRASP <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 TODO: Write here
 """

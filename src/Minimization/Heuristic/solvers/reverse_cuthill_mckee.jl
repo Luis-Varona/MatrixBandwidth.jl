@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    ReverseCuthillMcKee <: HeuristicSolver <: AbstractSolver
+    ReverseCuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 The *reverse Cuthill–McKee algorithm* is a variant of the *Cuthill–McKee algorithm*—a
 heuristic method for minimizing the bandwidth of a symmetric matrix ``A``. Cuthill–McKee

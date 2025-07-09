@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    DelCorsoManziniWithPS <: AbstractDecider
+    DelCorsoManziniWithPS <: AbstractDecider <: AbstractAlgorithm
 
 TODO: Write here
 """

@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    CuthillMcKee <: HeuristicSolver <: AbstractSolver
+    CuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 The *Cuthill–McKee algorithm* is a heuristic method for minimizing the bandwidth of a
 symmetric matrix ``A``. It considers the graph ``G(A)`` whose adjacency matrix is ``A``
