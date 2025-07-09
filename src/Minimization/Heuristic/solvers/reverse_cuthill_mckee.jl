@@ -39,11 +39,11 @@ indeed consider supporting this more performant implementation for sparse matric
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Examples
-In the following examples, [`...random_banded_matrix`](@ref) is used to generate random
-matrices with minimum bandwidth *close to* ``k``. In some cases, however, the true minimum
-bandwidth up to symmetric permutation may be even less than ``k``, making it hard to verify
-whether reverse Cuthill–McKee finds a truly optimal ordering or simply a near-ordering one.
-Nevertheless, the results are still very good in practice.
+In the following examples, [`MatrixBandwidth.random_banded_matrix`](@ref) is used to
+generate random matrices with minimum bandwidth *close to* ``k``. In some cases, however,
+the true minimum bandwidth up to symmetric permutation may be even less than ``k``, making
+it hard to verify whether reverse Cuthill–McKee finds a truly optimal ordering or simply a
+near-optimal one. Nevertheless, the results are still very good in practice.
 
 Reverse Cuthill–McKee finds a good ordering for a ``35×35`` matrix whose rows and columns
 have been shuffled:
