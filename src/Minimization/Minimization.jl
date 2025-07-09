@@ -44,7 +44,7 @@ module Minimization
 
 #! format: off
 import ..Recognition
-import ..AbstractAlgorithm, ..AbstractProblemResult
+import ..AbstractAlgorithm, ..AbstractResult
 import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
 import .._requires_symmetry, .._problem

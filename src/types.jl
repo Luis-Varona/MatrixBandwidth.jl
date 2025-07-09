@@ -39,12 +39,12 @@ function _problem(::T) where {T<:AbstractAlgorithm}
 end
 
 """
-    AbstractProblemResult
+    AbstractResult
 
 Abstract base type for all matrix bandwidth problem results.
 
 # Interface
-Concrete subtypes of `AbstractProblemResult` *must* implement parametric types
+Concrete subtypes of `AbstractResult` *must* implement parametric types
 - `A<:AbstractAlgorithm`;
 - `M<:AbstractMatrix{<:Number}`; and
 - `O<:Union{Nothing,Vector{Int}}`,
@@ -55,9 +55,9 @@ alongside the following fields:
 - `ordering::O`: the corresponding ordering of the rows and columns, if a relevant one is
     found; otherwise, `nothing`.
 """
-abstract type AbstractProblemResult end
+abstract type AbstractResult end
 
-Base.summary(res::AbstractProblemResult) = summary(res.algorithm)
+Base.summary(res::AbstractResult) = summary(res.algorithm)
 
 """
     NotImplementedError{Nothing}(f, subtype, abstracttype)

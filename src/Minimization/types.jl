@@ -33,7 +33,7 @@ function _approach(::T) where {T<:AbstractSolver}
 end
 
 """
-    MinimizationResult{A,M,O} <: AbstractProblemResult
+    MinimizationResult{A,M,O} <: AbstractResult
 
 Output struct for matrix bandwidth minimization results.
 
@@ -51,7 +51,7 @@ Output struct for matrix bandwidth minimization results.
     automatically determined based on the algorithm type.
 """
 struct MinimizationResult{A<:AbstractSolver,M<:AbstractMatrix{<:Number},O<:Vector{Int}} <:
-       AbstractProblemResult
+       AbstractResult
     algorithm::A
     matrix::M
     ordering::O

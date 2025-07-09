@@ -22,7 +22,7 @@ abstract type AbstractDecider <: AbstractAlgorithm end
 _problem(::AbstractDecider) = :recognition
 
 """
-    RecognitionResult{A,M,O} <: AbstractProblemResult
+    RecognitionResult{A,M,O} <: AbstractResult
 
 Output struct for matrix bandwidth recognition results.
 
@@ -42,7 +42,7 @@ Output struct for matrix bandwidth recognition results.
 """
 struct RecognitionResult{
     A<:AbstractDecider,M<:AbstractMatrix{<:Number},O<:Union{Nothing,Vector{Int}}
-} <: AbstractProblemResult
+} <: AbstractResult
     algorithm::A
     matrix::M
     ordering::O

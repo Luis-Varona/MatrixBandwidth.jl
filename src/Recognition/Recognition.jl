@@ -33,7 +33,7 @@ This submodule is part of the
 module Recognition
 
 #! format: off
-import ..AbstractAlgorithm, ..AbstractProblemResult
+import ..AbstractAlgorithm, ..AbstractResult
 import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
 import .._problem
