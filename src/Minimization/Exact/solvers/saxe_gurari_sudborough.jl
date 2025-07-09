@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    SaxeGurariSudborough <: ExactSolver <: AbstractSolver
+    SaxeGurariSudborough <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
 
 TODO: Write here
 """

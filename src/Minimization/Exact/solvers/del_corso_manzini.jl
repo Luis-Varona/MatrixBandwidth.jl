@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    DelCorsoManzini <: ExactSolver <: AbstractSolver
+    DelCorsoManzini <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
 
 TODO: Write here
 """

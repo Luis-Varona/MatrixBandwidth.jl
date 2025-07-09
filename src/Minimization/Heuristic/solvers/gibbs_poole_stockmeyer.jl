@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    GibbsPooleStockmeyer <: HeuristicSolver <: AbstractSolver
+    GibbsPooleStockmeyer <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 TODO: Write here. Do we need a node selector?
 """
