@@ -15,7 +15,11 @@ that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth
 zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
-The *matrix bandwidth recognition problem* [TODO: Write here]
+The *matrix bandwidth recognition problem* entails determining whether there exists a
+permutation matrix ``P`` such that the bandwidth of ``PAPᵀ`` is at most some fixed
+non-negative integer ``k ∈ ℕ``—an optimal permutation that fully minimizes the bandwidth of
+``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in
+``O(nᵏ)`` time, where ``n`` is the order of ``A``.
 
 The following algorithms are currently supported:
 - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))

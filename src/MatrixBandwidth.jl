@@ -17,14 +17,18 @@ that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth
 zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so
+The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
 Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
 relatively small matrices.
 
-On the other hand, the *matrix bandwidth recognition problem* [TODO: Write here]
+On the other hand, the *matrix bandwidth recognition problem* entails determining whether
+there exists a permutation matrix ``P`` such that the bandwidth of ``PAPᵀ`` is at most some
+fixed non-negative integer ``k ∈ ℕ``—an optimal permutation that fully minimizes the
+bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is
+decidable in ``O(nᵏ)`` time, where ``n`` is the order of ``A``.
 
 The following algorithms are currently supported:
 - **Minimization**

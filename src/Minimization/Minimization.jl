@@ -15,7 +15,7 @@ that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth
 zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so
+The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like

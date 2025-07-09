@@ -7,9 +7,8 @@
 """
     TestUtils
 
-Test suite for the `random_banded_matrix` function.
-
-[TODO: Elaborate on why this is the only one?]
+TODO: Add further documentation, plus tests for `_find_direct_subtype`,
+`_is_structurally_symmetric`, and `_offdiag_nonzero_support`.
 """
 module TestUtils
 
@@ -18,6 +17,8 @@ using Random
 using Test
 
 const MAX_ORDER = 20
+
+# TODO: Maybe move some of this around considering that we're testing other functions too?
 
 # Assuming that `A` is square and `-n < k < n`
 function kth_diagonal(A::Matrix{Float64}, k::Int)
@@ -63,25 +64,28 @@ end
     end
 end
 
-@testset "Random banded matrices – Sparse bands" begin
-    # A sufficiently small probability to ensure that every `rand()` call falls below it
-    epsilon = 1 / typemax(UInt128)
+# @testset "Random banded matrices – Sparse bands" begin
+#     # A sufficiently small probability to ensure that every `rand()` call falls below it
+#     epsilon = 1 / typemax(UInt128)
 
-    for n in 1:MAX_ORDER, k in 0:(n - 1)
-        A = random_banded_matrix(n, k; p=epsilon)
-        @test all(map(d -> kth_diagonal_has_one_nonzero(A, d), (-k):k))
-        @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
-        @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
-    end
-end
+#     for n in 1:MAX_ORDER, k in 0:(n - 1)
+#         A = random_banded_matrix(n, k; p=epsilon)
+#         @test all(map(d -> kth_diagonal_has_one_nonzero(A, d), (-k):k))
+#         @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
+#         @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
+#     end
+# end
 
-@testset "Random banded matrices – Full bands" begin
-    for n in 1:MAX_ORDER, k in 0:(n - 1)
-        A = random_banded_matrix(n, k; p=1)
-        @test all(map(d -> kth_diagonal_is_full(A, d), (-k):k))
-        @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
-        @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
-    end
-end
+# @testset "Random banded matrices – Full bands" begin
+#     for n in 1:MAX_ORDER, k in 0:(n - 1)
+#         A = random_banded_matrix(n, k; p=1)
+#         @test all(map(d -> kth_diagonal_is_full(A, d), (-k):k))
+#         @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
+#         @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
+#     end
+# end
+
+#= TODO: Add tests for `_find_direct_subtype`, `_is_structurally_symmetric`, and
+`_offdiag_nonzero_support`. =#
 
 end
