@@ -49,7 +49,7 @@ The *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative in
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for relatively small matrices.
 
-On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is at most some fixed integer non-negative integer ``k \in \mathbb{N}``—an optimal permutation that fully minimizes the bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in ``O(n^k)`` time.
+On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is at most some fixed non-negative integer ``k \in \mathbb{N}``—an optimal permutation that fully minimizes the bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in ``O(n^k)`` time.
 
 ## Algorithms
 
