@@ -7,13 +7,16 @@
 """
     GibbsPooleStockmeyer <: HeuristicSolver <: AbstractSolver
 
-TODO: Write here
+TODO: Write here. Do we need a node selector?
 """
 struct GibbsPooleStockmeyer <: HeuristicSolver end
 
-Base.summary(::GibbsPooleStockmeyer) = "Gibbs–Poole–Stockmeyer algorithm"
+Base.summary(::GibbsPooleStockmeyer) = "Gibbs–Poole–Stockmeyer"
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::GibbsPooleStockmeyer)
+_requires_symmetry(::GibbsPooleStockmeyer) = true
+
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GibbsPooleStockmeyer)
     # TODO: Implement
+
     return Int[]
 end

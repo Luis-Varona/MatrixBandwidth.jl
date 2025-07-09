@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    Exact <: AbstractSolver
+    Exact <: AbstractSolver <: AbstractAlgorithm
 
 Abstract type for all exact matrix bandwidth minimization solvers.
 

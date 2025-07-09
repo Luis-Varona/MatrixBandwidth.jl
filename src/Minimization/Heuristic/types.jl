@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    HeuristicSolver <: AbstractSolver
+    HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 Abstract type for all heuristic matrix bandwidth minimization solvers.
 

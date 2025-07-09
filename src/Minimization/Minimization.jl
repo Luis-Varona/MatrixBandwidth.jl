@@ -15,7 +15,7 @@ that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth
 zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so
+The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
@@ -43,9 +43,12 @@ This submodule is part of the
 module Minimization
 
 #! format: off
-import ..NotImplementedError
-import ..bandwidth
-import .._assert_matrix_is_square, .._symmetrize
+import ..Recognition
+import ..AbstractAlgorithm, ..AbstractResult
+import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
+import ..bandwidth, ..bandwidth_lower_bound
+import .._requires_symmetry, .._problem
+import .._find_direct_subtype, .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
 include("types.jl")
@@ -58,7 +61,7 @@ include("Metaheuristic/Metaheuristic.jl")
 using .Exact, .Heuristic, .Metaheuristic
 
 # The output struct and core minimization function
-export BandMinResult, minimize_bandwidth
+export MinimizationResult, minimize_bandwidth
 export CapraraSalazarGonzalez, # Exact solvers
     DelCorsoManzini,
     DelCorsoManziniWithPS,

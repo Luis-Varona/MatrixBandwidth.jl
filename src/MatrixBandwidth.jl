@@ -17,36 +17,41 @@ that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth
 zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the
 ``k``-th superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* entails finding a permutation matrix ``P`` so
+The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
 Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
 relatively small matrices.
 
-On the other hand, the *matrix bandwidth recognition problem* [TODO: Write here]
+On the other hand, the *matrix bandwidth recognition problem* entails determining whether
+there exists a permutation matrix ``P`` such that the bandwidth of ``PAPᵀ`` is at most some
+fixed non-negative integer ``k ∈ ℕ``—an optimal permutation that fully minimizes the
+bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is
+decidable in ``O(nᵏ)`` time, where ``n`` is the order of ``A``.
 
-The following algorithms are currently supported [TODO: Add refs for `Recognition` later]:
+The following algorithms are currently supported:
 - **Minimization**
     - *Exact*
-        - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
-        - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
+        - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
+        - Del Corso–Manzini algorithm ([`Minimization.DelCorsoManzini`](@ref))
         - Del Corso–Manzini algorithm with perimeter search
-          ([`DelCorsoManziniWithPS`](@ref))
-        - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+          ([`Minimization.DelCorsoManziniWithPS`](@ref))
+        - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
     - *Heuristic*
-        - Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
-        - Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
-        - Reverse Cuthill–McKee algorithm ([`ReverseCuthillMcKee`](@ref))
+        - Gibbs–Poole–Stockmeyer algorithm ([`Minimization.GibbsPooleStockmeyer`](@ref))
+        - Cuthill–McKee algorithm ([`Minimization.CuthillMcKee`](@ref))
+        - Reverse Cuthill–McKee algorithm ([`Minimization.ReverseCuthillMcKee`](@ref))
     - *Metaheuristic*
-        - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
-        - Simulated annealing ([`SimulatedAnnealing`](@ref))
-        - Genetic algorithm ([`GeneticAlgorithm`](@ref))
+        - Greedy randomized adaptive search procedure (GRASP) ([`Minimization.GRASP`](@ref))
+        - Simulated annealing ([`Minimization.SimulatedAnnealing`](@ref))
+        - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
-    - Caprara–Salazar-González algorithm
-    - Del Corso–Manzini algorithm
+    - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
+    - Del Corso–Manzini algorith ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search
-    - Saxe–Gurari–Sudborough algorithm
+      ([`Recognition.DelCorsoManziniWithPS`](@ref))
+    - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
 
 [Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
 the latest development version of this package.
@@ -56,17 +61,28 @@ module MatrixBandwidth
 using Random
 
 include("utils.jl")
+include("types.jl")
 include("core.jl")
 
-include("Minimization/Minimization.jl")
 include("Recognition/Recognition.jl")
+include("Minimization/Minimization.jl")
 
 using .Minimization, .Recognition
 
-export Minimization, Recognition # TODO: Comment here
-export bandwidth # Raw matrix bandwidth computation (with the current permutation)
-export BandMinResult, minimize_bandwidth # Matrix bandwidth minimization
-# export BandRecogResult, has_bandwidth_k_ordering # Matrix bandwidth recognition
-export random_banded_matrix # Random banded matrix generation for test data
+#= Module exports: allows users to call solvers like `Minimization.ReverseCuthillMcKee` and
+deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exported at the
+top level due to name conflicts between `Minimization` and `Recognition`. =#
+export Minimization, Recognition
+
+#= Core exports: the original bandwidth (before any reordering) and an `O(n³)` lower bound
+from Caprara and Salazar-González (2005). (This bound is not tight.) =#
+export bandwidth, bandwidth_lower_bound
+
+#= `Minimization` and `Recognition` exports: the core bandwidth minimization and recognition
+functions. =#
+export minimize_bandwidth, has_bandwidth_k_ordering
+
+# Utility exports: just a random banded matrix generator for now. Useful for test data.
+export random_banded_matrix
 
 end
