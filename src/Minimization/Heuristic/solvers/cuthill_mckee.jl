@@ -40,7 +40,7 @@ variant is preferred in almost all cases—see [`ReverseCuthillMcKee`](@ref) and
 associated method of `_bool_minimal_band_ordering` for our implementation.
 
 # Examples
-In the following examples, [`random_banded_matrix`](@ref) is used to generate random
+In the following examples, [`...random_banded_matrix`](@ref) is used to generate random
 matrices with minimum bandwidth *close to* ``k``. In some cases, however, the true minimum
 bandwidth up to symmetric permutation may be even less than ``k``, making it hard to verify
 whether Cuthill–McKee finds a truly optimal ordering or simply a near-ordering one.
