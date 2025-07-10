@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestGibbsPooleStockmeyer
+"""
+    TestGibbsPooleStockmeyer
+
+Test suite for the Gibbs–Poole–Stockmeyer matrix bandwidth minimization algorithm.
+"""
+module TestGibbsPooleStockmeyer
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

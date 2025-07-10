@@ -12,9 +12,9 @@ Exact solvers for matrix bandwidth minimization.
 Exact methods are those which guarantee an optimal ordering producing the true minimum
 bandwidth of a matrix. Since bandwidth minimization is an NP-complete problem, existing
 exact algorithms are, at best, exponential in time complexity—much worse than many
-polynomial-time heuristic approaches (e.g., reverse Cuthill–McKee). Such methods, therefore,
-are not feasible for large matrices, but they remain useful when precise solutions are
-required for small-to-medium-sized inputs (say, up to ``100×100``).
+polynomial-time heuristic approaches (e.g., Gibbs–Poole–Stockmeyer). Such methods,
+therefore, are not feasible for large matrices, but they remain useful when precise
+solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
 
 The following exact algorithms are currently supported:
 - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
@@ -36,13 +36,15 @@ import .._requires_symmetry
 import .._approach, .._bool_minimal_band_ordering
 #! format: on
 
+using Combinatorics
+
 export CapraraSalazarGonzalez, DelCorsoManzini, DelCorsoManziniWithPS, SaxeGurariSudborough
 
 include("types.jl")
 
 include("solvers/caprara_salazar_gonzalez.jl")
+# Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("solvers/del_corso_manzini.jl")
-include("solvers/del_corso_manzini_with_ps.jl")
 include("solvers/saxe_gurari_sudborough.jl")
 
 end

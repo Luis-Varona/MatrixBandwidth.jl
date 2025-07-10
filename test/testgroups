@@ -1,20 +1,5 @@
 core
 utils
 
-Minimization/Exact/solvers/caprara_salazar_gonzalez
-Minimization/Exact/solvers/del_corso_manzini
-Minimization/Exact/solvers/del_corso_manzini_with_ps
-Minimization/Exact/solvers/saxe_gurari_sudborough
-
-Minimization/Heuristic/solvers/gibbs_poole_stockmeyer
-Minimization/Heuristic/solvers/cuthill_mckee
-Minimization/Heuristic/solvers/reverse_cuthill_mckee
-
-Minimization/Metaheuristic/solvers/grasp
-Minimization/Metaheuristic/solvers/simulated_annealing
-Minimization/Metaheuristic/solvers/genetic_algorithm
-
-Recognition/deciders/caprara_salazar_gonzalez
-Recognition/deciders/del_corso_manzini
-Recognition/deciders/del_corso_manzini_with_ps
-Recognition/deciders/saxe_gurari_sudborough
+Minimization/Minimization
+Recognition/Recognition

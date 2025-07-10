@@ -9,7 +9,13 @@
 
 Metaheuristic solvers for matrix bandwidth minimization.
 
-Metaheuristic methods are those which [TODO: Write here]
+Metaheuristic methods are those which employ higher-level iterative search frameworks such
+as stochastic techniques or nature-inspired processes to survey the global search space and
+escape local minima. Unlike heuristic methods—which follow fixed deterministic
+procedures—metaheuristics adaptively refine candidate solutions over multiple iterations.
+Although metaheuristic approaches are often slower than heuristic ones (but certainly still
+faster than exact ones), they shine in complex cases where the latter may get trapped in
+poor-quality local minima.
 
 The following metaheuristic algorithms are currently supported:
 - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))

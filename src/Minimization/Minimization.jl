@@ -17,7 +17,7 @@ nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
-heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
+heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
 Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
 relatively small matrices.
@@ -66,9 +66,9 @@ export CapraraSalazarGonzalez, # Exact solvers
     DelCorsoManzini,
     DelCorsoManziniWithPS,
     SaxeGurariSudborough
-export CuthillMcKee, ReverseCuthillMcKee, GibbsPooleStockmeyer # Heuristic solvers
+export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
 export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
 
-const DEFAULT_SOLVER = ReverseCuthillMcKee()
+const DEFAULT_SOLVER = GibbsPooleStockmeyer()
 
 end

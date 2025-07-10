@@ -4,7 +4,13 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestDelCorsoManzini
+"""
+    TestDelCorsoManzini
+
+Test suite for the Del Corso–Manzini matrix bandwidth minimization algorithm, with and
+without the incorporation of perimeter search.
+"""
+module TestDelCorsoManzini
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

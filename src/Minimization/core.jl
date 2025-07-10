@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    minimize_bandwidth(A, solver=ReverseCuthillMcKee()) -> MinimizationResult
+    minimize_bandwidth(A, solver=GibbsPooleStockmeyer()) -> MinimizationResult
 
 Minimize the bandwidth of `A` using the algorithm defined by `solver`.
 
@@ -18,7 +18,7 @@ nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 This function computes a (near-)optimal ordering ``π`` of the rows and columns of ``A`` so
 that the bandwidth of ``PAPᵀ`` is minimized, where ``P`` is the permutation matrix
 corresponding to ``π``. This is known to be an NP-complete problem; however, several
-heuristic algorithms such as [`ReverseCuthillMcKee`](@ref) run in polynomial time while
+heuristic algorithms such as [`GibbsPooleStockmeyer`](@ref) run in polynomial time while
 still producing near-optimal orderings in practice. Exact methods like
 [`CapraraSalazarGonzalez`](@ref) are also available, but they are exponential in time
 complexity and thus only feasible for relatively small matrices.
@@ -26,7 +26,7 @@ complexity and thus only feasible for relatively small matrices.
 # Arguments
 - `A::AbstractMatrix{<:Number}`: the (square) matrix whose bandwidth is minimized.
 - `solver::AbstractSolver`: the matrix bandwidth minimization algorithm to use; defaults to
-    [`ReverseCuthillMcKee`](@ref). (See the [`Minimization`](@ref) module documentation for
+    [`GibbsPooleStockmeyer`](@ref). (See the [`Minimization`](@ref) module documentation for
     a full list of supported solvers.)
 
 # Returns

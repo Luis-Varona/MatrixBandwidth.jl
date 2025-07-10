@@ -11,7 +11,7 @@ Heuristic solvers for matrix bandwidth minimization.
 
 Heuristic methods are those which aim to produce near-optimal solutions in a more performant
 manner than exact methods. While precise bandwidth minimization is NP-complete, many
-heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time.
+heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time.
 
 Heuristic algorithms differ from metaheuristic ones in that they do not employ higher-level
 iterative search frameworks (e.g., stochastic techniques) to survey the global search space
@@ -37,14 +37,13 @@ import .._approach, .._bool_minimal_band_ordering
 
 using DataStructures: Queue, enqueue!, dequeue!
 
-export CuthillMcKee, ReverseCuthillMcKee, GibbsPooleStockmeyer
+export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee
 
 include("utils.jl")
 include("types.jl")
 
-include("solvers/cuthill_mckee.jl")
-include("solvers/reverse_cuthill_mckee.jl")
 include("solvers/gibbs_poole_stockmeyer.jl")
+include("solvers/cuthill_mckee.jl") # Defines both `CuthillMcKee` and `ReverseCuthillMcKee`
 
 const DEFAULT_SELECTOR = pseudo_peripheral_node
 

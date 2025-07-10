@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestGeneticAlgorithm
+"""
+    TestGeneticAlgorithm
+
+Test suite for the genetic algorithm in the context of matrix bandwidth minimization.
+"""
+module TestGeneticAlgorithm
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

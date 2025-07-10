@@ -40,12 +40,15 @@ import .._problem
 import .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
+using Combinatorics: combinations, permutations
+using DataStructures: Queue, enqueue!, dequeue!
+
 include("types.jl")
 include("core.jl")
 
 include("deciders/caprara_salazar_gonzalez.jl")
+# Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("deciders/del_corso_manzini.jl")
-include("deciders/del_corso_manzini_with_ps.jl")
 include("deciders/saxe_gurari_sudborough.jl")
 
 # THe output struct and core recognition function

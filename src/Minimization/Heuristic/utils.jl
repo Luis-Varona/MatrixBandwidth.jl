@@ -9,6 +9,8 @@
 
 Select a pseudo-peripheral node from the connected graph represented by `A`.
 
+[TODO: Potentially note Gibbs–Poole–Stockmeyer as well? Decide once I implement.]
+
 This function acts as a node selector for the Cuthill–McKee and Reverse Cuthill–McKee
 algorithms, heuristically choosing the node "farthest" from the others in the graph. It is
 assumed that `A` is the adjacency matrix of some connected, undirected graph; otherwise,

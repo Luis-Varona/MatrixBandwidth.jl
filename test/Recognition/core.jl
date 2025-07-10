@@ -4,7 +4,13 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module RecogTestCore
+"""
+    TestCore
+
+Test suite for the core API of the `Recognition` submodule of the `MatrixBandwidth.jl`
+package.
+"""
+module TestCore
 
 using MatrixBandwidth
 using MatrixBandwidth.Recognition

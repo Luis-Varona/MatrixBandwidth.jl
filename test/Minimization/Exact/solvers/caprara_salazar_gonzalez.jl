@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestCapraraSalazarGonzalez
+"""
+    TestCapraraSalazarGonzalez
+
+Test suite for the Caprara–Salazar–Gonzalez matrix bandwidth minimization algorithm.
+"""
+module TestCapraraSalazarGonzalez
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

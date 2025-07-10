@@ -12,7 +12,7 @@ Abstract base type for all matrix bandwidth minimization and recognition algorit
 # Interface
 Concrete subtypes of `AbstractAlgorithm` must implement the following methods:
 - `Base.summary(::T) where {T<:AbstractAlgorithm}`: returns a `String` indicating the name
-    of the algorithm (e.g., `"Reverse Cuthill–McKee"`).
+    of the algorithm (e.g., `"Gibbs–Poole–Stockmeyer"`).
 - `_requires_symmetry(::T) where {T<:AbstractAlgorithm}`: returns a `Bool` indicating
     whether the algorithm requires the input matrix to be structurally symmetric.
 
@@ -137,7 +137,20 @@ end
 """
     RectangularMatrixError(A)
 
-TODO: Write here
+An exception indicating that the matrix `A` is not square.
+
+Matrix bandwidth is only defined for square matrices, so this exception is raised when a
+bandwidth minimization or recognition algorithm is called with a non-square input.
+
+# Fields
+- `A::AbstractMatrix{<:Number}`: the input matrix.
+- `m::Int`: the number of rows of `A`.
+- `n::Int`: the number of columns of `A`.
+
+# Constructors
+- `RectangularMatrixError(A::AbstractMatrix{<:Number})`: constructs a new
+    `RectangularMatrixError` instance, automatically inferring `m` and `n` by calling
+    `size(A)`.
 """
 struct RectangularMatrixError <: Exception
     A::AbstractMatrix{<:Number}
@@ -170,7 +183,31 @@ end
 """
     StructuralAsymmetryError(A, algorithm)
 
-TODO: Write here. Cite [RS06](@cite).
+An exception indicating that the matrix `A` is not structurally symmetric.
+
+An `n×n` matrix ``A`` is *structurally symmetric* if ``A[i, j]`` is nonzero if and only if
+``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``. Many (albeit not all) matrix bandwidth
+minimization and recognition algorithms assume structural symmetry, so this exception is
+raised when one of these algorithms is called with a structurally asymmetric input.
+
+# Fields
+- `A::AbstractMatrix{<:Number}`: the input matrix.
+- `algorithm::AbstractAlgorithm`: the algorithm that was called.
+- `problem::Symbol`: the matrix bandwidth problem tackled by the algorithm (e.g.,
+    `:minimization`).
+
+# Constructors
+- `StructuralAsymmetryError(A::AbstractMatrix{<:Number}, algorithm::AbstractAlgorithm)`:
+    constructs a new `StructuralAsymmetryError` instance, automatically inferring `problem`
+    by calling `_problem(algorithm)`.
+
+# Notes
+As noted in the error message for `StructuralAsymmetryError` instances, users may want to
+consider symmetrization techniques from [RS06](@cite) to minimize the bandwidth of
+structurally asymmetric matrices. (A prominent one is to simply replace ``A[i, j]`` with
+``1`` whenever ``A[i, j] = 0`` but ``A[j, i] ≠ 0``.) Of course, the reliability of
+minimization algorithms is diminished after such a transformation, so users should proceed
+with caution nonetheless.
 """
 struct StructuralAsymmetryError <: Exception
     A::AbstractMatrix{<:Number}

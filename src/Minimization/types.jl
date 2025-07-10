@@ -13,7 +13,7 @@ Abstract base type for all matrix bandwidth minimization solvers.
 As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes of
 `AbstractSolver` must implement the following methods:
 - `Base.summary(::T) where {T<:AbstractSolver}`: returns a `String` indicating the name
-    of the solver (e.g., `"Reverse Cuthill–McKee"`).
+    of the solver (e.g., `"Gibbs–Poole–Stockmeyer"`).
 - `_requires_symmetry(::T) where {T<:AbstractSolver}`: returns a `Bool` indicating
     whether the solver requires the input matrix to be structurally symmetric.
 

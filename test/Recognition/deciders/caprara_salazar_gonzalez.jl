@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module RecogTestCapraraSalazarGonzalez
+"""
+    TestCapraraSalazarGonzalez
+
+Test suite for the Caprara–Salazar–Gonzalez matrix bandwidth recognition algorithm.
+"""
+module TestCapraraSalazarGonzalez
 
 using MatrixBandwidth
 using MatrixBandwidth.Recognition
