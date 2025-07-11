@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestSaxeGurariSudborough
+"""
+    TestSaxeGurariSudborough
+
+Test suite for the Saxe–Gurari–Sudborough matrix bandwidth minimization algorithm.
+"""
+module TestSaxeGurariSudborough
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

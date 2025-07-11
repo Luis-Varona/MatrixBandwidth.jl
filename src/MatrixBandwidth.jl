@@ -7,8 +7,6 @@
 """
     MatrixBandwidth
 
-[TODO: Update to reflect recognition algorithms too]
-
 Fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition in Julia.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
@@ -19,7 +17,7 @@ nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
-heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still
+heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
 Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
 relatively small matrices.
@@ -69,7 +67,7 @@ include("Minimization/Minimization.jl")
 
 using .Minimization, .Recognition
 
-#= Module exports: allows users to call solvers like `Minimization.ReverseCuthillMcKee` and
+#= Module exports: allows users to call solvers like `Minimization.GibbsPooleStockmeyer` and
 deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exported at the
 top level due to name conflicts between `Minimization` and `Recognition`. =#
 export Minimization, Recognition

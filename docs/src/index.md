@@ -47,7 +47,7 @@ CurrentModule = MatrixBandwidth
 
 The *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative integer ``k \in [0, n - 1]`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k^\text{th}`` superdiagonal and below the ``k^\text{th}`` subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the ``k^\text{th}`` superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as reverse Cuthill–McKee) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for relatively small matrices.
+The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for relatively small matrices.
 
 On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is at most some fixed non-negative integer ``k \in \mathbb{N}``—an optimal permutation that fully minimizes the bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in ``O(n^k)`` time.
 
@@ -99,7 +99,7 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-I aim to release the first stable version of *MatrixBandwidth.jl* in mid-July 2025. The current version is a work-in-progress, with much of the API still under development.
+I aim to release the first stable version of *MatrixBandwidth.jl* in late July 2025. The current version is a work-in-progress, with much of the API still under development.
 
 ## Index
 

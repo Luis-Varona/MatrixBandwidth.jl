@@ -115,8 +115,8 @@ nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 In contrast to [`minimize_bandwidth`](@ref), this function does not attempt to truly
 minimize the bandwidth of `A`—it simply returns a lower bound on its bandwidth up to
 symmetric permutation of its rows and columns. This bound is not tight, but it is easily
-computable in `O(n³)` time, dominated by the Floyd–Warshall algorithm call. (The core logic
-here runs in `O(n²)` time.)
+computable in ``O(n³)`` time, dominated by the Floyd–Warshall algorithm call. (The core
+logic here runs in ``O(n²)`` time.)
 
 # Arguments
 - `A::AbstractMatrix{<:Number}`: the (square) matrix on whose bandwidth a lower bound is to
@@ -127,7 +127,25 @@ here runs in `O(n²)` time.)
 - `::Int`: a lower bound on the bandwidth of `A`. (This bound is not tight.)
 
 # Examples
-TODO: Write here
+The function correctly computes a bound less than (or equal to) the true minimum bandwidth
+of a matrix up to symmetric permutation:
+```julia
+julia> using Random, SparseArrays, Combinatorics
+
+julia> Random.seed!(21);
+
+julia> (n, p) = (9, 0.4);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A'; # Make `A` structurally symmetric
+
+julia> minimum(Iterators.map(perm -> bandwidth(A[perm, perm]), permutations(1:n)))
+5
+
+julia> bandwidth_lower_bound(A) # Always less than or equal to the true minimum bandwidth
+4
+```
 
 # Notes
 Some texts define matrix bandwidth to be the minimum non-negative integer ``k`` such that
@@ -157,9 +175,9 @@ function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
     that assume an adjacency matrix structure. =#
     A_bool = _offdiag_nonzero_support(A)
 
-    #= The bandwidth is trivially zero, so we return early. This also anticipates `gamma`
-    never being updated to 0.0, since in that case, `length(finite_dists)` will always be
-    precisely 1 (due to the diagonal entries of `dist_matrix`). =#
+    #= The bandwidth is trivially zero, so we return early. This also prevents `gamma` from
+    erroneously never being updated to 0.0, since `finite_nonzero_dists` would always be
+    empty if we were to skip this check. =#
     if iszero(A_bool)
         return 0
     end
@@ -177,20 +195,20 @@ function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
     gamma = n - 1 # The maximum possible bandwidth is `n - 1`
 
     for dists in eachcol(dist_matrix)
-        finite_dists = Int.(filter(isfinite, dists)) # Exclude unreachable nodes
+        # Exclude not only unreachable nodes but also self-distances (always 0)
+        finite_nonzero_dists = Int.(filter(k -> isfinite(k) && k != 0.0, dists))
 
-        #= Since the distance from a node to itself is always 0, `finite_dists` will always
-        contain at least one element. Only non-isolated nodes are used to update `alpha` and
-        `gamma`, so we check that `finite_dists` contains more than just this element. =#
-        if length(finite_dists) > 1
-            max_dist = maximum(finite_dists)
+        # Only non-isolated nodes are used to update `alpha` and `gamma`
+        if !isempty(finite_nonzero_dists)
+            max_dist = maximum(finite_nonzero_dists)
             alpha_cand = 0
             gamma_cand = 0
 
             #= Compute the `k`-hop neighborhood sizes for each distance `k ≥ 1`. Every node
-            is a 0-hop neighbor of itself, so we add 1 after taking the cumulative sum. =#
+            is a 0-hop neighbor of itself, so we add 1 after taking the cumulative sum
+            (since we filtered out self-distances in `finite_nonzero_dists`). =#
             k_hop_neighborhood_sizes = zeros(Int, max_dist)
-            foreach(k -> k_hop_neighborhood_sizes[k] += 1, filter(!iszero, finite_dists))
+            foreach(k -> k_hop_neighborhood_sizes[k] += 1, finite_nonzero_dists)
             k_hop_neighborhood_sizes .= cumsum(k_hop_neighborhood_sizes) .+ 1
 
             for (k, num_k_hop_neighbors) in enumerate(k_hop_neighborhood_sizes)

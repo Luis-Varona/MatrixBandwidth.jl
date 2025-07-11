@@ -88,7 +88,11 @@ function has_bandwidth_k_ordering(
     return RecognitionResult(decider, A, bandwidth_k_ordering, k)
 end
 
-# TODO: Summarize here. Returns either `nothing` or a `Vector{Int}`.
+#= Compute an ordering inducing a bandwidth of at most `k` for a preprocessed
+`AbstractMatrix{Bool}`, if one exists; otherwise, return `nothing`. Restricting entries to
+booleans can improve performance via cache optimizations, bitwise operations, etc. Each
+concrete subtype of `AbstractDecider` must implement its own `_bool_bandwidth_k_ordering`
+method to define the corresponding algorithm logic. =#
 function _bool_bandwidth_k_ordering(
     ::AbstractMatrix{Bool}, ::Int, ::T
 ) where {T<:AbstractDecider}

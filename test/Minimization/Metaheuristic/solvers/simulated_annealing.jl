@@ -4,7 +4,12 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-module MinTestSimulatedAnnealing
+"""
+    TestSimulatedAnnealing
+
+Test suite for simulated annealing in the context of matrix bandwidth minimization.
+"""
+module TestSimulatedAnnealing
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization

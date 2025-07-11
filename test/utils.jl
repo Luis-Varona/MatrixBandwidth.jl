@@ -7,8 +7,8 @@
 """
     TestUtils
 
-TODO: Add further documentation, plus tests for `_find_direct_subtype`,
-`_is_structurally_symmetric`, and `_offdiag_nonzero_support`.
+[TODO: Write here. Add further documentation, plus tests for `_find_direct_subtype`,
+`_is_structurally_symmetric`, and `_offdiag_nonzero_support`.]
 """
 module TestUtils
 

@@ -5,16 +5,13 @@
 # distributed except according to those terms.
 
 """
-    TestDelCorsoManzini
+    TestHeuristic
 
-Test suite for the Del Corso–Manzini matrix bandwidth recognition algorithm.
+Test suite for the `Minimization.Heuristic` submodule of the `MatrixBandwidth.jl` package.
 """
-module TestDelCorsoManzini
+module TestHeuristic
 
-using MatrixBandwidth
-using MatrixBandwidth.Recognition
-using Test
-
-# TODO: Write here
+include("solvers/gibbs_poole_stockmeyer.jl")
+include("solvers/cuthill_mckee.jl")
 
 end
