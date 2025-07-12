@@ -101,10 +101,11 @@ end
 """
     bandwidth_lower_bound(A) -> Int
 
-Compute a lower bound on the bandwidth of `A` using [CSG05](@cite)'s results.
+Compute a lower bound on the bandwidth of `A` using [CSG05; pp.359--60](@cite)'s results.
 
-The nonzero support of `A` is assumed to be symmetric, since [CSG05](@cite)'s bound was
-discovered in the context of undirected graphs (whose adjacency matrices are symmetric).
+`A` is assumed to be structurally symmetric, since the bound from
+[CSG05; pp.359--60](@cite) was discovered in the context of undirected graphs (whose
+adjacency matrices are symmetric).
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
@@ -114,17 +115,19 @@ nonzero entry in the ``k``-th superdiagonal or subdiagonal.
 
 In contrast to [`minimize_bandwidth`](@ref), this function does not attempt to truly
 minimize the bandwidth of `A`—it simply returns a lower bound on its bandwidth up to
-symmetric permutation of its rows and columns. This bound is not tight, but it is easily
-computable in ``O(n³)`` time, dominated by the Floyd–Warshall algorithm call. (The core
-logic here runs in ``O(n²)`` time.)
+symmetric permutation of its rows and columns. This bound is not generally tight, but it
+indeed matches the true minimum in many non-trivial cases and is easily computable in
+``O(n³)`` time (dominated by the Floyd–Warshall algorithm call; the core logic itself runs
+in ``O(n²)`` time).
 
 # Arguments
 - `A::AbstractMatrix{<:Number}`: the (square) matrix on whose bandwidth a lower bound is to
-    be computed. `A` must have a symmetric nonzero support (i.e., `A[i, j]` is nonzero if
-    and only if `A[j, i]` is nonzero).
+    be computed. `A` must be structurally symmetric (i.e., `A[i, j]` must be nonzero if
+    and only if `A[j, i]` is nonzero for ``1 ≤ i, j ≤ n``).
 
 # Returns
-- `::Int`: a lower bound on the bandwidth of `A`. (This bound is not tight.)
+- `::Int`: a lower bound on the bandwidth of `A`. (This bound is tight in many non-trivial
+    cases but not universally so.)
 
 # Examples
 The function correctly computes a bound less than (or equal to) the true minimum bandwidth

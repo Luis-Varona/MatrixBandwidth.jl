@@ -73,7 +73,8 @@ top level due to name conflicts between `Minimization` and `Recognition`. =#
 export Minimization, Recognition
 
 #= Core exports: the original bandwidth (before any reordering) and an `O(n³)` lower bound
-from Caprara and Salazar-González (2005). (This bound is not tight.) =#
+from Caprara and Salazar-González (2005). (This bound is tight in many non-trivial cases
+but not universally so.) =#
 export bandwidth, bandwidth_lower_bound
 
 #= `Minimization` and `Recognition` exports: the core bandwidth minimization and recognition

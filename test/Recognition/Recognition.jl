@@ -11,10 +11,17 @@ Test suite for the `Recognition` submodule of the `MatrixBandwidth.jl` package.
 """
 module TestRecognition
 
-include("core.jl")
+const TEST_GROUPS = [
+    "core",
+    "deciders/caprara_salazar_gonzalez",
+    "deciders/del_corso_manzini",
+    "deciders/saxe_gurari_sudborough",
+]
 
-include("deciders/caprara_salazar_gonzalez.jl")
-include("deciders/del_corso_manzini.jl")
-include("deciders/saxe_gurari_sudborough.jl")
+for group in TEST_GROUPS
+    @info "Testing `Recognition/$group`"
+    include("$group.jl")
+    println()
+end
 
 end

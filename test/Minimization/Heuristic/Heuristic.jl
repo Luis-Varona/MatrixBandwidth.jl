@@ -11,7 +11,12 @@ Test suite for the `Minimization.Heuristic` submodule of the `MatrixBandwidth.jl
 """
 module TestHeuristic
 
-include("solvers/gibbs_poole_stockmeyer.jl")
-include("solvers/cuthill_mckee.jl")
+const TEST_GROUPS = ["solvers/gibbs_poole_stockmeyer", "solvers/cuthill_mckee"]
+
+for group in TEST_GROUPS
+    @info "Testing `Minimization/Heuristic/$group`"
+    include("$group.jl")
+    println()
+end
 
 end
