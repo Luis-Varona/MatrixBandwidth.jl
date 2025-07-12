@@ -33,7 +33,8 @@ This algorithm is not the main one described in the original paper [CSG05](@cite
 actually never explicitly presents a procedure for matrix bandwidth recognition. However,
 the paper does define a bandwidth minimization algorithm that repeatedly calls a recognition
 subroutine—this is precisely the logic we implement here. (We do, however, also implement
-said minimization algorithm in [`Minimization.CapraraSalazarGonzalez`](@ref).)
+said minimization algorithm in
+[`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 

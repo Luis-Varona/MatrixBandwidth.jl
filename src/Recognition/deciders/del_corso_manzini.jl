@@ -40,15 +40,16 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 For readers of the original paper, what we call the Del Corso–Manzini recognition algorithm
 here is essentially a wrapper around the underlying `AddNode` subroutine in what
 [DCM99; p. 191](@cite) terms the "MB-ID algorithm" for bandwidth minimization (not mere
-recognition). MB-ID (which we also implement in [`Minimization.DelCorsoManzini`](@ref))
-calls this recognition procedure with incrementing values of ``k`` until a bandwidth-``k``
-ordering is found, with ``k`` initialized to some lower bound on the minimum bandwidth of
-``A`` up to symmetric permutation.
+recognition). MB-ID (which we also implement in
+[`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref)) calls this recognition
+procedure with incrementing values of ``k`` until a bandwidth-``k`` ordering is found, with
+``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
+permutation.
 
 [DCM99; p. 193](@cite) also describes an "MB-PS algorithm" for bandwidth minimization,
-which we implement in [`Minimization.DelCorsoManziniWithPS`](@ref). Similarly, the
-underlying recognition subroutine for MB-PS is implemented in
-[`Recognition.DelCorsoManziniWithPS`](@ref).
+which we implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref).
+Similarly, the underlying recognition subroutine for MB-PS is implemented in
+[`DelCorsoManziniWithPS`](@ref).
 """
 struct DelCorsoManzini <: AbstractDecider end
 
@@ -113,14 +114,14 @@ For readers of the original paper, what we call the Del Corso–Manzini recognit
 with perimeter search here is essentially a wrapper around the underlying `AddNode1` and
 `Prune` subroutines in what [DCM99; p. 193](@cite) terms the "MB-PS algorithm" for bandwidth
 minimization (not mere recognition). MB-PS (which we also implement in
-[`Minimization.DelCorsoManziniWithPS`](@ref)) calls this recognition procedure with
-incrementing values of ``k`` until a bandwidth-``k`` ordering is found, with ``k``
-initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
+[`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref)) calls this recognition
+procedure with incrementing values of ``k`` until a bandwidth-``k`` ordering is found, with
+``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
 permutation.
 
 [DCM99; p. 191](@cite) also describes an "MB-ID algorithm" for bandwidth minimization, which
-we implement in [`Minimization.DelCorsoManzini`](@ref). Similarly, the underlying
-recognition subroutine for MB-ID is implemented in [`Recognition.DelCorsoManzini`](@ref).
+we implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref). Similarly, the
+underlying recognition subroutine for MB-ID is implemented in [`DelCorsoManzini`](@ref).
 """
 struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: AbstractDecider
     depth::D

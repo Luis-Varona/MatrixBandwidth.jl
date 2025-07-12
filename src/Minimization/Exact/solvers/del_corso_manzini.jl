@@ -54,7 +54,7 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini minimization algorithm
 here is designated the "MB-ID algorithm" in [DCM99; p. 191](@cite). The so-called "MB-PS
-algorithm," on the other hand, we implement in [`Minimization.DelCorsoManziniWithPS`](@ref).
+algorithm," on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
 """
 struct DelCorsoManzini <: ExactSolver end
 
@@ -86,12 +86,12 @@ bound on the earliest position at which any given index can be placed should sai
 selected.
 
 Like our implementation of the base Del Corso–Manzini algorithm (see
-[`Minimization.DelCorsoManzini`](@ref)), this implementation uses the
-``min(α(A), γ(A))`` lower bound from [CSG05; pp. 359--60](@cite) as the initial value of
-``k``. (Further implementation details can be found in the source code for
-[`bandwidth_lower_bound`](@ref).) This improves upon the original algorithm, which used the
-maximum number of nonzero off-diagonal entries in a single row as a lower bound on the
-minimum bandwidth of ``A`` up to symmetric permutation [DCM99; p. 194](@cite).
+[`DelCorsoManzini`](@ref)), this implementation uses the ``min(α(A), γ(A))`` lower bound
+from [CSG05; pp. 359--60](@cite) as the initial value of ``k``. (Further implementation
+details can be found in the source code for [`bandwidth_lower_bound`](@ref).) This improves
+upon the original algorithm, which used the maximum number of nonzero off-diagonal entries
+in a single row as a lower bound on the minimum bandwidth of ``A`` up to symmetric
+permutation [DCM99; p. 194](@cite).
 
 As noted above, the Del Corso–Manzini algorithm with perimeter search requires structurally
 symmetric input (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is
@@ -133,7 +133,7 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 For readers of the original paper, what we call the Del Corso–Manzini minimization algorithm
 with perimeter search here is designated the "MB-PS algorithm" in [DCM99; p. 193](@cite).
 The so-called "MB-ID algorithm," on the other hand, we implement in
-[`Minimization.DelCorsoManzini`](@ref).
+[`DelCorsoManzini`](@ref).
 """
 struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: ExactSolver
     depth::D
