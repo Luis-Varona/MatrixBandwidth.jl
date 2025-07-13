@@ -12,8 +12,14 @@ package.
 """
 module TestMetaheuristic
 
-include("solvers/grasp.jl")
-include("solvers/simulated_annealing.jl")
-include("solvers/genetic_algorithm.jl")
+const TEST_GROUPS = [
+    "solvers/grasp", "solvers/simulated_annealing", "solvers/genetic_algorithm"
+]
+
+for group in TEST_GROUPS
+    @info "Testing `Minimization/Metaheuristic/$group`"
+    include("$group.jl")
+    println()
+end
 
 end

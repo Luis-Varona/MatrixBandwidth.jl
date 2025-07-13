@@ -11,8 +11,16 @@ Test suite for the `Minimization.Exact` submodule of the `MatrixBandwidth.jl` pa
 """
 module TestExact
 
-include("solvers/caprara_salazar_gonzalez.jl")
-include("solvers/del_corso_manzini.jl")
-include("solvers/saxe_gurari_sudborough.jl")
+const TEST_GROUPS = [
+    "solvers/caprara_salazar_gonzalez",
+    "solvers/del_corso_manzini",
+    "solvers/saxe_gurari_sudborough",
+]
+
+for group in TEST_GROUPS
+    @info "Testing `Minimization/Exact/$group`"
+    include("$group.jl")
+    println()
+end
 
 end

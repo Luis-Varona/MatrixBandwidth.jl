@@ -7,27 +7,33 @@
 using MatrixBandwidth
 using Test
 
+const STATIC_ANALYZERS = ["Aqua", "JET"]
+const TEST_GROUPS = ["core", "utils"]
+const NESTED_TEST_SUITES = ["Minimization/Minimization.jl", "Recognition/Recognition.jl"]
+
 # Run static analysis
-for analyzer in readlines(joinpath(@__DIR__, "staticanalyzers"))
-    if !isempty(analyzer)
-        @info "Running static analysis with $analyzer.jl"
-        include("$analyzer.jl")
-        println()
-    end
+for analyzer in STATIC_ANALYZERS
+    @info "Running static analysis with $analyzer"
+    include(joinpath("static_analysis/", "$(lowercase(analyzer)).jl"))
+    println()
 end
 
 # Run unit tests
-for group in readlines(joinpath(@__DIR__, "testgroups"))
-    if !isempty(group)
-        @info "Testing `$group`"
-        include("$group.jl")
-        println()
-    end
+for group in TEST_GROUPS
+    @info "Testing `$group`"
+    include("$group.jl")
+    println()
 end
 
-# Check that all public names in the package are documented
+# Run more unit tests
+for suite in NESTED_TEST_SUITES
+    include(suite)
+end
+
+# Check that all public names in the package have docstrings
 @testset "Docstrings" begin
-    if VERSION >= v"1.11" # `Docs.undocumented_names` was introduced in Julia 1.11
+    if VERSION >= v"1.11" # `Docs.undocumented_names` was only introduced in Julia 1.11
+        @info "Checking for undocumented names"
         @test isempty(Docs.undocumented_names(MatrixBandwidth))
     else
         @info "Skipping `Docs.undocumented_names` test: not available on Julia $(VERSION)"

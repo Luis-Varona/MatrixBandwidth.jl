@@ -8,14 +8,15 @@
     CuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 The *Cuthill–McKee algorithm* is a heuristic method for minimizing the bandwidth of a
-symmetric matrix ``A``. It considers the graph ``G(A)`` whose adjacency matrix is ``A``
-(ignoring self-loops) and performs a breadth-first search of each connected component of
-``G(A)``, starting from a low-degree node then visiting its neighbors in order of increasing
-degree. Particularly effective when ``A`` is sparse, this heuristic typically produces an
-ordering which induces a matrix bandwidth either equal to or very close to the true minimum
-[CM69; pp. 157--58](@cite).
+structurally symmetric matrix ``A``. It considers the graph ``G(A)`` whose adjacency matrix
+is ``A`` (ignoring weights and self-loops) and performs a breadth-first search of each
+connected component of ``G(A)``, starting from a low-degree node then visiting its neighbors
+in order of increasing degree. Particularly effective when ``A`` is sparse, this heuristic
+typically produces an ordering which induces a matrix bandwidth either equal to or very
+close to the true minimum [CM69; pp. 157--58](@cite).
 
-As noted above, the input matrix must be symmetric for Cuthill–McKee to work.
+As noted above, the Cuthill–McKee algorithm requires structurally symmetric input (that is,
+``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
 
 # Fields
 - `node_selector::Function`: a function that selects a node from some connected component of
@@ -210,18 +211,20 @@ _requires_symmetry(::CuthillMcKee) = true
     ReverseCuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 The *reverse Cuthill–McKee algorithm* is a variant of the *Cuthill–McKee algorithm*—a
-heuristic method for minimizing the bandwidth of a symmetric matrix ``A``. Cuthill–McKee
-considers the graph ``G(A)`` whose adjacency matrix is ``A`` (ignoring self-loops) and
-performs a breadth-first search of each connected component of ``G(A)``, starting from a
-low-degree node then visiting its neighbors in order of increasing degree. Particularly
-effective when ``A`` is sparse, this heuristic typically produces an ordering which induces
-a matrix bandwidth either equal to or very close to the true minimum
+heuristic method for minimizing the bandwidth of a structurally symmetric matrix ``A``.
+Cuthill–McKee considers the graph ``G(A)`` whose adjacency matrix is ``A`` (ignoring weights
+and self-loops) and performs a breadth-first search of each connected component of ``G(A)``,
+starting from a low-degree node then visiting its neighbors in order of increasing degree.
+Particularly effective when ``A`` is sparse, this heuristic typically produces an ordering
+which induces a matrix bandwidth either equal to or very close to the true minimum
 [CM69; pp. 157--58](@cite). The reverse Cuthill–McKee algorithm simply reverses the ordering
 produced by application of Cuthill–McKee; it was found in [Geo71; pp. 114--15](@cite) that
 although the bandwidth remains the same, this tends to produce a more optimal *matrix
 profile* (a measure of how far, on average, nonzero entries are from the diagonal).
 
-As noted above, the input matrix must be symmetric for reverse Cuthill–McKee to work.
+As noted above, the reverse Cuthill–McKee algorithm requires structurally symmetric input
+(that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
+``1 ≤ i, j ≤ n``).
 
 # Performance
 Given an ``n×n`` input matrix ``A``, the reverse Cuthill–McKee algorithm runs in ``O(n²)``

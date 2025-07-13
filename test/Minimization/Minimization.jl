@@ -11,10 +11,19 @@ Test suite for the `Minimization` submodule of the `MatrixBandwidth.jl` package.
 """
 module TestMinimization
 
-include("core.jl")
+const TEST_GROUPS = ["core"]
+const NESTED_TEST_SUITES = [
+    "Exact/Exact.jl", "Heuristic/Heuristic.jl", "Metaheuristic/Metaheuristic.jl"
+]
 
-include("Exact/Exact.jl")
-include("Heuristic/Heuristic.jl")
-include("Metaheuristic/Metaheuristic.jl")
+for group in TEST_GROUPS
+    @info "Testing `Minimization/$group`"
+    include("$group.jl")
+    println()
+end
+
+for suite in NESTED_TEST_SUITES
+    include(suite)
+end
 
 end
