@@ -11,11 +11,11 @@ Generate a random `n×n` structurally symmetric `k`-banded matrix with band dens
 
 By definition of structural symmetry, the ``(i, j)``-th entry of the matrix is nonzero if
 and only if the ``(j, i)``-th entry is nonzero as well. All entries from this matrix are
-from the interval `[0, 1]`. Entries up to the `k`-th superdiagonal and down to the `k`-th
+from the interval `[0, 1]`. Entries up to the `k`ᵗʰ superdiagonal and down to the `k`ᵗʰ
 subdiagonal are nonzero with probability `p`.
 
 It is also guaranteed that each of these bands (besides the main diagonal) has at least one
-nonzero entry (even when `p` is very small), thus ensuring that th matrix has bandwidth
+nonzero entry (even when `p` is very small), thus ensuring that the matrix has bandwidth
 precisely `k` before any reordering. (There may, however, still exist a symmetric
 permutation inducing a minimum bandwidth less than `k`, especially for small values of `p`.)
 
@@ -120,7 +120,7 @@ function random_banded_matrix(
         end
     end
 
-    #= Conditionally add entries to the superdiagonals and subdiagonals (up to the `k`-th)
+    #= Conditionally add entries to the superdiagonals and subdiagonals (up to the `k`ᵗʰ)
     based on the band density `p`. =#
     for d in 1:k
         feasible_indices = 1:(n - d)
@@ -132,7 +132,7 @@ function random_banded_matrix(
             end
         end
 
-        #= Ensure that the `d`-th superdiagonal and subdiagonal each have at least one
+        #= Ensure that the `d`ᵗʰ superdiagonal and subdiagonal each have at least one
         nonzero entry for `1 ≤ d ≤ k`, making a `bandwidth < k` symmetric permutation less
         likely. (Given structural symmetry, we need only check for empty superdiagonals.) =#
         if iszero(map(i -> A[i, i + d], feasible_indices))

@@ -11,9 +11,9 @@ Compute the bandwidth of `A` before any permutation of its rows and columns.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
-has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
-``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
-nonzero entry in the ``k``-th superdiagonal or subdiagonal.
+has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ superdiagonal and below the
+``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
 
 In contrast to [`minimize_bandwidth`](@ref), this function does not attempt to minimize the
 bandwidth of `A` by permuting its rows and columns—it simply computes its bandwidth as is.
@@ -109,9 +109,9 @@ adjacency matrices are symmetric).
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
-has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
-``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
-nonzero entry in the ``k``-th superdiagonal or subdiagonal.
+has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ superdiagonal and below the
+``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
 
 In contrast to [`minimize_bandwidth`](@ref), this function does not attempt to truly
 minimize the bandwidth of `A`—it simply returns a lower bound on its bandwidth up to

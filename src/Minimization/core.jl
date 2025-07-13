@@ -11,16 +11,16 @@ Minimize the bandwidth of `A` using the algorithm defined by `solver`.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
-has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
-``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
-nonzero entry in the ``k``-th superdiagonal or subdiagonal.
+has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ superdiagonal and below the
+``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
 
 This function computes a (near-)optimal ordering ``π`` of the rows and columns of ``A`` so
 that the bandwidth of ``PAPᵀ`` is minimized, where ``P`` is the permutation matrix
 corresponding to ``π``. This is known to be an NP-complete problem; however, several
-heuristic algorithms such as [`GibbsPooleStockmeyer`](@ref) run in polynomial time while
+heuristic algorithms such as Gibbs–Poole–Stockmeyer run in polynomial time while still
 still producing near-optimal orderings in practice. Exact methods like
-[`CapraraSalazarGonzalez`](@ref) are also available, but they are exponential in time
+Caprara–Salazar-González are also available, but they are at least exponential in time
 complexity and thus only feasible for relatively small matrices.
 
 # Arguments
