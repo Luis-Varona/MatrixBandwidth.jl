@@ -7,7 +7,7 @@
 """
     GRASP <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
-TODO: Write here
+[TODO: Write here]
 """
 struct GRASP <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
@@ -18,5 +18,6 @@ Base.summary(::GRASP) = "Greedy randomized adaptive search procedure (GRASP)"
 _requires_symmetry(::GRASP) = false
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
-    # TODO: Implement
+    error("TODO: Not yet implemented")
+    return nothing
 end

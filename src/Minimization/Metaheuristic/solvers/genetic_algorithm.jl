@@ -7,7 +7,7 @@
 """
     GeneticAlgorithm <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
-TODO: Write here
+[TODO: Write here]
 """
 struct GeneticAlgorithm <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
@@ -18,5 +18,6 @@ Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 _requires_symmetry(::GeneticAlgorithm) = false
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GeneticAlgorithm)
-    # TODO: Implement
+    error("TODO: Not yet implemented")
+    return nothing
 end

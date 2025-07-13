@@ -16,6 +16,6 @@ Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 _requires_symmetry(::SaxeGurariSudborough) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::SaxeGurariSudborough)
-    # TODO: Implement
-    return Int[]
+    error("TODO: Not yet implemented")
+    return nothing
 end
