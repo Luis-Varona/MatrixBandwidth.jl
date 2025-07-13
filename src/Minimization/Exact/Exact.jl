@@ -21,6 +21,7 @@ The following exact algorithms are currently supported:
 - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
 - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+- Brute-force search ([`BruteForce`](@ref))
 
 This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
@@ -31,14 +32,15 @@ module Exact
 import ..Recognition
 import ..AbstractSolver
 import ..NotImplementedError, ..StructuralAsymmetryError
-import ..bandwidth_lower_bound
+import ..bandwidth, ..bandwidth_lower_bound
 import .._requires_symmetry
 import .._approach, .._bool_minimal_band_ordering
 #! format: on
 
 using Combinatorics
 
-export CapraraSalazarGonzalez, DelCorsoManzini, DelCorsoManziniWithPS, SaxeGurariSudborough
+export CapraraSalazarGonzalez,
+    DelCorsoManzini, DelCorsoManziniWithPS, SaxeGurariSudborough, BruteForce
 
 include("types.jl")
 
@@ -46,5 +48,6 @@ include("solvers/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("solvers/del_corso_manzini.jl")
 include("solvers/saxe_gurari_sudborough.jl")
+include("solvers/brute_force.jl")
 
 end

@@ -20,10 +20,10 @@ is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 �
 
 # Performance
 Given an ``n×n`` input matrix ``A`` and threshold bandwidth ``k``, the Del Corso–Manzini
-algorithm runs in ``O(nk ⋅ n!)`` time:
+algorithm runs in ``O(n! ⋅ nk)`` time:
 - We perform a depth-first search of ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time.
-- Therefore, the overall time complexity is ``O(nk ⋅ n!)``.
+- Therefore, the overall time complexity is ``O(n! ⋅ nk)``.
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini, achieved
 only in the most pathological of cases. In practice, efficient pruning techniques and
@@ -90,13 +90,13 @@ nonzero for ``1 ≤ i, j ≤ n``).
 
 # Performance
 Given an ``n×n`` input matrix ``A``, perimeter search depth ``d``, and threshold bandwidth
-``k``, the Del Corso–Manzini algorithm with perimeter search runs in ``O(max(nᵈ, nk) ⋅ n!)``
+``k``, the Del Corso–Manzini algorithm with perimeter search runs in ``O(n! ⋅ max(nᵈ, nk))``
 time:
 - We perform a depth-first search of ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time, and checking
     compatibility with all size-``d`` LPOs takes ``O(nᵈ)`` time. Thus, the overall time
-    complexity for each value of ``k`` is ``O((nᵈ + nk) ⋅ n!)``.
-- Therefore, the overall time complexity is ``O(max(nᵈ, nk) ⋅ n!)``.
+    complexity for each value of ``k`` is ``O(n! ⋅ (nᵈ + nk))``.
+- Therefore, the overall time complexity is ``O(n! ⋅ max(nᵈ, nk))``.
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini with
 perimeter search, achieved only in the most pathological of cases. In practice, efficient
@@ -199,6 +199,11 @@ function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Int, decider::DelCorsoManziniWithPS{Int}
 )
     n = size(A, 1)
+    ps_depth = decider.depth
+
+    if ps_depth > n
+        throw(ArgumentError("Perimeter search depth $ps_depth exceeds matrix order $n"))
+    end
 
     ordering_buf = Vector{Int}(undef, n)
     adj_lists = map(node -> findall(A[:, node]), 1:n)
@@ -206,7 +211,6 @@ function _bool_bandwidth_k_ordering(
     unselected = Set(1:n)
     adj_list = Set{Int}()
     num_placed = 0
-    ps_depth = decider.depth
     perimeter = [
         (lpo, _dcm_lpo_time_stamps(lpo, A, k)) for
         node_subset in combinations(1:n, ps_depth) for lpo in permutations(node_subset)
@@ -266,34 +270,32 @@ function _dcm_add_node!(
         )
             unselected_new = setdiff(unselected, [candidate])
 
-            if _dcm_no_ps_is_reversed(
+            if !_dcm_order_is_reversed(
                 ordering_buf, unselected_new, num_placed, ps_depth, candidate
             )
-                continue
-            end
-
-            perimeter_new = _dcm_pruned_perimeter(
-                perimeter, candidate, num_placed, ps_depth, n
-            )
-
-            if !isempty(perimeter_new)
-                adj_list_new = intersect(
-                    union(adj_list, adj_lists[candidate]), unselected_new
+                perimeter_new = _dcm_pruned_perimeter(
+                    perimeter, candidate, num_placed, ps_depth, n
                 )
 
-                if _dcm_is_compatible(ordering_buf, A, adj_list_new, k, num_placed)
-                    ordering_buf[num_placed + 1] = candidate
-                    ordering = _dcm_add_node!(
-                        ordering_buf,
-                        A,
-                        k,
-                        adj_lists,
-                        unselected_new,
-                        adj_list_new,
-                        perimeter_new,
-                        num_placed + 1,
-                        ps_depth,
+                if !isempty(perimeter_new)
+                    adj_list_new = intersect(
+                        union(adj_list, adj_lists[candidate]), unselected_new
                     )
+
+                    if _dcm_is_compatible(ordering_buf, A, adj_list_new, k, num_placed)
+                        ordering_buf[num_placed + 1] = candidate
+                        ordering = _dcm_add_node!(
+                            ordering_buf,
+                            A,
+                            k,
+                            adj_lists,
+                            unselected_new,
+                            adj_list_new,
+                            perimeter_new,
+                            num_placed + 1,
+                            ps_depth,
+                        )
+                    end
                 end
             end
         end
@@ -304,10 +306,10 @@ function _dcm_add_node!(
     return ordering
 end
 
-#= The ordering `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without
-loss of generality, we restrict our search to partial orderings such that `i₁` is less than
-the maximum possible `iₙ`. =#
-function _dcm_no_ps_is_reversed(
+#= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
+generality, we restrict our search to partial orderings such that `i₁` is less than or equal
+to the maximum possible `iₙ` (with equality checked just in case `n = 1`). =#
+function _dcm_order_is_reversed(
     ordering_buf::Vector{Int},
     unselected::Set{Int},
     num_placed::Int,
@@ -336,8 +338,7 @@ function _dcm_no_ps_is_reversed(
         max_last_label = maximum(unselected)
     end
 
-    # There is no need to check for equality, since every label is unique
-    return max_last_label < first_label
+    return max_last_label <= first_label
 end
 
 function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Int)
@@ -372,11 +373,11 @@ function _dcm_pruned_perimeter(
     else
         perimeter_new = copy(perimeter)
 
-        #= The ordering `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so
-        without loss of generality, we restrict our search to partial orderings such that
-        `i₁` is less than `iₙ`. =#
+        #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
+        generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
+        checked just in case `n = 1`). =#
         if num_placed == 0
-            filter!(((lpo, _),) -> candidate < lpo[end], perimeter_new)
+            filter!(((lpo, _),) -> candidate <= lpo[end], perimeter_new)
         end
 
         if num_placed >= n - search_depth

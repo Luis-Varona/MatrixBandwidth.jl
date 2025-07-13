@@ -26,6 +26,7 @@ The following algorithms are currently supported:
 - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
 - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+- Brute-force search ([`BruteForce`](@ref))
 
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
@@ -43,6 +44,14 @@ import .._is_structurally_symmetric, .._offdiag_nonzero_support
 using Combinatorics: combinations, permutations
 using DataStructures: Queue, enqueue!, dequeue!
 
+# THe output struct and core recognition function
+export RecognitionResult, has_bandwidth_k_ordering
+export CapraraSalazarGonzalez, # Recognition algorithms
+    DelCorsoManzini,
+    DelCorsoManziniWithPS,
+    SaxeGurariSudborough,
+    BruteForce
+
 include("types.jl")
 include("core.jl")
 
@@ -50,13 +59,7 @@ include("deciders/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("deciders/del_corso_manzini.jl")
 include("deciders/saxe_gurari_sudborough.jl")
-
-# THe output struct and core recognition function
-export RecognitionResult, has_bandwidth_k_ordering
-export CapraraSalazarGonzalez, # Recognition algorithms
-    DelCorsoManzini,
-    DelCorsoManziniWithPS,
-    SaxeGurariSudborough
+include("deciders/brute_force.jl")
 
 const DEFAULT_DECIDER = CapraraSalazarGonzalez()
 

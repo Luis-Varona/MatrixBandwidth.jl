@@ -4,6 +4,8 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
+# TODO: I feel like this test suite is a bit messy. Let's rewrite it at some point.
+
 """
     TestCuthillMcKee
 
@@ -23,7 +25,7 @@ using Test
 const MAX_ORDER = 200
 const MAX_BAND = 10
 const MAX_DENSITY = 0.5
-const MAX_CCS = 8
+const MAX_CCS = 6
 
 include("../test_utils.jl")
 

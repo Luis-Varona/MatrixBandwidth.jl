@@ -143,7 +143,7 @@ julia> A = sprand(n, n, p);
 
 julia> A = A + A'; # Make `A` structurally symmetric
 
-julia> minimum(Iterators.map(perm -> bandwidth(A[perm, perm]), permutations(1:n)))
+julia> minimize_bandwidth(A, Minimization.BruteForce()).bandwidth # Foolproof algorithm
 5
 
 julia> bandwidth_lower_bound(A) # Always less than or equal to the true minimum bandwidth

@@ -62,30 +62,23 @@ function has_bandwidth_k_ordering(
         throw(StructuralAsymmetryError(A, decider))
     end
 
-    #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
-    values. We also set every diagonal entry to `false` for consistency with any algorithms
-    that assume an adjacency matrix structure. =#
-    A_bool = _offdiag_nonzero_support(A)
-
-    bandwidth_orig = bandwidth(A_bool)
-
     #= If the bandwidth of `A` is already less than or equal to `k`, then the current
-    row/column ordering suffices. =#
-    if bandwidth_orig <= k
-        bandwidth_k_ordering = collect(axes(A_bool, 1)) # The original ordering
+    ordering suffices. Otherwise, we compute a preliminary lower bound on the bandwidth
+    using results from Caprara and Salazar-González (2005) to determine whether we should
+    continue searching for an ordering. =#
+    if bandwidth(A) <= k
+        ordering = collect(axes(A, 1))
+    elseif bandwidth_lower_bound(A) <= k
+        #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
+        values. We also set every diagonal entry to `false` for consistency with any algorithms
+        that assume an adjacency matrix structure. =#
+        A_bool = _offdiag_nonzero_support(A)
+        ordering = _bool_bandwidth_k_ordering(A_bool, k, decider)
     else
-        #= Compute a preliminary lower bound on the bandwidth using results from Caprara and
-        Salazar-González (2005). =#
-        lower_bound = bandwidth_lower_bound(A_bool)
-
-        if lower_bound > k
-            bandwidth_k_ordering = nothing
-        else # The default case wherein a more expensive exact decider is used
-            bandwidth_k_ordering = _bool_bandwidth_k_ordering(A_bool, k, decider)
-        end
+        ordering = nothing
     end
 
-    return RecognitionResult(decider, A, bandwidth_k_ordering, k)
+    return RecognitionResult(decider, A, ordering, k)
 end
 
 #= Compute an ordering inducing a bandwidth of at most `k` for a preprocessed

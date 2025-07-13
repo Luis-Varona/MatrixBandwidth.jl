@@ -28,6 +28,7 @@ The following algorithms are currently supported:
     - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
     - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+    - Brute-force search ([`BruteForce`](@ref))
 - *Heuristic*
     - Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
     - Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
@@ -65,7 +66,8 @@ export MinimizationResult, minimize_bandwidth
 export CapraraSalazarGonzalez, # Exact solvers
     DelCorsoManzini,
     DelCorsoManziniWithPS,
-    SaxeGurariSudborough
+    SaxeGurariSudborough,
+    BruteForce
 export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
 export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
 

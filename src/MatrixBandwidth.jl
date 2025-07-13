@@ -34,8 +34,9 @@ The following algorithms are currently supported:
         - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
         - Del Corso–Manzini algorithm ([`Minimization.DelCorsoManzini`](@ref))
         - Del Corso–Manzini algorithm with perimeter search
-          ([`Minimization.DelCorsoManziniWithPS`](@ref))
+            ([`Minimization.DelCorsoManziniWithPS`](@ref))
         - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
+        - Brute-force search ([`Minimization.BruteForce`](@ref))
     - *Heuristic*
         - Gibbs–Poole–Stockmeyer algorithm ([`Minimization.GibbsPooleStockmeyer`](@ref))
         - Cuthill–McKee algorithm ([`Minimization.CuthillMcKee`](@ref))
@@ -46,10 +47,11 @@ The following algorithms are currently supported:
         - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
     - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
-    - Del Corso–Manzini algorith ([`Recognition.DelCorsoManzini`](@ref))
+    - Del Corso–Manzini algorithm ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search
-      ([`Recognition.DelCorsoManziniWithPS`](@ref))
+        ([`Recognition.DelCorsoManziniWithPS`](@ref))
     - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
+    - Brute-force search ([`Recognition.BruteForce`](@ref))
 
 [Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
 the latest development version of this package.
