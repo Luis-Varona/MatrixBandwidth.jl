@@ -31,7 +31,7 @@ const NUM_ITER = 100
             A = A + A' # Make `A` structurally symmetric
         end
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(0:(b - 1))
 
         res = has_bandwidth_k_ordering(A, k, DelCorsoManzini())
@@ -53,7 +53,7 @@ end
             A = A + A' # Make `A` structurally symmetric
         end
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(0:(b - 1))
 
         res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS())
@@ -75,7 +75,7 @@ end
             A = A + A' # Make `A` structurally symmetric
         end
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(0:(b - 1))
         depth = rand(1:n)
 
@@ -92,7 +92,7 @@ end
         A = sprand(n, n, density)
         A = A + A' # Make `A` structurally symmetric
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))
 
         res = has_bandwidth_k_ordering(A, k, DelCorsoManzini())
@@ -109,7 +109,7 @@ end
         A = sprand(n, n, density)
         A = A + A' # Make `A` structurally symmetric
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))
 
         res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS())
@@ -126,7 +126,7 @@ end
         A = sprand(n, n, density)
         A = A + A' # Make `A` structurally symmetric
 
-        b = minimize_bandwidth(A, Minimization.BruteForce()).bandwidth
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))
         depth = rand(1:n)
 

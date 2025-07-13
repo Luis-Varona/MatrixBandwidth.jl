@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    BruteForce <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
+    BruteForceSearch <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
 
 The simplest exact method for minimizing the bandwidth of a matrix is to iterate over all
 possible symmetric permutations and compare the bandwidths they induce.
@@ -28,13 +28,13 @@ Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! 
 Brute force is by far the slowest approach to matrix bandwidth minimization and should only
 be used in very niche cases like writing unit tests for other non-naïve algorithms.
 """
-struct BruteForce <: ExactSolver end
+struct BruteForceSearch <: ExactSolver end
 
-Base.summary(::BruteForce) = "Brute-force search"
+Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_symmetry(::BruteForce) = false
+_requires_symmetry(::BruteForceSearch) = false
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::BruteForce)
+function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::BruteForceSearch)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#

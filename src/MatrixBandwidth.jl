@@ -36,7 +36,7 @@ The following algorithms are currently supported:
         - Del Corso–Manzini algorithm with perimeter search
             ([`Minimization.DelCorsoManziniWithPS`](@ref))
         - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
-        - Brute-force search ([`Minimization.BruteForce`](@ref))
+        - Brute-force search ([`Minimization.BruteForceSearch`](@ref))
     - *Heuristic*
         - Gibbs–Poole–Stockmeyer algorithm ([`Minimization.GibbsPooleStockmeyer`](@ref))
         - Cuthill–McKee algorithm ([`Minimization.CuthillMcKee`](@ref))
@@ -51,7 +51,7 @@ The following algorithms are currently supported:
     - Del Corso–Manzini algorithm with perimeter search
         ([`Recognition.DelCorsoManziniWithPS`](@ref))
     - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
-    - Brute-force search ([`Recognition.BruteForce`](@ref))
+    - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 
 [Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
 the latest development version of this package.

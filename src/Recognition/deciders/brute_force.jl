@@ -5,7 +5,7 @@
 # distributed except according to those terms.
 
 """
-    BruteForce <: AbstractDecider <: AbstractAlgorithm
+    BruteForceSearch <: AbstractDecider <: AbstractAlgorithm
 
 The simplest method for determining, given some fixed ``k ∈ ℕ``, whether a matrix has
 bandwidth at most ``k`` up to symmetric permutation is to iterate over all orderings and
@@ -32,15 +32,15 @@ Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! 
 Brute force is by far the slowest approach to matrix bandwidth recognition and should only
 be used in very niche cases like writing unit tests for other non-naïve algorithms.
 """
-struct BruteForce <: AbstractDecider end
+struct BruteForceSearch <: AbstractDecider end
 
-Base.summary(::BruteForce) = "Brute-force search"
+Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_symmetry(::BruteForce) = false
+_requires_symmetry(::BruteForceSearch) = false
 
 #= We take advantage of the laziness of `permutations` and `Iterators.filter` to avoid
 iterating over all orderings if a valid one is found early. =#
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::BruteForce)
+function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::BruteForceSearch)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#
