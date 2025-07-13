@@ -70,7 +70,7 @@ tracking the latest positions at which the remaining indices can be placed [DCM9
 
 The incorporation of perimeter search to this approach entails precomputing a "perimeter" of
 ``d``-permutations of row indices of ``A``, where ``d`` is a positive integer passed as a
-parameter to the solver. Each permutation represents a way to select the last ``d`` entries
+parameter to the decider. Each permutation represents a way to select the last ``d`` entries
 of the ordering, and as the construction of the partial ordering progresses, potential
 endings are pruned to exclude those incompatible with already placed indices. In addition to
 pruning a potential ending if it contains indices already placed, compatibility is also
