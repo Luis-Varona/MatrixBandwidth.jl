@@ -26,7 +26,7 @@ const NUM_ITER = 100
         A = sprand(n, n, density)
         A = A + A' # Make `A` structurally symmetric
 
-        res_bf = minimize_bandwidth(A, BruteForce())
+        res_bf = minimize_bandwidth(A, BruteForceSearch())
         res_dcm = minimize_bandwidth(A, DelCorsoManzini())
         ordering_dcm = res_dcm.ordering
 
@@ -42,7 +42,7 @@ end
         A = sprand(n, n, density)
         A = A + A' # Make `A` structurally symmetric
 
-        res_bf = minimize_bandwidth(A, BruteForce())
+        res_bf = minimize_bandwidth(A, BruteForceSearch())
         res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS())
         ordering_dcm = res_dcm.ordering
 
@@ -59,7 +59,7 @@ end
         A = A + A' # Make `A` structurally symmetric
         depth = rand(1:n)
 
-        res_bf = minimize_bandwidth(A, BruteForce())
+        res_bf = minimize_bandwidth(A, BruteForceSearch())
         res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS(depth))
         ordering_dcm = res_dcm.ordering
 

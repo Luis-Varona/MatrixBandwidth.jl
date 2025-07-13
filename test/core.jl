@@ -41,7 +41,7 @@ end
         A = A + A' # Make `A` structurally symmetric
 
         k = bandwidth_lower_bound(A)
-        res = minimize_bandwidth(A, BruteForce())
+        res = minimize_bandwidth(A, BruteForceSearch())
 
         @test k <= res.bandwidth
     end

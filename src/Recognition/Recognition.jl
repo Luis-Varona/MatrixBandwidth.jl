@@ -26,7 +26,7 @@ The following algorithms are currently supported:
 - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
 - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
-- Brute-force search ([`BruteForce`](@ref))
+- Brute-force search ([`BruteForceSearch`](@ref))
 
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
@@ -50,7 +50,7 @@ export CapraraSalazarGonzalez, # Recognition algorithms
     DelCorsoManzini,
     DelCorsoManziniWithPS,
     SaxeGurariSudborough,
-    BruteForce
+    BruteForceSearch
 
 include("types.jl")
 include("core.jl")
