@@ -43,7 +43,7 @@
 
 The *bandwidth* of an *n*&times;*n* matrix *A* is the minimum non-negative integer *k* &isin; [0, *n* - 1] such that *A<sub>i,j</sub>* = 0 whenever |*i* - *j*| > *k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
 
-The *matrix bandwidth minimization problem* involves finding a permutation matrix *P* such that the bandwidth of *PAP*<sup>T</sup> is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs&ndash;Poole&ndash;Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara&ndash;Salazar-González) are exponential in time complexity and thus are only feasible for relatively small matrices.
+The *matrix bandwidth minimization problem* involves finding a permutation matrix *P* such that the bandwidth of *PAP*<sup>T</sup> is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs&ndash;Poole&ndash;Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara&ndash;Salazar-González) are at least exponential in time complexity and thus are only feasible for relatively small matrices.
 
 On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix *P* such that the bandwidth of *PAP*<sup>T</sup> is at most some fixed non-negative integer *k* &isin; **N**&mdash;an optimal permutation that fully minimizes the bandwidth of *A* is not required. Unlike the NP-hard minimization problem, this is decidable in *O*(*n*<sup>*k*</sup>) time.
 
@@ -87,6 +87,112 @@ When *MatrixBandwidth.jl* is finally added to the official Julia registry, you w
 
 ```julia-repl
 pkg> add MatrixBandwidth
+```
+
+## Basic use
+
+*MatrixBandwidth.jl* offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively&mdash;the algorithm itself is specified as an argument. For example, to minimize the bandwidth of a random matrix with the reverse Cuthill&ndash;McKee algorithm, you can run the following code:
+
+```julia-repl
+julia> using SparseArrays
+
+julia> A = sprand(30, 30, 0.05); A = A + A' # Ensure structural symmetry
+30×30 SparseMatrixCSC{Float64, Int64} with 80 stored entries:
+⎡⢠⠖⠀⠀⠂⠀⠀⠐⢀⠀⠈⠀⠠⢀⠂⎤
+⎢⠀⠀⠀⢀⠠⠀⠀⠀⠠⠀⠢⠀⠀⡀⠀⎥
+⎢⠈⠀⠀⠂⡀⠈⠀⠘⠐⣌⠀⠀⠀⠀⠒⎥
+⎢⢀⠀⠀⠀⣀⠀⠀⢀⠁⠈⠀⡐⠀⠂⠀⎥
+⎢⠀⠐⠀⠂⡐⢤⡁⠀⠀⠀⢈⠀⠈⠀⠐⎥
+⎢⠂⠀⠈⠂⠀⠀⢀⠠⠂⠐⡕⠉⠁⠀⢀⎥
+⎢⠀⢂⠀⠠⠀⠀⠠⠀⠂⠀⠁⠀⠀⠄⠀⎥
+⎣⠈⠀⠀⠀⠘⠀⠀⠀⠐⠀⠀⠐⠀⠀⠀⎦
+
+julia> res = minimize_bandwidth(A, Minimization.ReverseCuthillMcKee())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Reverse Cuthill–McKee
+ * Approach: heuristic
+ * Minimum Bandwidth: 8
+ * Original Bandwidth: 27
+ * Matrix Size: 30×30
+
+julia> A[res.ordering, res.ordering]
+30×30 SparseMatrixCSC{Float64, Int64} with 80 stored entries:
+⎡⠀⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⠊⠀⠐⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠰⠤⢀⠔⢈⠀⡢⡀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠂⠐⠄⠅⡀⠀⢱⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠈⠪⠀⠈⠄⠁⠀⢣⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠑⠒⠤⣀⡠⢎⠱⡀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠢⢤⡳⡀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠊⎦
+```
+
+Similarly, to determine whether a random matrix has bandwidth *at most* 10 (not necessarily caring about the true minimum) via the Del Corso&ndash;Manzini algorithm, you can run:
+
+```julia-repl
+julia> using SparseArrays
+
+julia> A = sprand(30, 30, 0.05); A = A + A' # Ensure structural symmetry
+30×30 SparseMatrixCSC{Float64, Int64} with 73 stored entries:
+⎡⠐⠀⢀⠀⣠⠄⠀⣀⠀⠂⠀⠀⠠⠄⠀⎤
+⎢⠀⠐⠀⠀⠀⠍⡐⠀⠓⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠞⡄⠄⠀⠀⠀⡀⠀⠂⡀⠂⠀⠀⠄⎥
+⎢⠀⢠⠐⠈⠀⠠⠀⠀⠈⠀⠀⠀⠀⡈⠁⎥
+⎢⠠⠀⠙⠀⠠⠀⠂⠀⠠⡢⠀⠀⡀⠈⠀⎥
+⎢⠀⠀⠀⠀⠠⠈⠀⠀⠀⠀⠁⠀⠈⢀⠀⎥
+⎢⠀⠆⠀⠀⠀⠀⡀⠠⡀⠈⠂⢀⠀⠀⠰⎥
+⎣⠀⠀⠀⠀⠀⠁⠁⠀⠀⠀⠀⠀⠐⠂⠁⎦
+
+julia> res = has_bandwidth_k_ordering(A, 10, Recognition.DelCorsoManzini())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * k: 10
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 24
+ * Matrix Size: 30×30
+
+julia> A[res.ordering, res.ordering]
+30×30 SparseMatrixCSC{Float64, Int64} with 73 stored entries:
+⎡⡀⠈⠈⠠⠑⡐⢄⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠂⡀⠀⠀⠠⠀⠀⠓⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⢑⠠⠀⠂⠠⠂⠀⠐⡉⠑⡀⠀⠀⠀⠀⎥
+⎢⠀⠑⢤⠀⢀⠀⠐⠀⠀⠈⠈⡑⢄⠀⠀⎥
+⎢⠀⠀⠀⠀⢇⠈⡀⠀⡐⠈⠀⠈⠂⠀⢀⎥
+⎢⠀⠀⠀⠀⠀⠈⢆⠠⡀⠀⡐⠈⠄⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠑⠈⠀⠀⠁⠄⠁⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⎦
+```
+
+## Documentation
+
+The full documentation is available at [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/dev/). Documentation for methods and types is also available via the Julia REPL. To learn more about the `minimize_bandwidth` function, for instance, enter help mode by typing `?`, then run the following command:
+
+```julia-repl
+help?> minimize_bandwidth
+search: minimize_bandwidth MatrixBandwidth bandwidth
+
+  minimize_bandwidth(A, solver=GibbsPooleStockmeyer()) -> MinimizationResult
+
+  Minimize the bandwidth of A using the algorithm defined by solver.
+
+  The bandwidth of an n×n matrix A is the minimum non-negative integer k ∈ [0,
+  n - 1] such that A[i, j] = 0 whenever |i - j| > k. Equivalently, A has
+  bandwidth at most k if all entries above the kᵗʰ superdiagonal and below the
+  kᵗʰ subdiagonal are zero, and A has bandwidth at least k if there exists any
+  nonzero entry in the kᵗʰ superdiagonal or subdiagonal.
+
+  This function computes a (near-)optimal ordering π of the rows and columns
+  of A so that the bandwidth of PAPᵀ is minimized, where P is the permutation
+  matrix corresponding to π. This is known to be an NP-complete problem;
+  however, several heuristic algorithms such as Gibbs–Poole–Stockmeyer run in
+  polynomial time while still still producing near-optimal orderings in
+  practice. Exact methods like Caprara–Salazar-González are also available,
+  but they are at least exponential in time complexity and thus only feasible
+  for relatively small matrices.
+
+  Arguments
+  ≡≡≡≡≡≡≡≡≡
+  …
 ```
 
 ## Citing

@@ -11,16 +11,16 @@ Fast algorithms for matrix bandwidth minimization and matrix bandwidth recogniti
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ [0, n - 1]`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. Equivalently, ``A``
-has bandwidth *at most* ``k`` if all entries above the ``k``-th superdiagonal and below the
-``k``-th subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
-nonzero entry in the ``k``-th superdiagonal or subdiagonal.
+has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ superdiagonal and below the
+``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any
+nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
 that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
 heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still
 producing near-optimal orderings in practice, but exact methods (like
-Caprara–Salazar-González) are exponential in time complexity and thus are only feasible for
-relatively small matrices.
+Caprara–Salazar-González) are at least exponential in time complexity and thus are only
+feasible for relatively small matrices.
 
 On the other hand, the *matrix bandwidth recognition problem* entails determining whether
 there exists a permutation matrix ``P`` such that the bandwidth of ``PAPᵀ`` is at most some
