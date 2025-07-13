@@ -40,6 +40,6 @@ Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 _requires_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez)
-    # TODO: Implement
-    return Int[]
+    error("TODO: Not yet implemented")
+    return nothing
 end

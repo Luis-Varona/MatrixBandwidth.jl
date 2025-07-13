@@ -45,5 +45,6 @@ _requires_symmetry(::CapraraSalazarGonzalez) = true
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Int, ::CapraraSalazarGonzalez
 )
-    # TODO: Implement
+    error("TODO: Not yet implemented")
+    return nothing
 end

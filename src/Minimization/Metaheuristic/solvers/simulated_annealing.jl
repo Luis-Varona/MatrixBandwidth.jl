@@ -7,7 +7,7 @@
 """
     SimulatedAnnealing <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
-TODO: Write here
+[TODO: Write here]
 """
 struct SimulatedAnnealing <: MetaheuristicSolver
     initial_temp::Float64
@@ -24,5 +24,6 @@ Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 _requires_symmetry(::SimulatedAnnealing) = false
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::SimulatedAnnealing)
-    # TODO: Implement
+    error("TODO: Not yet implemented")
+    return nothing
 end

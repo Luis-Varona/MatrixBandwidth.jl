@@ -77,7 +77,7 @@ The following algorithms are currently supported:
   - Saxe–Gurari–Sudborough algorithm
   - Brute-force search
 
-(As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested.)
+(As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested. Whenever an unimplemented algorithm is used, an `ERROR: TODO: Not yet implemented` is raised.)
 
 ## Installation
 

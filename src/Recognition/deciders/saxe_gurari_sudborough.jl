@@ -7,12 +7,13 @@
 """
     SaxeGurariSudborough <: AbstractDecider <: AbstractAlgorithm
 
-TODO: Write here
+[TODO: Write here]
 """
 struct SaxeGurariSudborough <: AbstractDecider end
 
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
 function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::SaxeGurariSudborough)
-    # TODO: Implement
+    error("TODO: Not yet implemented")
+    return nothing
 end
