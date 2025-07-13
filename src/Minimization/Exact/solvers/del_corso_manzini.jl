@@ -29,15 +29,15 @@ is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 �
 
 # Performance
 Given an ``n×n`` input matrix ``A``, the Del Corso–Manzini algorithm runs in
-``O(n³ ⋅ n!)`` time:
+``O(n! ⋅ n³)`` time:
 - For each underlying "bandwidth ≤ ``k``" check, we perform a depth-first search of
     ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time, resulting in
-    ``O(nk ⋅ n!)`` steps for each value of ``k``.
+    ``O(n! ⋅ nk)`` steps for each value of ``k``.
 - The difference between the maximum possible bandwidth (``n - 1``) and our initial lower
-    bound grows linearly in ``n``, so we run the underlying ``O(nk ⋅ n!)`` recognition
+    bound grows linearly in ``n``, so we run the underlying ``O(n! ⋅ nk)`` recognition
     algorithm ``O(n)`` times.
-- Finally, ``∑ₖ₌₀ⁿ⁻¹ nk = O(n³)``, so the overall time complexity is ``O(n³ ⋅ n!)``.
+- Finally, ``∑ₖ₌₀ⁿ⁻¹ nk = O(n³)``, so the overall time complexity is ``O(n! ⋅ n³)``.
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini, achieved
 only in the most pathological of cases. In practice, efficient pruning techniques and
@@ -105,17 +105,17 @@ nonzero for ``1 ≤ i, j ≤ n``).
 
 # Performance
 Given an ``n×n`` input matrix ``A`` and perimeter search depth ``d``, the Del Corso–Manzini
-algorithm with perimeter search runs in ``O(nᴰ⁺¹ ⋅ n!)`` time, where ``Dᴰ = max(d, 2)``:
+algorithm with perimeter search runs in ``O(n! ⋅ nᴰ⁺¹)`` time, where ``Dᴰ = max(d, 2)``:
 - For each underlying "bandwidth ≤ ``k``" check, we perform a depth-first search of
     ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time, and checking
     compatibility with all size-``d`` LPOs takes ``O(nᵈ)`` time. Thus, the overall time
-    complexity for each value of ``k`` is ``O((nᵈ + nk) ⋅ n!)``.
+    complexity for each value of ``k`` is ``O(n! ⋅ (nᵈ + nk))``.
 - The difference between the maximum possible bandwidth (``n - 1``) and our initial lower
-    bound grows linearly in ``n``, so we run the underlying ``O((nᵈ + nk) ⋅ n!)``
+    bound grows linearly in ``n``, so we run the underlying ``O(n! ⋅ (nᵈ + nk))``
     recognition algorithm ``O(n)`` times.
 - Finally, ``∑ₖ₌₀ⁿ⁻¹ (nᵈ + nk) = O(nᵈ⁺¹ + n³)``, so the overall time complexity
-    is ``O(nᴰ⁺¹ ⋅ n!)``, where ``D = max(d, 2)``.
+    is ``O(n! ⋅ nᴰ⁺¹)``, where ``D = max(d, 2)``.
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini with
 perimeter search, achieved only in the most pathological of cases. In practice, efficient
@@ -199,6 +199,11 @@ function _bool_minimal_band_ordering(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Int}
 )
     n = size(A, 1)
+    ps_depth = solver.depth
+
+    if ps_depth > n
+        throw(ArgumentError("Perimeter search depth $ps_depth exceeds matrix order $n"))
+    end
 
     ordering_buf = Vector{Int}(undef, n)
     k = bandwidth_lower_bound(A)
@@ -207,7 +212,6 @@ function _bool_minimal_band_ordering(
     unselected = Set(1:n)
     adj_list = Set{Int}()
     num_placed = 0
-    ps_depth = solver.depth
     lpos = Iterators.flatmap(permutations, combinations(1:n, ps_depth))
 
     ordering = nothing

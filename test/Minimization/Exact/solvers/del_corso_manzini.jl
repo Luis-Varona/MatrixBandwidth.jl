@@ -14,8 +14,59 @@ module TestDelCorsoManzini
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization
+using SparseArrays
 using Test
 
-# TODO: Write here
+const MAX_ORDER = 7
+const NUM_ITER = 100
+
+@testset "DCM – Brute force verification (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Make `A` structurally symmetric
+
+        res_bf = minimize_bandwidth(A, BruteForce())
+        res_dcm = minimize_bandwidth(A, DelCorsoManzini())
+        ordering_dcm = res_dcm.ordering
+
+        @test res_bf.bandwidth ==
+            res_dcm.bandwidth ==
+            bandwidth(A[ordering_dcm, ordering_dcm])
+    end
+end
+
+@testset "DCM-PS (default depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Make `A` structurally symmetric
+
+        res_bf = minimize_bandwidth(A, BruteForce())
+        res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS())
+        ordering_dcm = res_dcm.ordering
+
+        @test res_bf.bandwidth ==
+            res_dcm.bandwidth ==
+            bandwidth(A[ordering_dcm, ordering_dcm])
+    end
+end
+
+@testset "DCM-PS (custom depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Make `A` structurally symmetric
+        depth = rand(1:n)
+
+        res_bf = minimize_bandwidth(A, BruteForce())
+        res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS(depth))
+        ordering_dcm = res_dcm.ordering
+
+        @test res_bf.bandwidth ==
+            res_dcm.bandwidth ==
+            bandwidth(A[ordering_dcm, ordering_dcm])
+    end
+end
 
 end

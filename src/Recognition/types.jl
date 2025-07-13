@@ -32,13 +32,13 @@ Output struct for matrix bandwidth recognition results.
 - `ordering::O<:Union{Nothing,Vector{Int}}`: an ordering of the rows and columns of `matrix`
     inducing a bandwidth at most `k`, if such an ordering exists; otherwise, `nothing`.
 - `k::Int`: the threshold bandwidth against which to test.
-- `has_bandwidth_k_ordering::Bool`: whether the matrix has an ordering inducing a bandwidth
-    at most `k`. (This is `true` if and only if `ordering` is not `nothing`.)
+- `has_ordering::Bool`: whether the matrix has an ordering inducing a bandwidth at most `k`.
+    (This is `true` if and only if `ordering` is not `nothing`.)
 
 # Constructors
 - `RecognitionResult(decider, matrix, ordering, k)`: constructs a new `RecognitionResult`
-    instance with the given fields. The `has_bandwidth_k_ordering` field is automatically
-    determined based on whether `ordering` is `nothing` or a `Vector{Int}`.
+    instance with the given fields. The `has_ordering` field is automatically determined
+    based on whether `ordering` is `nothing` or a `Vector{Int}`.
 """
 struct RecognitionResult{
     A<:AbstractDecider,M<:AbstractMatrix{<:Number},O<:Union{Nothing,Vector{Int}}
@@ -47,7 +47,7 @@ struct RecognitionResult{
     matrix::M
     ordering::O
     k::Int
-    has_bandwidth_k_ordering::Bool
+    has_ordering::Bool
 
     function RecognitionResult(
         algorithm::A, matrix::M, ::Nothing, k::Int
@@ -69,7 +69,7 @@ function Base.show(io::IO, res::RecognitionResult)
     println(io, "Results of Bandwidth Recognition Algorithm")
     println(io, " * Algorithm: $(summary(res.algorithm))")
     println(io, " * k: $(res.k)")
-    println(io, " * Has Bandwidth ≤ k Ordering: $(res.has_bandwidth_k_ordering)")
+    println(io, " * Has Bandwidth ≤ k Ordering: $(res.has_ordering)")
     println(io, " * Original Bandwidth: $(bandwidth(res.matrix))")
     print(io, " * Matrix Size: $n×$n")
 

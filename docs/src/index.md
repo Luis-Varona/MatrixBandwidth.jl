@@ -61,6 +61,7 @@ The following algorithms are currently supported:
     - Del Corso–Manzini algorithm
     - Del Corso–Manzini algorithm with perimeter search
     - Saxe–Gurari–Sudborough algorithm
+    - Brute-force search
   - *Heuristic*
     - Gibbs–Poole–Stockmeyer algorithm
     - Cuthill–McKee algorithm
@@ -74,6 +75,7 @@ The following algorithms are currently supported:
   - Del Corso–Manzini algorithm
   - Del Corso–Manzini algorithm with perimeter search
   - Saxe–Gurari–Sudborough algorithm
+  - Brute-force search
 
 (As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested.)
 
