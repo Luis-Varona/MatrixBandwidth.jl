@@ -417,7 +417,7 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcK
     k = 1
 
     for component in components
-        submatrix = A[component, component]
+        submatrix = view(A, component, component)
         component_ordering = _connected_cuthill_mckee_ordering(submatrix, node_selector)
 
         component_size = length(component)
@@ -447,7 +447,7 @@ function _connected_cuthill_mckee_ordering(A::AbstractMatrix{Bool}, node_selecto
         parent = dequeue!(queue)
         ordering[i] = parent
 
-        unvisited = filter!(!in(visited), findall(A[:, parent]))
+        unvisited = filter!(!in(visited), findall(view(A, :, parent)))
         sort!(unvisited; by=node -> degrees[node])
 
         union!(visited, unvisited)

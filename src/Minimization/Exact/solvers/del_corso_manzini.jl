@@ -4,8 +4,6 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-# TODO: Some parts of the source code here are still missing clarifying inline comments.
-
 """
     DelCorsoManzini <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
 
@@ -278,6 +276,10 @@ The so-called "MB-ID algorithm," on the other hand, we implement in
 struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: ExactSolver
     depth::D
 
+    #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
+    instantiation of the solver, as it depends on the input matrix as well. Hence, we use
+    `nothing` as a sentinel to indicate to `_bool_minimal_band_ordering` that a default
+    depth still needs to be computed upon the function call. =#
     DelCorsoManziniWithPS() = new{Nothing}(nothing)
 
     function DelCorsoManziniWithPS(depth::Int)
@@ -298,10 +300,12 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::DelCorsoManzini)
 
     ordering_buf = Vector{Int}(undef, n)
     k = bandwidth_lower_bound(A)
-    adj_lists = map(node -> findall(A[:, node]), 1:n)
+    adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
     adj_list = Set{Int}()
+    #= Sentinel value for a nonempty perimeter just so the common logic between DCM and
+    DCM-PS still runs. =#
     perimeter = [(Int[], Int[])]
     num_placed = 0
     ps_depth = 0
@@ -329,8 +333,10 @@ end
 function _bool_minimal_band_ordering(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Nothing}
 )
-    decider_with_depth = DelCorsoManziniWithPS(Recognition.dcm_ps_optimal_depth(A))
-    return _bool_minimal_band_ordering(A, decider_with_depth)
+    #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
+    instantiation of the solver, as it depends on the input matrix as well. =#
+    solver_with_depth = DelCorsoManziniWithPS(Recognition.dcm_ps_optimal_depth(A))
+    return _bool_minimal_band_ordering(A, solver_with_depth)
 end
 
 function _bool_minimal_band_ordering(
@@ -345,7 +351,7 @@ function _bool_minimal_band_ordering(
 
     ordering_buf = Vector{Int}(undef, n)
     k = bandwidth_lower_bound(A)
-    adj_lists = map(node -> findall(A[:, node]), 1:n)
+    adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
     adj_list = Set{Int}()

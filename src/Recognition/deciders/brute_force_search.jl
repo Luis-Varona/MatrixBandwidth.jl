@@ -21,8 +21,8 @@ to check subsequent permutations.
 Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
 - Up to ``n!/2`` permutations may be checked (except when ``n = 1``, in which case
     ``1! = 1`` permutation is checked). This is, clearly, ``O(n!)``.
-- For each permutation, the [`bandwidth`](@ref) function is called on ``A[perm, perm]``,
-    which takes ``O(n²)`` time.
+- For each permutation, the [`bandwidth`](@ref) function is called on
+    ``view(A, perm, perm)``, which takes ``O(n²)`` time.
 - Therefore, the overall time complexity is ``O(n! ⋅ n²)``.
 
 # Examples
@@ -95,7 +95,7 @@ function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::BruteForc
         perm -> perm[1] <= perm[end], permutations(axes(A, 1))
     )
     valid_orderings = Iterators.filter(
-        perm -> bandwidth(A[perm, perm]) <= k, orderings_up_to_reversal
+        perm -> bandwidth(view(A, perm, perm)) <= k, orderings_up_to_reversal
     )
     res = iterate(valid_orderings)
 

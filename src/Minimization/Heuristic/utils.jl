@@ -44,7 +44,7 @@ function pseudo_peripheral_node(A::AbstractMatrix{Bool})
 
         while !isempty(queue)
             curr = dequeue!(queue)
-            neighbors = findall(A[curr, :])
+            neighbors = findall(view(A, :, curr))
 
             for neighbor in neighbors
                 if distances[neighbor] == typemax(Int)
