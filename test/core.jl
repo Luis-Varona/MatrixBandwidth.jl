@@ -38,7 +38,7 @@ end
     for n in 1:MAX_ORDER2, _ in 1:NUM_ITER2
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         k = bandwidth_lower_bound(A)
         res = minimize_bandwidth(A, BruteForceSearch())
@@ -51,7 +51,7 @@ end
     for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
         density = rand()
         A = sprand(Bool, n, n, density)
-        A = A .|| A' # Make `A` structurally symmetric
+        A = A .|| A' # Ensure structural symmetry
         g = Graph(A)
 
         res_matband = MatrixBandwidth._floyd_warshall_shortest_paths(A)

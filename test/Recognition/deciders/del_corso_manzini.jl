@@ -23,12 +23,12 @@ const NUM_ITER = 100
     for n in 2:MAX_ORDER, i in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         while bandwidth(A) == 0
             density = rand()
             A = sprand(n, n, density)
-            A = A + A' # Make `A` structurally symmetric
+            A = A + A' # Ensure structural symmetry
         end
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
@@ -45,12 +45,12 @@ end
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         while bandwidth(A) == 0
             density = rand()
             A = sprand(n, n, density)
-            A = A + A' # Make `A` structurally symmetric
+            A = A + A' # Ensure structural symmetry
         end
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
@@ -67,12 +67,12 @@ end
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         while bandwidth(A) == 0
             density = rand()
             A = sprand(n, n, density)
-            A = A + A' # Make `A` structurally symmetric
+            A = A + A' # Ensure structural symmetry
         end
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
@@ -90,7 +90,7 @@ end
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))
@@ -107,7 +107,7 @@ end
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))
@@ -124,7 +124,7 @@ end
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
         k = rand(b:(n - 1))

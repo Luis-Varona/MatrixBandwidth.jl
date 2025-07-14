@@ -68,7 +68,7 @@ function Base.show(io::IO, res::RecognitionResult)
 
     println(io, "Results of Bandwidth Recognition Algorithm")
     println(io, " * Algorithm: $(summary(res.algorithm))")
-    println(io, " * k: $(res.k)")
+    println(io, " * Bandwidth Threshold k: $(res.k)")
     println(io, " * Has Bandwidth ≤ k Ordering: $(res.has_ordering)")
     println(io, " * Original Bandwidth: $(bandwidth(res.matrix))")
     print(io, " * Matrix Size: $n×$n")
