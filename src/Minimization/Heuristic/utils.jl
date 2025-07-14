@@ -9,16 +9,17 @@
 
 Select a pseudo-peripheral node from the connected graph represented by `A`.
 
-[TODO: Potentially note Gibbs–Poole–Stockmeyer as well? Decide once I implement.]
+This function acts as a node selector for heuristic matrix bandwidth minimization algorithms
+such as reverse Cuthill–McKee and Gibbs–Poole–Stockmeyer when applies to connected graphs
+(or their adjacency matrices). It heuristically identifies the node "farthest" from the
+others in the graph as a good starting point for the search process.
 
-This function acts as a node selector for the Cuthill–McKee and Reverse Cuthill–McKee
-algorithms, heuristically choosing the node "farthest" from the others in the graph. It is
-assumed that `A` is the adjacency matrix of some connected, undirected graph; otherwise,
-undefined behavior may arise.
+It is assumed that `A` is the adjacency matrix of some connected, undirected graph;
+otherwise, undefined behavior may arise.
 
 # Arguments
-- `A::AbstractMatrix{Bool}`: the adjacency matrix of some connected, undirected graph. In
-    practice, this semantically represents the connected component of some larger graph.
+- `A::AbstractMatrix{Bool}`: a symmetric matrix with boolean entries, acting as the
+    adjacency matrix of some connected undirected graph.
 
 # Returns
 - `Int`: the index of the pseudo-peripheral node selected from the graph.
@@ -106,4 +107,36 @@ function _assert_valid_node_selector(selector::Function)
     end
 
     return nothing
+end
+
+# Find the indices of all connected components in an adjacency matrix
+function _connected_components(A::AbstractMatrix{Bool})
+    n = size(A, 1)
+    visited = falses(n)
+    queue = Queue{Int}()
+    components = Vector{Int}[]
+
+    for i in 1:n
+        if !visited[i]
+            visited[i] = true
+            enqueue!(queue, i)
+            component = Int[]
+
+            while !isempty(queue)
+                u = dequeue!(queue)
+                push!(component, u)
+
+                for v in findall(view(A, :, u))
+                    if !visited[v]
+                        visited[v] = true
+                        enqueue!(queue, v)
+                    end
+                end
+            end
+
+            push!(components, component)
+        end
+    end
+
+    return components
 end

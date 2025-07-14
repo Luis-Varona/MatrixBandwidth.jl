@@ -135,7 +135,7 @@ function random_banded_matrix(
         #= Ensure that the `d`ᵗʰ superdiagonal and subdiagonal each have at least one
         nonzero entry for `1 ≤ d ≤ k`, making a `bandwidth < k` symmetric permutation less
         likely. (Given structural symmetry, we need only check for empty superdiagonals.) =#
-        if iszero(map(i -> A[i, i + d], feasible_indices))
+        if all(iszero, Iterators.map(i -> A[i, i + d], feasible_indices))
             i = rand(rng, feasible_indices)
             A[i, i + d] = rand(rng)
             A[i + d, i] = rand(rng)
