@@ -47,8 +47,7 @@ the true minimum bandwidth up to symmetric permutation may be even less than ``k
 it hard to verify whether Cuthill–McKee finds a truly optimal ordering or simply a
 near-optimal one. Nevertheless, the results are still very good in practice.
 
-Cuthill–McKee finds a good ordering for a ``30×30`` matrix whose rows and columns have been
-shuffled:
+Cuthill–McKee finds a good ordering for a ``30×30`` matrix:
 ```jldoctest
 julia> using Random
 
@@ -68,7 +67,7 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 25
 
-julia> res = minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee())
+julia> minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee())
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Cuthill–McKee
  * Approach: heuristic
@@ -78,7 +77,7 @@ Results of Bandwidth Minimization Algorithm
 ```
 
 Cuthill–McKee finds a good ordering for a structurally symmetric ``183×183`` matrix with
-multiple (separate) connected components whose rows and columns have been shuffled:
+multiple (separate) connected components:
 ```jldoctest
 julia> using Random, SparseArrays
 
@@ -250,8 +249,7 @@ the true minimum bandwidth up to symmetric permutation may be even less than ``k
 it hard to verify whether reverse Cuthill–McKee finds a truly optimal ordering or simply a
 near-optimal one. Nevertheless, the results are still very good in practice.
 
-Reverse Cuthill–McKee finds a good ordering for a ``35×35`` matrix whose rows and columns
-have been shuffled:
+Reverse Cuthill–McKee finds a good ordering for a ``35×35`` matrix:
 ```jldoctest
 julia> using Random
 
@@ -271,7 +269,7 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 30
 
-julia> res = minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee())
+julia> minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee())
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Reverse Cuthill–McKee
  * Approach: heuristic
@@ -281,7 +279,7 @@ Results of Bandwidth Minimization Algorithm
 ```
 
 Reverse Cuthill–McKee finds a good ordering for a ``235×235`` matrix with multiple
-(separate) connected components whose rows and columns have been shuffled:
+(separate) connected components:
 ```jldoctest
 julia> using Random, SparseArrays
 

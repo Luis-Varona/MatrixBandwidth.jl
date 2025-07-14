@@ -4,6 +4,8 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
+# TODO: Some parts of the source code here are still missing clarifying inline comments.
+
 """
     DelCorsoManzini <: AbstractDecider <: AbstractAlgorithm
 
@@ -34,7 +36,37 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 ``n ≈ 100`` or so.
 
 # Examples
-[TODO: Write here]
+We demonstrate both an affirmative and a negative result for the Del Corso–Manzini
+recognition algorithm on a random ``40×40`` matrix:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(7878);
+
+julia> (n, p) = (40, 0.1);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (13, 26);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.DelCorsoManzini())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * Bandwidth Threshold k: 13
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 34
+ * Matrix Size: 40×40
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.DelCorsoManzini())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * Bandwidth Threshold k: 26
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 34
+ * Matrix Size: 40×40
+```
 
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini recognition algorithm
@@ -83,10 +115,17 @@ symmetric input (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]``
 nonzero for ``1 ≤ i, j ≤ n``).
 
 # Fields
-[TODO: Write here]
+- `depth::D<:Union{Nothing,Int}`: the perimeter search depth. If this field is not set (and
+    thus automatically initialized to `nothing`), a default depth is computed by
+    [`dcm_ps_optimal_depth`](@ref) as a function of the input matrix every time the decider
+    is passed to [`has_bandwidth_k_ordering`](@ref) as a function of the input matrix.
+    Otherwise, it must be manually set to a positive integer.
 
 # Constructors
-[TODO: Write here]
+- `DelCorsoManziniWithPS()`: constructs a new `DelCorsoManziniWithPS` instance with the
+    default perimeter search depth initialized to `nothing`.
+- `DelCorsoManziniWithPS(depth::Int)`: constructs a new `DelCorsoManziniWithPS` instance
+    with the specified perimeter search depth. `depth` must be a positive integer.
 
 # Performance
 Given an ``n×n`` input matrix ``A``, perimeter search depth ``d``, and threshold bandwidth
@@ -107,7 +146,56 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 ``n ≈ 100`` or so.
 
 # Examples
-[TODO: Write here]
+Here, Del Corso–Manzini with perimeter search ascertains that A random ``30×30`` matrix has
+a minimum bandwidth greater than ``9``. The depth parameter is not explicitly set; instead,
+some near-optimal value is automatically computed upon the first
+[`has_bandwidth_k_ordering`](@ref) function call.
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(5847);
+
+julia> (n, p) = (30, 0.05);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> k = 6;
+
+julia> has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini with perimeter search
+ * Bandwidth Threshold k: 6
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 27
+ * Matrix Size: 30×30
+```
+
+Now, Del Corso–Manzini with perimeter search recognizes that a random ``35×35`` matrix has a
+minimum bandwidth at most ``8``. In this case, we explitily set the depth parameter to ``4``
+beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(23552);
+
+julia> (n, p, depth) = (35, 0.02, 4);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> k = 8;
+
+julia> has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS(depth))
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini with perimeter search
+ * Bandwidth Threshold k: 8
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 32
+ * Matrix Size: 35×35
+```
 
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini recognition algorithm
@@ -141,9 +229,33 @@ Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter sear
 
 _requires_symmetry(::DelCorsoManziniWithPS) = true
 
-# TODO: Add inline comments to all the code in the rest of the file below
+"""197 199
+    dcm_ps_optimal_depth(A::AbstractMatrix{Bool}) -> Int
 
-function _dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
+Compute a (hopefully) near-optimal Del Corso–Manzini perimeter search depth for `A`.
+
+Taking experimental results from [DCM99; pp. 197–199](@cite) into account, this function
+tries to approximate the optimal depth parameter as a function of both matrix size and
+density. This depth parameter determines how large of a "perimeter" of last-placed indices
+is precomputed in the Del Corso–Manzini algorithm with perimeter search.
+
+# Arguments
+- `A::AbstractMatrix{Bool}`: the (structurally symmetric and square) input matrix whose
+    bandwidth is investigated.
+
+# Returns
+- `::Int`: a (hopefully) near-optimal perimeter search depth for the Del Corso–Manzini
+    algorithm with perimeter search on `A`.
+
+# Notes
+See Tables 4, 5, and 6 from the original paper for more details on experimental results
+regarding the optimal perimeter search depth [DCM99; pp. 197–199](@cite).
+
+See also [`DelCorsoManziniWithPS`](@ref) and
+[`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref)) for our implementation
+of the relevant bandwidth recognition and bandwidth minimization algorithms, respectively.
+"""
+function dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
     n = size(A, 1)
 
     #= `A` is symmetric and diagonal entries are irrelevant (and indeed all false in this
@@ -155,7 +267,6 @@ function _dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
     k_lb = bandwidth_lower_bound(A)
     band_density_ub = num_nonzero / (2n * k_lb - k_lb * (k_lb + 1))
 
-    # TODO: Explain
     if n < 100
         max_depth = 1.6e-8n^5 - 3.52e-6n^4 + 2.33e-4n^3 - 5.5e-3n^2 + 0.14n + 1.0
     else
@@ -191,7 +302,7 @@ end
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Int, ::DelCorsoManziniWithPS{Nothing}
 )
-    decider_with_depth = DelCorsoManziniWithPS(_dcm_ps_optimal_depth(A))
+    decider_with_depth = DelCorsoManziniWithPS(dcm_ps_optimal_depth(A))
     return _bool_bandwidth_k_ordering(A, k, decider_with_depth)
 end
 

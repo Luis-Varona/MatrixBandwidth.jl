@@ -132,7 +132,7 @@ in ``O(n²)`` time).
 # Examples
 The function correctly computes a bound less than (or equal to) the true minimum bandwidth
 of a matrix up to symmetric permutation:
-```julia
+```jldoctest
 julia> using Random, SparseArrays, Combinatorics
 
 julia> Random.seed!(21);
@@ -141,10 +141,15 @@ julia> (n, p) = (9, 0.4);
 
 julia> A = sprand(n, n, p);
 
-julia> A = A + A'; # Make `A` structurally symmetric
+julia> A = A + A' # Ensure structural symmetry;
 
-julia> minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
-5
+julia> minimize_bandwidth(A, Minimization.BruteForceSearch())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Brute-force search
+ * Approach: exact
+ * Minimum Bandwidth: 5
+ * Original Bandwidth: 8
+ * Matrix Size: 9×9
 
 julia> bandwidth_lower_bound(A) # Always less than or equal to the true minimum bandwidth
 4

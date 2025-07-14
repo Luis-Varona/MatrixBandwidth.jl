@@ -150,7 +150,7 @@ julia> A = sprand(30, 30, 0.05); A = A + A' # Ensure structural symmetry
 julia> res = has_bandwidth_k_ordering(A, 10, Recognition.DelCorsoManzini())
 Results of Bandwidth Recognition Algorithm
  * Algorithm: Del Corso–Manzini
- * k: 10
+ * Bandwidth Threshold k: 10
  * Has Bandwidth ≤ k Ordering: true
  * Original Bandwidth: 24
  * Matrix Size: 30×30

@@ -24,7 +24,7 @@ const NUM_ITER = 100
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         res_bf = minimize_bandwidth(A, BruteForceSearch())
         res_dcm = minimize_bandwidth(A, DelCorsoManzini())
@@ -40,7 +40,7 @@ end
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
 
         res_bf = minimize_bandwidth(A, BruteForceSearch())
         res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS())
@@ -56,7 +56,7 @@ end
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
-        A = A + A' # Make `A` structurally symmetric
+        A = A + A' # Ensure structural symmetry
         depth = rand(1:n)
 
         res_bf = minimize_bandwidth(A, BruteForceSearch())

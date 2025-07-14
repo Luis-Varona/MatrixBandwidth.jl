@@ -22,6 +22,8 @@ makedocs(;
         canonical="https://Luis-Varona.github.io/MatrixBandwidth.jl",
         edit_link="main",
         assets=["assets/styles.css"],
+        size_threshold=1_000_000,
+        size_threshold_warn=200_000,
     ),
     plugins=[bib],
     pages=[

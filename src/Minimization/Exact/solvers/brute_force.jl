@@ -21,12 +21,43 @@ Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! 
     which takes ``O(n²)`` time.
 - Therefore, the overall time complexity is ``O(n! ⋅ n²)``.
 
+Indeed, due to the need to exhaustively check all permutations, this is close to a lower
+bound as well on the the algorithm's time complexity. (The only reason we cannot claim to
+have a precise value for the big-``Θ`` complexity is that the [`bandwidth`](@ref) function
+is not *exactly* ``Θ(n²)``, although it is close.)
+
 # Examples
-[TODO: Write here]
+The algorithm always iterates over all possible permutations, so it is infeasible to go
+above ``9×9`` or ``10×10`` without incurring multiple-hour runtimes. Nevertheless, we see
+that it is quite effective for, say, ``8×8``:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(628318);
+
+julia> (n, p) = (8, 0.2);
+
+julia> A = sprand(Bool, n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> minimize_bandwidth(A, Minimization.BruteForceSearch())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Brute-force search
+ * Approach: exact
+ * Minimum Bandwidth: 3
+ * Original Bandwidth: 6
+ * Matrix Size: 8×8
+```
 
 # Notes
 Brute force is by far the slowest approach to matrix bandwidth minimization and should only
-be used in very niche cases like writing unit tests for other non-naïve algorithms.
+be used in very niche cases (like verifying the correctness of other algorithms in unit
+tests). For ``10×10`` matrices, the algorithm already takes several minutes to run (between
+``2`` to ``5`` on most commercial machines) and allocates over ``4`` gigabytes of memory.
+Given the ``O(n! ⋅ n²)`` time complexity, minimizing the bandwidth of any ``11×11`` matrix
+would take over an hour.
+
 """
 struct BruteForceSearch <: ExactSolver end
 
