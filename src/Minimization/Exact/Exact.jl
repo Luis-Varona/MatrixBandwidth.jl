@@ -48,6 +48,6 @@ include("solvers/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("solvers/del_corso_manzini.jl")
 include("solvers/saxe_gurari_sudborough.jl")
-include("solvers/brute_force.jl")
+include("solvers/brute_force_search.jl")
 
 end
