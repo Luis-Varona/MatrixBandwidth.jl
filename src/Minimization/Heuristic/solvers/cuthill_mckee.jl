@@ -189,9 +189,6 @@ Results of Bandwidth Minimization Algorithm
 Note that the `node_selector` field must be of the form
 `(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
-
-See also the documentation for supertypes [`HeuristicSolver`](@ref) and
-[`AbstractSolver`](@ref).
 """
 struct CuthillMcKee <: HeuristicSolver
     node_selector::Function
@@ -413,27 +410,26 @@ _requires_symmetry(::ReverseCuthillMcKee) = true
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
     node_selector = solver.node_selector
     components = _connected_components(A)
-    ordering = Vector{Int}(undef, size(A, 1))
-    k = 1
 
-    for component in components
-        submatrix = view(A, component, component)
-        component_ordering = _connected_cuthill_mckee_ordering(submatrix, node_selector)
+    component_orderings = Iterators.map(
+        component -> _cm_connected_ordering(view(A, component, component), node_selector),
+        components,
+    )
 
-        component_size = length(component)
-        ordering[k:(k + component_size - 1)] = component[component_ordering]
-        k += component_size
-    end
-
-    return ordering
+    return collect(
+        Iterators.flatmap(
+            ((component, component_ordering),) -> component[component_ordering],
+            zip(components, component_orderings),
+        ),
+    )
 end
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee)
     return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_selector)))
 end
 
-# Cuthill–McKee performs a breadth-first search on each connected component independently
-function _connected_cuthill_mckee_ordering(A::AbstractMatrix{Bool}, node_selector::Function)
+# Cuthill–McKee searches each connected component independently
+function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_selector::Function)
     n = size(A, 1)
     ordering = Vector{Int}(undef, n)
 
@@ -455,36 +451,4 @@ function _connected_cuthill_mckee_ordering(A::AbstractMatrix{Bool}, node_selecto
     end
 
     return ordering
-end
-
-# Find the indices of all connected components in an adjacency matrix
-function _connected_components(A::AbstractMatrix{Bool})
-    n = size(A, 1)
-    visited = falses(n)
-    queue = Queue{Int}()
-    components = Vector{Int}[]
-
-    for i in 1:n
-        if !visited[i]
-            visited[i] = true
-            enqueue!(queue, i)
-            component = Int[]
-
-            while !isempty(queue)
-                u = dequeue!(queue)
-                push!(component, u)
-
-                for v in 1:n
-                    if A[u, v] && !visited[v]
-                        visited[v] = true
-                        enqueue!(queue, v)
-                    end
-                end
-            end
-
-            push!(components, component)
-        end
-    end
-
-    return components
 end
