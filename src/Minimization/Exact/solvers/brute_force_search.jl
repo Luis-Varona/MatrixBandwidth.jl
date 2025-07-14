@@ -17,8 +17,8 @@ search to orderings such that ``i₁ ≤ iₙ`` (with equality checked just in c
 Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
 - Precisely ``n!/2`` permutations are checked (except when ``n = 1``, in which case
     ``1! = 1`` permutation is checked). This is, clearly, ``O(n!)``.
-- For each permutation, the [`bandwidth`](@ref) function is called on ``A[perm, perm]``,
-    which takes ``O(n²)`` time.
+- For each permutation, the [`bandwidth`](@ref) function is called on
+    ``view(A, perm, perm)``, which takes ``O(n²)`` time.
 - Therefore, the overall time complexity is ``O(n! ⋅ n²)``.
 
 Indeed, due to the need to exhaustively check all permutations, this is close to a lower
@@ -72,5 +72,5 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::BruteForceSearch
     orderings_up_to_reversal = Iterators.filter(
         perm -> perm[1] <= perm[end], permutations(axes(A, 1))
     )
-    return argmin(perm -> bandwidth(A[perm, perm]), orderings_up_to_reversal)
+    return argmin(perm -> bandwidth(view(A, perm, perm)), orderings_up_to_reversal)
 end
