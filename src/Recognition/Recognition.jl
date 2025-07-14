@@ -59,7 +59,7 @@ include("deciders/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("deciders/del_corso_manzini.jl")
 include("deciders/saxe_gurari_sudborough.jl")
-include("deciders/brute_force.jl")
+include("deciders/brute_force_search.jl")
 
 const DEFAULT_DECIDER = CapraraSalazarGonzalez()
 
