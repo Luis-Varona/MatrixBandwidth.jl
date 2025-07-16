@@ -176,7 +176,7 @@ julia> bandwidth(A)
 julia> bandwidth(A_shuffled) # Much larger after shuffling
 266
 
-julia> res # Even better than the original bandwidth (which was not optimal)
+julia> res # Even better than the original bandwidth (which was, clearly, not yet optimal)
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Cuthill–McKee
  * Approach: heuristic
@@ -389,10 +389,9 @@ Note that the `node_selector` field must be of the form
 `(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
 
-See also the documentation for supertypes [`HeuristicSolver`](@ref) and
-[`AbstractSolver`](@ref), as well as [`CuthillMcKee`](@ref) for the original non-reversed
-algorithm. (Indeed, the reverse Cuthill–McKee method of `_bool_minimal_band_ordering` is
-merely a wrapper around the Cuthill–McKee method.)
+See also the documentation for [`CuthillMcKee`](@ref)—the original (non-reversed) algorithm.
+(Indeed, the reverse Cuthill–McKee method of `_bool_minimal_band_ordering` is merely a
+wrapper around the Cuthill–McKee method.)
 """
 struct ReverseCuthillMcKee <: HeuristicSolver
     node_selector::Function
@@ -407,6 +406,10 @@ Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee"
 
 _requires_symmetry(::ReverseCuthillMcKee) = true
 
+#= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
+allocating `component_orderings` or individual `component[component_ordering]` arrays.
+(Indeed, the only allocations performed here are those performed by `_connected_components`
+, individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
     node_selector = solver.node_selector
     components = _connected_components(A)
@@ -431,22 +434,24 @@ end
 # Cuthill–McKee searches each connected component independently
 function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_selector::Function)
     n = size(A, 1)
+
     ordering = Vector{Int}(undef, n)
+    visited = falses(n)
+    degrees = vec(sum(A; dims=1))
+    queue = Queue{Int}()
 
     start = node_selector(A)
-    degrees = vec(sum(A; dims=1))
-    visited = Set(start)
-    queue = Queue{Int}()
+    visited[start] = true
     enqueue!(queue, start)
 
     for i in 1:n
         parent = dequeue!(queue)
         ordering[i] = parent
 
-        unvisited = filter!(!in(visited), findall(view(A, :, parent)))
+        unvisited = filter!(node -> !visited[node], findall(view(A, :, parent)))
         sort!(unvisited; by=node -> degrees[node])
 
-        union!(visited, unvisited)
+        visited[unvisited] .= true
         foreach(neighbor -> enqueue!(queue, neighbor), unvisited)
     end
 
