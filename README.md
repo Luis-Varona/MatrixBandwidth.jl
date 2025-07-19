@@ -80,12 +80,6 @@ The following algorithms are currently supported:
 The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:
 
 ```julia-repl
-pkg> add https://github.com/Luis-Varona/MatrixBandwidth.jl
-```
-
-When *MatrixBandwidth.jl* is finally added to the official Julia registry, you will be able to install it more easily with:
-
-```julia-repl
 pkg> add MatrixBandwidth
 ```
 
