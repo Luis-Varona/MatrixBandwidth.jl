@@ -23,7 +23,7 @@ const NUM_ITER1 = 100
 const MAX_ORDER2 = 8
 const NUM_ITER2 = 10
 
-@testset "Testing `bandwidth` (n ≤ $MAX_ORDER1)" begin
+@testset "`bandwidth` (n ≤ $MAX_ORDER1)" begin
     for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
         density = rand()
         A = sprand(n, n, density)
@@ -34,7 +34,7 @@ const NUM_ITER2 = 10
     end
 end
 
-@testset "Testing `bandwidth_lower_bound` (n ≤ $MAX_ORDER2)" begin
+@testset "`bandwidth_lower_bound` (n ≤ $MAX_ORDER2)" begin
     for n in 1:MAX_ORDER2, _ in 1:NUM_ITER2
         density = rand()
         A = sprand(n, n, density)
@@ -47,7 +47,7 @@ end
     end
 end
 
-@testset "Testing `_floyd_warshall_shortest_paths` (n ≤ $MAX_ORDER1)" begin
+@testset "`_floyd_warshall_shortest_paths` (n ≤ $MAX_ORDER1)" begin
     for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
         density = rand()
         A = sprand(Bool, n, n, density)
