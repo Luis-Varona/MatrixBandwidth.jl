@@ -4,7 +4,7 @@
   <tr>
     <td>Metadata</td>
     <td>
-      <img src="https://img.shields.io/badge/version-v0.1.0--dev-pink.svg" alt="Version">
+      <img src="https://img.shields.io/badge/version-v0.1.0--beta-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
     </td>
