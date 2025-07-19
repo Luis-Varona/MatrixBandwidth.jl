@@ -40,7 +40,8 @@ Caprara and Salazar-González (2005). If this lower bound is greater than ``k```
     `k`, and a boolean indicating whether the ordering exists.
 
 # Examples
-[TODO: Add here once more deciders are implemented]
+[TODO: Add here once more deciders are implemented. For now, refer to the **Examples**
+sections of the [`DelCorsoManzini`](@ref) and [`DelCorsoManziniWithPS`](@ref) docstrings.]
 
 # Notes
 Some texts define matrix bandwidth to be the minimum non-negative integer ``k`` such that

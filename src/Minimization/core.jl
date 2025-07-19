@@ -34,7 +34,9 @@ complexity and thus only feasible for relatively small matrices.
     the (near-)optimal ordering of the rows and columns, and the minimized bandwidth.
 
 # Examples
-[TODO: Add here once more solvers are implemented]
+[TODO: Add here once more solvers are implemented. For now, refer to the **Examples**
+sections of the [`GibbsPooleStockmeyer`](@ref), [`CuthillMcKee`](@ref), and
+[`ReverseCuthillMcKee`](@ref) docstrings.]
 
 # Notes
 Some texts define matrix bandwidth to be the minimum non-negative integer ``k`` such that
