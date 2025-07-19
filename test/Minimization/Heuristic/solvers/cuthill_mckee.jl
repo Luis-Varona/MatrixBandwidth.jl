@@ -4,7 +4,8 @@
 # http://opensource.org/licenses/MIT>. This file may not be copied, modified, or
 # distributed except according to those terms.
 
-# TODO: I feel like this test suite is a bit messy. Let's rewrite it at some point.
+#= TODO: I feel like this test suite is a bit messy. Let's rewrite it at some point. We
+should also add tests for custom node selectors… =#
 
 """
     TestCuthillMcKee
@@ -12,7 +13,8 @@
 Test suite for the Cuthill–McKee and reverse Cuthill–McKee matrix bandwidth minimization
 algorithms.
 
-See `../test_utils.jl` for the definitions of `RCM_INPUT` and `RCM_ANSWERS`.
+See `../test_utils.jl` for the definitions of `RCM_INPUT`, `RCM_ANSWERS`, and
+`random_banded_discon_matrix`.
 """
 module TestCuthillMcKee
 
@@ -22,10 +24,10 @@ using Random
 using SparseArrays
 using Test
 
-const MAX_ORDER = 200
-const MAX_BAND = 10
+const MAX_ORDER = 500
+const MAX_BAND = 25
 const MAX_DENSITY = 0.5
-const MAX_CCS = 6
+const MAX_CCS = 10
 
 include("../test_utils.jl")
 
@@ -56,8 +58,12 @@ bands (pre-shuffling). =#
     sum_mult_errors = 0.0
     error_count = 0
 
-    for n in MAX_CCS:MAX_ORDER, num_ccs in 1:MAX_CCS, k in 0:min(MAX_BAND, n - num_ccs)
-        A = random_banded_discon_matrix(n, k, num_ccs, MAX_DENSITY * rand())
+    for n in 1:MAX_ORDER
+        num_ccs = rand(1:min(MAX_CCS, n))
+        k = rand(0:min(MAX_BAND, n - num_ccs))
+        p = MAX_DENSITY * rand()
+
+        A = random_banded_discon_matrix(n, k, num_ccs, p)
         perm = randperm(n)
         A = A[perm, perm]
         res = minimize_bandwidth(A, CuthillMcKee())
@@ -87,8 +93,12 @@ end
     sum_mult_errors = 0.0
     error_count = 0
 
-    for n in MAX_CCS:MAX_ORDER, num_ccs in 1:MAX_CCS, k in 0:min(MAX_BAND, n - num_ccs)
-        A = random_banded_discon_matrix(n, k, num_ccs, MAX_DENSITY * rand())
+    for n in 1:MAX_ORDER
+        num_ccs = rand(1:min(MAX_CCS, n))
+        k = rand(0:min(MAX_BAND, n - num_ccs))
+        p = MAX_DENSITY * rand()
+
+        A = random_banded_discon_matrix(n, k, num_ccs, p)
         perm = randperm(n)
         A = A[perm, perm]
         res = minimize_bandwidth(A, ReverseCuthillMcKee())

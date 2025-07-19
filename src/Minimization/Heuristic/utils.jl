@@ -29,6 +29,8 @@ This function takes heavy inspiration from the implementation in [Net25](@cite),
 accepts a graph object as input and leverages several pre-existing functions in the
 `networkx` library. We herein repurpose the logic to work directly on adjacency matrices,
 avoiding reallocation overhead and an unnecessary dependency on `Graphs.jl`.
+
+[TODO: Specify the actual academic source for this, not just the NetworkX one.]
 """
 function pseudo_peripheral_node(A::AbstractMatrix{Bool})
     n = size(A, 1)
