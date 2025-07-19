@@ -7,7 +7,7 @@ CurrentModule = MatrixBandwidth
   <tr>
     <td>Metadata</td>
     <td>
-      <img src="https://img.shields.io/badge/version-v0.1.0--beta-pink.svg" alt="Version">
+      <img src="https://img.shields.io/badge/version-v0.1.0-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
     </td>
@@ -77,17 +77,11 @@ The following algorithms are currently supported:
   - Saxe–Gurari–Sudborough algorithm [**under development**]
   - Brute-force search
 
-(As we remain in the early stages of development, some of these may not yet be fully implemented and/or tested. Whenever an unimplemented algorithm is used, an `ERROR: TODO: Not yet implemented` is raised.)
+(Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
 
 ## Installation
 
 The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:
-
-```julia-repl
-pkg> add https://github.com/Luis-Varona/MatrixBandwidth.jl
-```
-
-When *MatrixBandwidth.jl* is finally added to the official Julia registry, you will be able to install it more easily with:
 
 ```julia-repl
 pkg> add MatrixBandwidth
@@ -237,7 +231,7 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-I aim to release the first stable version of *MatrixBandwidth.jl* in late July 2025. The current version is a work-in-progress, with much of the API still under development.
+The first stable release of *MatrixBandwidth.jl*, `v0.1.0`, is now available. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by early August 2025.
 
 ## Index
 
