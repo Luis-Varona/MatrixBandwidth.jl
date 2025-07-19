@@ -7,8 +7,7 @@
 """
     TestUtils
 
-[TODO: Write here. Add further documentation, plus tests for `_find_direct_subtype`,
-`_is_structurally_symmetric`, and `_offdiag_nonzero_support`.]
+[TODO: Write here.]
 """
 module TestUtils
 
@@ -17,21 +16,6 @@ using Random
 using Test
 
 const MAX_ORDER = 20
-
-# TODO: Maybe move some of this around considering that we're testing other functions too?
-
-# Assuming that `A` is square and `-n < k < n`
-function kth_diagonal(A::Matrix{Float64}, k::Int)
-    return map(i -> A[i - min(k, 0), i + max(k, 0)], 1:(size(A, 1) - abs(k)))
-end
-
-kth_diagonal_is_empty(A::Matrix{Float64}, k::Int) = all(iszero, kth_diagonal(A, k))
-
-kth_diagonal_is_full(A::Matrix{Float64}, k::Int) = all(!iszero, kth_diagonal(A, k))
-
-function kth_diagonal_has_one_nonzero(A::Matrix{Float64}, k::Int)
-    return count(!iszero, kth_diagonal(A, k)) == 1
-end
 
 @testset "Random banded matrices – Default density" begin
     for n in 1:MAX_ORDER, k in 0:(n - 1)
@@ -64,28 +48,14 @@ end
     end
 end
 
-# @testset "Random banded matrices – Sparse bands" begin
-#     # A sufficiently small probability to ensure that every `rand()` call falls below it
-#     epsilon = 1 / typemax(UInt128)
+# TODO: Add tests for `random_banded_matrix` with sparse bands (`p = 1 / typemax(UInt128)`)
 
-#     for n in 1:MAX_ORDER, k in 0:(n - 1)
-#         A = random_banded_matrix(n, k; p=epsilon)
-#         @test all(map(d -> kth_diagonal_has_one_nonzero(A, d), (-k):k))
-#         @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
-#         @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
-#     end
-# end
+# TODO: Add tests for `random_banded_matrix` with full bands (`p = 1`)
 
-# @testset "Random banded matrices – Full bands" begin
-#     for n in 1:MAX_ORDER, k in 0:(n - 1)
-#         A = random_banded_matrix(n, k; p=1)
-#         @test all(map(d -> kth_diagonal_is_full(A, d), (-k):k))
-#         @test all(map(d -> kth_diagonal_is_empty(A, d), (1 - n):(-k - 1))) # Superdiagonals
-#         @test all(map(d -> kth_diagonal_is_empty(A, d), (k + 1):(n - 1))) # Subdiagonals
-#     end
-# end
+# TODO: Add tests for `_find_direct_subtype`
 
-#= TODO: Add tests for `_find_direct_subtype`, `_is_structurally_symmetric`, and
-`_offdiag_nonzero_support`. =#
+# TODO: Add tests for `_is_structurally_symmetric`
+
+# TODO: Add tests for `_offdiag_nonzero_support`
 
 end
