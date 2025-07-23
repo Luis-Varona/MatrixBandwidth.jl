@@ -8,11 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added the `homepage` field to `Project.toml` to reference the GitHub Pages documentation (#76).
 - Created `CHANGELOG.md` to document changes to this project (#72).
 - Clarified certain `if-else` checks in the `bandwidth` method and in a helper function for the Del Corso&ndash;Manzini `Recognition` deciders by explaining via inline comments that we cannot reduce over an empty collection (#71).
 
 ### Changed
 
+- Fixed the copyright preface in `docs/make.jl` (#75).
 - Updated the compatibility requirements in `test/Project.toml` to allow only a finite number of breaking releases of `Aqua` and `JET` (#74).
 - Changed "*MatrixBandwidth.jl* offers several algorithms&hellip;" to "*MatrixBandwidth.jl* offers fast algorithms&hellip;" in `README.md`. Similarly changed "Luis-Varona/MatrixBandwidth.jl: Algorithms&hellip;" to "Luis-Varona/MatrixBandwidth.jl: Fast algorithms&hellip;" in `CITATION.bib` (#74).
 - Added PR numbers to changelog entries for better traceability (#73).
