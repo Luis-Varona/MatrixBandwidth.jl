@@ -447,7 +447,8 @@ function _dcm_order_is_reversed(
     end
 
     #= If `unselected` is empty, then `candidate` is already the last label, not some label
-    placed at an intermediate position that we can ignore. =#
+    placed at an intermediate position that we can ignore. (Also, we avoid reducing over an
+    empty collection with `maximum` and throwing an error…) =#
     if isempty(unselected)
         max_last_label = candidate
     else

@@ -189,7 +189,7 @@ ERROR: TODO: Not yet implemented
 
 ## Documentation
 
-The full documentation is available at [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/dev/). Documentation for methods and types is also available via the Julia REPL. To learn more about the `minimize_bandwidth` function, for instance, enter help mode by typing `?`, then run the following command:
+The full documentation is available at [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/). Documentation for methods and types is also available via the Julia REPL. To learn more about the `minimize_bandwidth` function, for instance, enter help mode by typing `?`, then run the following command:
 
 ```julia-repl
 help?> minimize_bandwidth
@@ -227,4 +227,4 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-The first stable release of *MatrixBandwidth.jl*, `v0.1.0`, is now available. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by early August 2025.
+The first stable release of *MatrixBandwidth.jl*, `v0.1.0`, is now available. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by September 2025.

@@ -82,17 +82,12 @@ function bandwidth(A::AbstractMatrix{<:Number})
         throw(RectangularMatrixError(A))
     end
 
-    #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
-    values. We also set every diagonal entry to `false` for consistency with any algorithms
-    that assume an adjacency matrix structure. =#
-    A_bool = _offdiag_nonzero_support(A)
-
-    indices = findall(A_bool)
+    indices = findall(!iszero, A)
 
     if isempty(indices)
-        band = 0
+        band = 0 # Avoid reducing over an empty collection with `maximum``
     else
-        band = maximum(abs(index[1] - index[2]) for index in indices)
+        band = maximum(Iterators.map(idx -> abs(idx[1] - idx[2]), indices))
     end
 
     return band
