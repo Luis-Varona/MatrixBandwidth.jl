@@ -8,9 +8,9 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-Aqua = ">=0.8.5, <1.0"
+Aqua = "0.8.5"
 Graphs = "1.10"
-JET = ">=0.8.26, <1.0"
+JET = "0.8.26 - 0.10"
 Random = "1.10"
 SparseArrays = "1.10"
 Test = "1.10"
