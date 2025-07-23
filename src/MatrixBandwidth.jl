@@ -53,8 +53,8 @@ The following algorithms are currently supported:
     - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 
-[Full documentation](https://Luis-Varona.github.io/MatrixBandwidth.jl/dev/) is available for
-the latest development version of this package.
+The full documentation is available at
+[GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/).
 """
 module MatrixBandwidth
 
