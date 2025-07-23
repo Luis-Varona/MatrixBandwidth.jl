@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Updated the compatibility requirements in `test/Project.toml` to allow only a finite number of breaking releases of `Aqua` and `JET` (#74).
+- Changed "*MatrixBandwidth.jl* offers several algorithms&hellip;" to "*MatrixBandwidth.jl* offers fast algorithms&hellip;" in `README.md`. Similarly changed "Luis-Varona/MatrixBandwidth.jl: Algorithms&hellip;" to "Luis-Varona/MatrixBandwidth.jl: Fast algorithms&hellip;" in `CITATION.bib` (#74).
 - Added PR numbers to changelog entries for better traceability (#73).
 - Eliminated unnecessary reallocation of a boolean matrix in the `bandwidth` method by directly using `findall(!iszero, A)` instead of calling `_offdiag_nonzero_support(A)` (#71).
 - Switched from a generator comprehension in the `bandwidth` method to `Iterators.map` (more idiomatic) (#71).

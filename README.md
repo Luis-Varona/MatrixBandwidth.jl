@@ -39,7 +39,7 @@
 
 ## Overview
 
-*MatrixBandwidth.jl* offers several algorithms for matrix bandwidth minimization and matrix bandwidth recognition.
+*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition.
 
 The *bandwidth* of an *n*&times;*n* matrix *A* is the minimum non-negative integer *k* &isin; [0, *n* - 1] such that *A<sub>i,j</sub>* = 0 whenever |*i* - *j*| > *k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
 
