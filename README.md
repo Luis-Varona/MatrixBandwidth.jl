@@ -245,4 +245,4 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-The first stable release of *MatrixBandwidth.jl*, `v0.1.0`, is now available. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by September 2025.
+The latest stable release of *MatrixBandwidth.jl* is `v0.1.1`. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by September 2025.
