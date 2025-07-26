@@ -8,7 +8,7 @@ maintainers = ["Luis M. B. Varona <lbvarona@mta.ca>"]
 readme = "README.md"
 repository = "https://github.com/Luis-Varona/MatrixBandwidth.jl"
 homepage = "https://luis-varona.github.io/MatrixBandwidth.jl/"
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
