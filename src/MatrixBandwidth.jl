@@ -53,6 +53,10 @@ The following algorithms are currently supported:
     - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 
+This package also exports several additional core functions, including (but not limited to)
+[`bandwidth`](@ref) and [`profile`](@ref) to compute the original bandwidth and profile of a
+matrix prior to any reordering.
+
 The full documentation is available at
 [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/).
 """
@@ -74,10 +78,13 @@ deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exp
 top level due to name conflicts between `Minimization` and `Recognition`. =#
 export Minimization, Recognition
 
-#= Core exports: the original bandwidth (before any reordering) and an `O(n³)` lower bound
-from Caprara and Salazar-González (2005). (This bound is tight in many non-trivial cases
-but not universally so.) =#
-export bandwidth, bandwidth_lower_bound
+#= Core exports:
+- Compute the original bandwidth (before any reordering).
+- Compute Caprara and Salazar-González (2005)'s lower bound on bandwidth in `O(n³)`. (This
+    bound is tight in many non-trivial cases but not universally so.)
+- Compute the original profile (before any reordering).
+=#
+export bandwidth, bandwidth_lower_bound, profile
 
 #= `Minimization` and `Recognition` exports: the core bandwidth minimization and recognition
 functions. =#

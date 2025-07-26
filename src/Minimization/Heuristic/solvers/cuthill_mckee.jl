@@ -36,9 +36,10 @@ indeed consider supporting this more performant implementation for sparse matric
 
 It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
 Cuthill–McKee tends to induce a more optimal *matrix profile* (a measure of how far, on
-average, nonzero entries are from the diagonal). This so-called *reverse Cuthill–McKee*
-variant is preferred in almost all cases—see [`ReverseCuthillMcKee`](@ref) and the
-associated method of `_bool_minimal_band_ordering` for our implementation.
+average, nonzero entries are from the diagonal; see also [`MatrixBandwidth.profile`](@ref)).
+This so-called *reverse Cuthill–McKee* variant is preferred in almost all cases—see
+[`ReverseCuthillMcKee`](@ref) and the associated method of `_bool_minimal_band_ordering` for
+    our implementation.
 
 # Examples
 In the following examples, [`MatrixBandwidth.random_banded_matrix`](@ref) is used to
@@ -216,7 +217,8 @@ which induces a matrix bandwidth either equal to or very close to the true minim
 [CM69; pp. 157--58](@cite). The reverse Cuthill–McKee algorithm simply reverses the ordering
 produced by application of Cuthill–McKee; it was found in [Geo71; pp. 114--15](@cite) that
 although the bandwidth remains the same, this tends to produce a more optimal *matrix
-profile* (a measure of how far, on average, nonzero entries are from the diagonal).
+profile* (a measure of how far, on average, nonzero entries are from the diagonal; see also
+[`MatrixBandwidth.profile`](@ref)).
 
 As noted above, the reverse Cuthill–McKee algorithm requires structurally symmetric input
 (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for

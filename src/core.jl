@@ -25,7 +25,8 @@ bandwidth of `A` by permuting its rows and columns—it simply computes its band
 - `::Int`: the bandwidth of `A`.
 
 # Performance
-Given an ``n×n`` input matrix ``A``, this relatively simple algorithm runs in ``O(n²)`` time.
+Given an ``n×n`` input matrix ``A``, this relatively simple algorithm runs in ``O(n²)``
+time.
 
 # Examples
 `bandwidth` correctly identifies the bandwidth of a pentadiagonal matrix as ``2`` and does
@@ -94,9 +95,129 @@ function bandwidth(A::AbstractMatrix{<:Number})
 end
 
 """
+    profile(A) -> Int
+
+Compute the profile of `A` before any permutation of its rows and columns.
+
+The *profile* of a structurally symmetric ``n×n`` matrix ``A`` is traditionally defined as
+the sum of the distances from each diagonal entry to the leftmost nonzero entry in that
+row—in other words, ``∑ᵢ₌₁ⁿ (i - fᵢ)``, where each ``fᵢ`` is the smallest index such that
+``A[i, fᵢ] ≠ 0`` [Maf14; pp. 187-88](@cite). Generalizing this property to all square
+matrices, we define the *column profile* of a matrix to be the sum of the distances from
+each diagonal entry to the farthest (not necessarily topmost) nonzero entry in that column
+and the *row profile* to be the sum of the distances from each diagonal entry to the
+farthest (not necessarily leftmost) nonzero entry in that row. (Note that both of these
+properties are equal to traditional matrix profile for structurally symmetric matrices.)
+
+One of the most common contexts in which matrix profile is relevant is sparse matrix
+storage, where lower-profile matrices occupy less space in memory [Maf14; p.188](@cite).
+Since Julia's `SparseArrays` package defaults to compressed sparse column storage over
+compressed sparse row, we therefore compute column profile by default unless the dimension
+is otherwise specified.
+
+# Arguments
+- `A::AbstractMatrix{<:Number}`: the (square) matrix whose profile is computed.
+
+# Keyword Arguments
+- `dim::Symbol=:col`: the dimension along which the profile is computed; must be either
+    `:col` (the default) or `:row`.
+
+# Returns
+- `::Int`: the profile of `A` along the specified dimension.
+
+# Performance
+Given an ``n×n`` input matrix ``A``, this relatively simple algorithm runs in ``O(n²)``
+time.
+
+# Examples
+`profile` computes the column profile of a matrix by default:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(2287);
+
+julia> (n, p) = (25, 0.05);
+
+julia> A = sprand(n, n, p)
+25×25 SparseMatrixCSC{Float64, Int64} with 29 stored entries:
+⎡⠀⠀⠀⠀⠀⠀⠐⠀⠒⠀⡀⠀⠀⎤
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠐⠂⎥
+⎢⠀⠀⠀⢀⠌⠀⠀⠀⢀⠈⠀⠀⠀⎥
+⎢⠠⢄⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠂⡀⠀⠀⠌⠀⠈⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠢⡀⢄⡈⠀⠀⠀⎥
+⎣⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
+
+julia> profile(A)
+211
+```
+
+The dimension (`:row` or `:col`) can also be explicitly specified:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(3647);
+
+julia> (n, p) = (25, 0.05);
+
+julia> A = sprand(n, n, p)
+25×25 SparseMatrixCSC{Float64, Int64} with 31 stored entries:
+⎡⠄⠀⠀⠀⠀⠀⠀⠘⠀⠀⠀⠁⠀⎤
+⎢⠄⢀⠀⠀⠁⠀⠀⠀⠀⢀⠀⠀⠀⎥
+⎢⠀⢀⡂⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⎥
+⎢⠀⠀⠀⠀⠀⡀⠂⠀⠀⠀⠀⠀⠀⎥
+⎢⠁⠀⠁⠀⠁⠀⠀⠁⠄⢀⠈⠀⠀⎥
+⎢⠂⠐⠐⠐⠠⠀⠄⠀⠀⠀⠠⣀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
+
+julia> profile(A, dim=:row)
+147
+
+julia> profile(A, dim=:col)
+175
+```
+"""
+function profile(A::AbstractMatrix{<:Number}; dim::Symbol=:col)
+    if dim == :col
+        slice_iter = eachcol(A)
+    elseif dim == :row
+        slice_iter = eachrow(A)
+    else
+        throw(ArgumentError("Expected `dim` to be `:col` or `:row`, got `$dim`"))
+    end
+
+    m, n = size(A)
+
+    if m != n
+        throw(RectangularMatrixError(A))
+    end
+
+    prof = 0
+
+    for (i, slice) in enumerate(slice_iter)
+        j = max(i - 1, n - i + 1)
+        found_nonzero = false
+
+        while (!found_nonzero && j > 0)
+            if i - j > 0 && slice[i - j] != 0
+                prof += j
+                found_nonzero = true
+            elseif i + j <= n && slice[i + j] != 0
+                prof += j
+                found_nonzero = true
+            end
+
+            j -= 1
+        end
+    end
+
+    return prof
+end
+
+"""
     bandwidth_lower_bound(A) -> Int
 
-Compute a lower bound on the bandwidth of `A` using [CSG05; pp.359--60](@cite)'s results.
+Compute a lower bound on the bandwidth of `A` using [CSG05; pp. 359--60](@cite)'s results.
 
 `A` is assumed to be structurally symmetric, since the bound from
 [CSG05; pp.359--60](@cite) was discovered in the context of undirected graphs (whose

@@ -191,6 +191,24 @@ ERROR: TODO: Not yet implemented
 [...]
 ```
 
+Complementing our various bandwidth minimization and recognition algorithms, *MatrixBandwidth.jl* exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix:
+
+```julia-repl
+julia> using Random, SparseArrays
+
+julia> Random.seed!(1234);
+
+julia> A = sprand(50, 50, 0.01); A = A + A' # Ensure structural symmetry
+
+julia> bandwidth(A) # Bandwidth prior to any reordering of rows and columns
+38
+
+julia> profile(A) # Profile prior to any reordering of rows and columns
+645
+```
+
+(Closely related to bandwidth, the *column profile* of a matrix is the sum of the distances from each diagonal entry to the farthest nonzero entry in that column, whereas the *row profile* is the sum of the distances from each diagonal entry to the farthest nonzero entry in that row. `profile(A)` computes the column profile of `A` by default, but it can also be used to compute the row profile.)
+
 ## Documentation
 
 The full documentation is available at [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/). Documentation for methods and types is also available via the Julia REPL—for instance, to learn more about the `minimize_bandwidth` function, enter help mode by typing `?`, then run the following command:
