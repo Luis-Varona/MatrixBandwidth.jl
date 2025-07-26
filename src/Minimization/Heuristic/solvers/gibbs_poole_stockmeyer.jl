@@ -24,8 +24,9 @@ an undirected graph), this implementation instead reverses the entire final orde
 every case, similarly to [`ReverseCuthillMcKee`](@ref). Conditional reversals are not only
 more complex to implement but also slightly more time-consuming, with the only benefit being
 a marginally smaller *matrix profile* (a measure of how far, on average, nonzero entries are
-from the diagonal). Since such reversal strategies do not affect matrix bandwidth (the
-primary focus of this package), we thus opt for the simpler unconditional reversal.
+from the diagonal; see also [`MatrixBandwidth.profile`](@ref)). Since such reversal
+strategies do not affect matrix bandwidth (the primary focus of this package), we opt
+instead for the simpler unconditional reversal.
 
 As noted above, the Gibbs–Poole–Stockmeyer algorithm requires structurally symmetric input
 (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
