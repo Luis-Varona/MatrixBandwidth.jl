@@ -45,7 +45,7 @@ CurrentModule = MatrixBandwidth
 
 *MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition.
 
-The *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative integer ``k \in [0, n - 1]`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k^\text{th}`` superdiagonal and below the ``k^\text{th}`` subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the ``k^\text{th}`` superdiagonal or subdiagonal.
+The *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative integer ``k \in \{0, 1, \ldots, n - 1\}`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k^\text{th}`` superdiagonal and below the ``k^\text{th}`` subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the ``k^\text{th}`` superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara–Salazar-González) are at least exponential in time complexity and thus are only feasible for relatively small matrices.
 
@@ -215,17 +215,17 @@ The full documentation is available at [GitHub Pages](https://luis-varona.github
 
 ```julia-repl
 help?> minimize_bandwidth
-search: minimize_bandwidth MatrixBandwidth bandwidth
+search: minimize_bandwidth bandwidth MatrixBandwidth
 
   minimize_bandwidth(A, solver=GibbsPooleStockmeyer()) -> MinimizationResult
 
   Minimize the bandwidth of A using the algorithm defined by solver.
 
-  The bandwidth of an n×n matrix A is the minimum non-negative integer k ∈ [0,
-  n - 1] such that A[i, j] = 0 whenever |i - j| > k. Equivalently, A has
-  bandwidth at most k if all entries above the kᵗʰ superdiagonal and below the
-  kᵗʰ subdiagonal are zero, and A has bandwidth at least k if there exists any
-  nonzero entry in the kᵗʰ superdiagonal or subdiagonal.
+  The bandwidth of an n×n matrix A is the minimum non-negative integer k ∈
+  \{0, 1, …, n - 1\} such that A[i, j] = 0 whenever |i - j| > k. Equivalently,
+  A has bandwidth at most k if all entries above the kᵗʰ superdiagonal and
+  below the kᵗʰ subdiagonal are zero, and A has bandwidth at least k if there
+  exists any nonzero entry in the kᵗʰ superdiagonal or subdiagonal.
 
   This function computes a (near-)optimal ordering π of the rows and columns
   of A so that the bandwidth of PAPᵀ is minimized, where P is the permutation
@@ -238,7 +238,7 @@ search: minimize_bandwidth MatrixBandwidth bandwidth
 
   Arguments
   ≡≡≡≡≡≡≡≡≡
-  …
+  [...]
 ```
 
 ## Citing
