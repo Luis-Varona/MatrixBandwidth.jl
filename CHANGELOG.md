@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Added a section in `README.md` and the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
+
 ### Changed
 
 - Changed the phrase `… integer k ∈ [0, n - 1] …` to `… integer k ∈ {0, 1, …, n - 1} …` every time matrix bandwidth is defined in the documentation (#84).

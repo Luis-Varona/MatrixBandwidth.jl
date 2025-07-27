@@ -39,9 +39,9 @@
 
 ## Overview
 
-*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition.
+*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition. Reordering the rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering and scientific computing. It is a common preprocessing step used to improve performance when solving linear systems, approximating partial differential equations, optimizing circuit layout, and more.
 
-The *bandwidth* of an *n*&times;*n* matrix *A* is the minimum non-negative integer *k* &isin; {0, 1, &hellip;, *n* - 1} such that *A<sub>i,j</sub>* = 0 whenever |*i* - *j*| > *k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
+Recall that the *bandwidth* of an *n*&times;*n* matrix *A* is the minimum non-negative integer *k* &isin; {0, 1, &hellip;, *n* - 1} such that *A<sub>i,j</sub>* = 0 whenever |*i* - *j*| > *k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
 
 The *matrix bandwidth minimization problem* involves finding a permutation matrix *P* such that the bandwidth of *PAP*<sup>T</sup> is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs&ndash;Poole&ndash;Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara&ndash;Salazar-González) are at least exponential in time complexity and thus are only feasible for relatively small matrices.
 

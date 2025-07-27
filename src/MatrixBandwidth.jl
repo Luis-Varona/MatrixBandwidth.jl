@@ -9,7 +9,12 @@
 
 Fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition in Julia.
 
-The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
+Reordering the rows and columns of a matrix to reduce its bandwidth has many practical
+applications in engineering and scientific computing. It is a common preprocessing step used
+to improve performance when solving linear systems, approximating partial differential
+equations, optimizing circuit layout, and more [Maf14; p. 184](@cite).
+
+Recall that the *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
 Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ
 superdiagonal and below the ``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least*
