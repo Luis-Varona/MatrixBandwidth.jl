@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Changed the phrase `… integer k ∈ [0, n - 1] …` to `… integer k ∈ {0, 1, …, n - 1} …` every time matrix bandwidth is defined in the documentation (#84).
+
 ## [0.1.1] - 2025-07-26
 
 ### Added
@@ -39,5 +45,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Released the initial stable version and added the package to Julia's General package registry.
 
+[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.1.1...HEAD
 [0.1.1]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.0
