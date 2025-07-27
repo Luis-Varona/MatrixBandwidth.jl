@@ -194,13 +194,27 @@ julia> using Random, SparseArrays
 
 julia> Random.seed!(1234);
 
-julia> A = sprand(50, 50, 0.01); A = A + A' # Ensure structural symmetry
+julia> A = sprand(50, 50, 0.02)
+50×50 SparseMatrixCSC{Float64, Int64} with 49 stored entries:
+⎡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⎤
+⎢⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠂⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⡀⠀⡀⠀⠀⠀⠄⠀⠀⠀⠄⠀⎥
+⎢⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠄⠂⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠈⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠀⠂⠀⠀⠀⠁⎥
+⎢⡀⡀⢀⠄⠀⠁⠄⢀⠀⠀⠀⠀⠀⢀⠀⠀⠠⠀⠀⠀⠀⣀⠀⠀⠀⎥
+⎢⠀⢀⠀⠀⠀⠊⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⎥
+⎢⠈⠀⢀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠨⠐⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
 
 julia> bandwidth(A) # Bandwidth prior to any reordering of rows and columns
 38
 
 julia> profile(A) # Profile prior to any reordering of rows and columns
-645
+703
 ```
 
 (Closely related to bandwidth, the *column profile* of a matrix is the sum of the distances from each diagonal entry to the farthest nonzero entry in that column, whereas the *row profile* is the sum of the distances from each diagonal entry to the farthest nonzero entry in that row. `profile(A)` computes the column profile of `A` by default, but it can also be used to compute the row profile.)
