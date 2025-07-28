@@ -16,7 +16,7 @@ bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"); style=:alpha)
 
 makedocs(;
     modules=[MatrixBandwidth, MatrixBandwidth.Minimization, MatrixBandwidth.Recognition],
-    authors="Luis M. B. Varona <lbvarona@mta.ca>",
+    authors="Luis M. B. Varona <lm.varona@outlook.com>",
     sitename="MatrixBandwidth.jl",
     format=Documenter.HTML(;
         canonical="https://Luis-Varona.github.io/MatrixBandwidth.jl",
