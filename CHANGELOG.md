@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Added "Supertype Hierarchy" sections to the docstrings of all subtyped structs (#90).
+- Added "Supertype Hierarchy" sections to the docstrings of all subtypes (both concrete and abstract) (#90).
 - Added a section in `README.md` and the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
 
 ### Changed
