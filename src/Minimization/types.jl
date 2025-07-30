@@ -20,6 +20,9 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
 Direct subtypes of `AbstractSolver` must implement the following method:
 - `_approach(::T) where {T<:AbstractSolver}`: returns a `Symbol` indicating the
     category of solver (e.g., `:heuristic`).
+
+# Supertype Hierarchy
+`AbstractSolver` <: [`AbstractAlgorithm`](@ref)
 """
 abstract type AbstractSolver <: AbstractAlgorithm end
 
@@ -49,6 +52,9 @@ Output struct for matrix bandwidth minimization results.
 - `MinimizationResult(algorithm, matrix, ordering, bandwidth)`: constructs a new
     `MinimizationResult` instance with the given fields. The `approach` field is
     automatically determined based on the algorithm type.
+
+# Supertype Hierarchy
+`MinimizationResult` <: [`AbstractResult`](@ref)
 """
 struct MinimizationResult{A<:AbstractSolver,M<:AbstractMatrix{<:Number},O<:Vector{Int}} <:
        AbstractResult

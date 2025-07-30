@@ -17,6 +17,9 @@ search to orderings such that ``i₁ ≤ iₙ`` (with equality checked just in c
 If a bandwidth-``k`` ordering is found, the algorithm breaks early instead of continuing
 to check subsequent permutations.
 
+# Supertype Hierarchy
+`BruteForceSearch` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
 - Up to ``n!/2`` permutations may be checked (except when ``n = 1``, in which case
@@ -87,7 +90,7 @@ _requires_symmetry(::BruteForceSearch) = false
 
 #= We take advantage of the laziness of `permutations` and `Iterators.filter` to avoid
 iterating over all orderings if a valid one is found early. =#
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::BruteForceSearch)
+function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Integer, ::BruteForceSearch)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#

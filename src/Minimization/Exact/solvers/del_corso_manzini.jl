@@ -27,6 +27,9 @@ minimum bandwidth of ``A`` up to symmetric permutation [DCM99; p. 192--93](@cite
 As noted above, the Del Corso–Manzini algorithm requires structurally symmetric input (that
 is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
 
+# Supertype Hierarchy
+`DelCorsoManzini` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A``, the Del Corso–Manzini algorithm runs in
 ``O(n! ⋅ n³)`` time:
@@ -170,8 +173,11 @@ nonzero for ``1 ≤ i, j ≤ n``).
 # Constructors
 - `DelCorsoManziniWithPS()`: constructs a new `DelCorsoManziniWithPS` instance with the
     default perimeter search depth initialized to `nothing`.
-- `DelCorsoManziniWithPS(depth::Int)`: constructs a new `DelCorsoManziniWithPS` instance
+- `DelCorsoManziniWithPS(depth::Integer)`: constructs a new `DelCorsoManziniWithPS` instance
     with the specified perimeter search depth. `depth` must be a positive integer.
+
+# Supertype Hierarchy
+`DelCorsoManziniWithPS` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
 Given an ``n×n`` input matrix ``A`` and perimeter search depth ``d``, the Del Corso–Manzini
@@ -273,7 +279,7 @@ with perimeter search here is designated the "MB-PS algorithm" in [DCM99; p. 193
 The so-called "MB-ID algorithm," on the other hand, we implement in
 [`DelCorsoManzini`](@ref).
 """
-struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: ExactSolver
+struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: ExactSolver
     depth::D
 
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
@@ -282,12 +288,12 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: ExactSolver
     depth still needs to be computed upon the function call. =#
     DelCorsoManziniWithPS() = new{Nothing}(nothing)
 
-    function DelCorsoManziniWithPS(depth::Int)
+    function DelCorsoManziniWithPS(depth::Integer)
         if depth <= 0
             throw(ArgumentError("Perimeter search depth must be positive, got $depth"))
         end
 
-        return new{Int}(depth)
+        return new{Integer}(depth)
     end
 end
 
@@ -340,7 +346,7 @@ function _bool_minimal_band_ordering(
 end
 
 function _bool_minimal_band_ordering(
-    A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Int}
+    A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Integer}
 )
     n = size(A, 1)
     ps_depth = solver.depth

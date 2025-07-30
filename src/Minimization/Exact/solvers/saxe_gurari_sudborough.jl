@@ -7,7 +7,12 @@
 """
     SaxeGurariSudborough <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
 
-TODO: Write here
+[TODO: Write here]
+
+# Supertype Hierarchy
+`SaxeGurariSudborough` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
+[TODO: Write here]
 """
 struct SaxeGurariSudborough <: ExactSolver end
 

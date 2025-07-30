@@ -22,6 +22,9 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
 ``1 ≤ i, j ≤ n``).
 
+# Supertype Hierarchy
+`CapraraSalazarGonzalez` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
+
 # Performance
 [TODO: Write here]
 
@@ -43,7 +46,7 @@ Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 _requires_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_bandwidth_k_ordering(
-    A::AbstractMatrix{Bool}, k::Int, ::CapraraSalazarGonzalez
+    A::AbstractMatrix{Bool}, k::Integer, ::CapraraSalazarGonzalez
 )
     error("TODO: Not yet implemented")
     return nothing

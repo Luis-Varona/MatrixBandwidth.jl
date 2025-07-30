@@ -16,6 +16,9 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
     of the decider (e.g., `"Caprara–Salazar-González"`).
 - `_requires_symmetry(::T) where {T<:AbstractDecider}`: returns a `Bool` indicating
     whether the decider requires the input matrix to be structurally symmetric.
+
+# Supertype Hierarchy
+`AbstractDecider` <: [`AbstractAlgorithm`](@ref)
 """
 abstract type AbstractDecider <: AbstractAlgorithm end
 
@@ -31,7 +34,7 @@ Output struct for matrix bandwidth recognition results.
 - `matrix::M<:AbstractMatrix{<:Number}`: the original matrix whose bandwidth is tested.
 - `ordering::O<:Union{Nothing,Vector{Int}}`: an ordering of the rows and columns of `matrix`
     inducing a bandwidth at most `k`, if such an ordering exists; otherwise, `nothing`.
-- `k::Int`: the threshold bandwidth against which to test.
+- `k::Integer`: the threshold bandwidth against which to test.
 - `has_ordering::Bool`: whether the matrix has an ordering inducing a bandwidth at most `k`.
     (This is `true` if and only if `ordering` is not `nothing`.)
 
@@ -39,6 +42,9 @@ Output struct for matrix bandwidth recognition results.
 - `RecognitionResult(decider, matrix, ordering, k)`: constructs a new `RecognitionResult`
     instance with the given fields. The `has_ordering` field is automatically determined
     based on whether `ordering` is `nothing` or a `Vector{Int}`.
+
+# Supertype Hierarchy
+`RecognitionResult` <: [`AbstractResult`](@ref)
 """
 struct RecognitionResult{
     A<:AbstractDecider,M<:AbstractMatrix{<:Number},O<:Union{Nothing,Vector{Int}}
@@ -46,17 +52,17 @@ struct RecognitionResult{
     algorithm::A
     matrix::M
     ordering::O
-    k::Int
+    k::Integer
     has_ordering::Bool
 
     function RecognitionResult(
-        algorithm::A, matrix::M, ::Nothing, k::Int
+        algorithm::A, matrix::M, ::Nothing, k::Integer
     ) where {A<:AbstractDecider,M<:AbstractMatrix{<:Number}}
         return new{A,M,Nothing}(algorithm, matrix, nothing, k, false)
     end
 
     function RecognitionResult(
-        algorithm::A, matrix::M, ordering::Vector{Int}, k::Int
+        algorithm::A, matrix::M, ordering::Vector{Int}, k::Integer
     ) where {A<:AbstractDecider,M<:AbstractMatrix{<:Number}}
         return new{A,M,Vector{Int}}(algorithm, matrix, ordering, k, true)
     end

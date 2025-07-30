@@ -24,6 +24,9 @@ As noted above, the Cuthill–McKee algorithm requires structurally symmetric in
     specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
+# Supertype Hierarchy
+`CuthillMcKee` <: [`HeuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A``, the Cuthill–McKee algorithm runs in ``O(n²)`` time.
 
@@ -240,6 +243,9 @@ indeed consider supporting this more performant implementation for sparse matric
     the input matrix from which to start the breadth-first search. If no custom heuristic is
     specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
+
+# Supertype Hierarchy
+`ReverseCuthillMcKee` <: [`HeuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Examples
 In the following examples, [`MatrixBandwidth.random_banded_matrix`](@ref) is used to

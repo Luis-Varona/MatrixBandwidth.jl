@@ -88,6 +88,9 @@ called on a newly created subtype for which no method has been defined.
 - `NotImplementedError(::Function, ::Symbol, ::Type, ::Type)`: constructs a new
     `NotImplementedError` instance for a multi-argument function. Throws an error if the
     second type is not abstract or the first type is not a subtype of the second.
+
+# Supertype Hierarchy
+`NotImplementedError` <: `Exception`
 """
 struct NotImplementedError{T<:Union{Nothing,Symbol}} <: Exception
     f::Function
@@ -151,6 +154,9 @@ bandwidth minimization or recognition algorithm is called with a non-square inpu
 - `RectangularMatrixError(A::AbstractMatrix{<:Number})`: constructs a new
     `RectangularMatrixError` instance, automatically inferring `m` and `n` by calling
     `size(A)`.
+
+# Supertype Hierarchy
+`RectangularMatrixError` <: `Exception`
 """
 struct RectangularMatrixError <: Exception
     A::AbstractMatrix{<:Number}
@@ -200,6 +206,9 @@ raised when one of these algorithms is called with a structurally asymmetric inp
 - `StructuralAsymmetryError(A::AbstractMatrix{<:Number}, algorithm::AbstractAlgorithm)`:
     constructs a new `StructuralAsymmetryError` instance, automatically inferring `problem`
     by calling `_problem(algorithm)`.
+
+# Supertype Hierarchy
+`StructuralAsymmetryError` <: `Exception`
 
 # Notes
 As noted in the error message for `StructuralAsymmetryError` instances, users may want to
