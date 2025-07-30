@@ -8,6 +8,11 @@
     SimulatedAnnealing <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 [TODO: Write here]
+
+# Supertype Hierarchy
+`SimulatedAnnealing` <: [`MetaheuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
+[TODO: Write here]
 """
 struct SimulatedAnnealing <: MetaheuristicSolver
     initial_temp::Float64

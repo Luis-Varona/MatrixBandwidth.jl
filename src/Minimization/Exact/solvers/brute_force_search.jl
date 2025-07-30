@@ -13,6 +13,9 @@ possible symmetric permutations and compare the bandwidths they induce.
 Since ``i₁, i₂, … iₙ`` induces the same bandwidth as ``iₙ, iₙ₋₁, … i₁``, we restrict our
 search to orderings such that ``i₁ ≤ iₙ`` (with equality checked just in case ``n = 1``).
 
+# Supertype Hierarchy
+`BruteForceSearch` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
 - Precisely ``n!/2`` permutations are checked (except when ``n = 1``, in which case

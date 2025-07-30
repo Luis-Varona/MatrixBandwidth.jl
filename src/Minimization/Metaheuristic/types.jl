@@ -16,6 +16,9 @@ procedures—metaheuristics adaptively refine candidate solutions over multiple 
 Although metaheuristic approaches are often slower than heuristic ones (but certainly still
 faster than exact ones), they shine in complex cases where the latter may get trapped in
 poor-quality local minima.
+
+# Supertype Hierarchy
+`MetaheuristicSolver` <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 """
 abstract type MetaheuristicSolver <: AbstractSolver end
 

@@ -8,6 +8,11 @@
     GeneticAlgorithm <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 [TODO: Write here]
+
+# Supertype Hierarchy
+`GeneticAlgorithm` <: [`MetaheuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
+[TODO: Write here]
 """
 struct GeneticAlgorithm <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)

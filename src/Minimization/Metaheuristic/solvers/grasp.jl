@@ -8,6 +8,11 @@
     GRASP <: MetaheuristicSolver <: AbstractSolver <: AbstractAlgorithm
 
 [TODO: Write here]
+
+# Supertype Hierarchy
+`GRASP` <: [`MetaheuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
+[TODO: Write here]
 """
 struct GRASP <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)

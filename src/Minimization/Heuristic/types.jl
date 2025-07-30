@@ -17,6 +17,9 @@ Heuristic algorithms differ from metaheuristic ones in that they do not employ h
 iterative search frameworks (e.g., stochastic techniques) to survey the global search space
 and escape local minima; instead, they rely on straightforward deterministic procedures to
 find good solutions in a single pass.
+
+# Supertype Hierarchy
+`HeuristicSolver` <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 """
 abstract type HeuristicSolver <: AbstractSolver end
 

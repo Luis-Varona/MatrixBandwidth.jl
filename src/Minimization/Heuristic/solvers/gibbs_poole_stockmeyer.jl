@@ -38,6 +38,9 @@ As noted above, the Gibbs–Poole–Stockmeyer algorithm requires structurally s
     specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
+# Supertype Hierarchy
+`GibbsPooleStockmeyer` <: [`HeuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A``, the Gibbs–Poole–Stockmeyer algorithm runs in ``O(n²)``
 time.

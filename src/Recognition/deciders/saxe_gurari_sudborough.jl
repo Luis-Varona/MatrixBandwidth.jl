@@ -8,12 +8,19 @@
     SaxeGurariSudborough <: AbstractDecider <: AbstractAlgorithm
 
 [TODO: Write here]
+
+# Supertype Hierarchy
+`SaxeGurariSudborough` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
+
+[TODO: Write here]
 """
 struct SaxeGurariSudborough <: AbstractDecider end
 
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::SaxeGurariSudborough)
+function _bool_bandwidth_k_ordering(
+    A::AbstractMatrix{Bool}, k::Integer, ::SaxeGurariSudborough
+)
     error("TODO: Not yet implemented")
     return nothing
 end

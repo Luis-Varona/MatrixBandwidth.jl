@@ -15,6 +15,9 @@ exact algorithms are, at best, exponential in time complexity—much worse than 
 polynomial-time heuristic approaches (e.g., Gibbs–Poole–Stockmeyer). Such methods,
 therefore, are not feasible for large matrices, but they remain useful when precise
 solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
+
+# Supertype Hierarchy
+`ExactSolver` <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 """
 abstract type ExactSolver <: AbstractSolver end
 

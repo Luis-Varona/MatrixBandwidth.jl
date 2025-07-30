@@ -18,6 +18,9 @@ placed [DCM99](@cite).
 As noted above, the Del Corso–Manzini algorithm requires structurally symmetric input (that
 is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
 
+# Supertype Hierarchy
+`DelCorsoManzini` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
+
 # Performance
 Given an ``n×n`` input matrix ``A`` and threshold bandwidth ``k``, the Del Corso–Manzini
 algorithm runs in ``O(n! ⋅ nk)`` time:
@@ -113,8 +116,8 @@ symmetric input (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]``
 nonzero for ``1 ≤ i, j ≤ n``).
 
 # Fields
-- `depth::D<:Union{Nothing,Int}`: the perimeter search depth. If this field is not set (and
-    thus automatically initialized to `nothing`), a default depth is computed by
+- `depth::D<:Union{Nothing,Integer}`: the perimeter search depth. If this field is not set
+    (and thus automatically initialized to `nothing`), a default depth is computed by
     [`dcm_ps_optimal_depth`](@ref) as a function of the input matrix every time the decider
     is passed to [`has_bandwidth_k_ordering`](@ref) as a function of the input matrix.
     Otherwise, it must be manually set to a positive integer.
@@ -122,8 +125,11 @@ nonzero for ``1 ≤ i, j ≤ n``).
 # Constructors
 - `DelCorsoManziniWithPS()`: constructs a new `DelCorsoManziniWithPS` instance with the
     default perimeter search depth initialized to `nothing`.
-- `DelCorsoManziniWithPS(depth::Int)`: constructs a new `DelCorsoManziniWithPS` instance
+- `DelCorsoManziniWithPS(depth::Integer)`: constructs a new `DelCorsoManziniWithPS` instance
     with the specified perimeter search depth. `depth` must be a positive integer.
+
+# Supertype Hierarchy
+`DelCorsoManziniWithPS` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
 Given an ``n×n`` input matrix ``A``, perimeter search depth ``d``, and threshold bandwidth
@@ -209,7 +215,7 @@ permutation.
 we implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref). Similarly, the
 underlying recognition subroutine for MB-ID is implemented in [`DelCorsoManzini`](@ref).
 """
-struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: AbstractDecider
+struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: AbstractDecider
     depth::D
 
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
@@ -218,12 +224,12 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Int}} <: AbstractDecider
     still needs to be computed upon the function call. =#
     DelCorsoManziniWithPS() = new{Nothing}(nothing)
 
-    function DelCorsoManziniWithPS(depth::Int)
+    function DelCorsoManziniWithPS(depth::Integer)
         if depth <= 0
             throw(ArgumentError("Perimeter search depth must be positive, got $depth"))
         end
 
-        return new{Int}(depth)
+        return new{Integer}(depth)
     end
 end
 
@@ -284,7 +290,7 @@ function dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
     return round(Int, optimal_depth)
 end
 
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::DelCorsoManzini)
+function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Integer, ::DelCorsoManzini)
     n = size(A, 1)
 
     ordering_buf = Vector{Int}(undef, n)
@@ -304,7 +310,7 @@ function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Int, ::DelCorsoM
 end
 
 function _bool_bandwidth_k_ordering(
-    A::AbstractMatrix{Bool}, k::Int, ::DelCorsoManziniWithPS{Nothing}
+    A::AbstractMatrix{Bool}, k::Integer, ::DelCorsoManziniWithPS{Nothing}
 )
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
     instantiation of the decider, as it depends on the input matrix as well. =#
@@ -313,7 +319,7 @@ function _bool_bandwidth_k_ordering(
 end
 
 function _bool_bandwidth_k_ordering(
-    A::AbstractMatrix{Bool}, k::Int, decider::DelCorsoManziniWithPS{Int}
+    A::AbstractMatrix{Bool}, k::Integer, decider::DelCorsoManziniWithPS{Integer}
 )
     n = size(A, 1)
     ps_depth = decider.depth
@@ -341,7 +347,7 @@ end
 function _dcm_add_node!(
     ordering_buf::Vector{Int},
     A::AbstractMatrix{Bool},
-    k::Int,
+    k::Integer,
     adj_lists::Vector{Vector{Int}},
     unselected::Set{Int},
     adj_list::Set{Int},
@@ -458,7 +464,7 @@ function _dcm_order_is_reversed(
     return max_last_label <= first_label
 end
 
-function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Int)
+function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Integer)
     n = size(A, 1)
 
     time_stamps = zeros(Int, n)
@@ -529,7 +535,7 @@ function _dcm_is_compatible(
     ordering_buf::Vector{Int},
     A::AbstractMatrix{Bool},
     adj_list::Set{Int},
-    k::Int,
+    k::Integer,
     num_placed::Int,
 )
     l = length(adj_list)

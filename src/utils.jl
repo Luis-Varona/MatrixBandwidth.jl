@@ -20,8 +20,8 @@ precisely `k` before any reordering. (There may, however, still exist a symmetri
 permutation inducing a minimum bandwidth less than `k`, especially for small values of `p`.)
 
 # Arguments
-- `n::Int`: the order of the matrix to generate. Must be positive.
-- `k::Int`: the desired matrix bandwidth. Must satisfy `0 ≤ k < n`.
+- `n::Integer`: the order of the matrix to generate. Must be positive.
+- `k::Integer`: the desired matrix bandwidth. Must satisfy `0 ≤ k < n`.
 
 # Keyword Arguments
 - `p::Real=0.5`: the band density. Must satisfy `0 < p ≤ 1`. Defaults to `0.5`.
@@ -92,7 +92,7 @@ Users of the [`MatrixBandwidth`](@ref) package may find this function useful whe
 random test data for whatever frameworks, algorithms, etc. they are implementing.
 """
 function random_banded_matrix(
-    n::Int, k::Int; p::Real=0.5, rng::AbstractRNG=Random.default_rng()
+    n::Integer, k::Integer; p::Real=0.5, rng::AbstractRNG=Random.default_rng()
 )
     if n <= 0
         throw(ArgumentError("Matrix order must be positive, got $n"))

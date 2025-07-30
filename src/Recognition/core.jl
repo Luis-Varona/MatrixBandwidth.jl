@@ -29,7 +29,7 @@ Caprara and Salazar-González (2005). If this lower bound is greater than ``k```
 
 # Arguments
 - `A::AbstractMatrix{<:Number}`: the (square) matrix whose bandwidth is tested.
-- `k::Int`: the threshold bandwidth against which to test.
+- `k::Integer`: the threshold bandwidth against which to test.
 - `decider::AbstractDecider`: the matrix bandwidth recognition algorithm to use; defaults to
     [`CapraraSalazarGonzalez`](@ref). (See the [`Recognition`](@ref) module documentation
     for a full list of supported deciders.)
@@ -53,7 +53,7 @@ tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that 
 bandwidth of an empty matrix is simply ``0``.)
 """
 function has_bandwidth_k_ordering(
-    A::AbstractMatrix{<:Number}, k::Int, decider::AbstractDecider=DEFAULT_DECIDER
+    A::AbstractMatrix{<:Number}, k::Integer, decider::AbstractDecider=DEFAULT_DECIDER
 )
     if !allequal(size(A))
         throw(RectangularMatrixError(A))
@@ -88,7 +88,7 @@ booleans can improve performance via cache optimizations, bitwise operations, et
 concrete subtype of `AbstractDecider` must implement its own `_bool_bandwidth_k_ordering`
 method to define the corresponding algorithm logic. =#
 function _bool_bandwidth_k_ordering(
-    ::AbstractMatrix{Bool}, ::Int, ::T
+    ::AbstractMatrix{Bool}, ::Integer, ::T
 ) where {T<:AbstractDecider}
     throw(NotImplementedError(_bool_bandwidth_k_ordering, :decider, T, AbstractDecider))
 end

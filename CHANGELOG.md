@@ -8,10 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added "Supertype Hierarchy" sections to the docstrings of all subtyped structs (#90).
 - Added a section in `README.md` and the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
 
 ### Changed
 
+- Changed some user-facing parameters typed as `Int` to the more generic `Integer` (#90).
 - Changed the phrase `… integer k ∈ [0, n - 1] …` to `… integer k ∈ {0, 1, …, n - 1} …` every time matrix bandwidth is defined in the documentation (#84).
 
 ## [0.1.1] - 2025-07-26
