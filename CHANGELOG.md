@@ -8,14 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Started using *PrecompileTools.jl* to compile all solvers/deciders during package startup, reducing delay on first usage (formerly reached up to ~3 seconds for some algorithms) (#91).
-- Created the `MatrixBandwidth.ALGORITHMS` constant to index all available algorithms by submodule (#91).
+- Started using *PrecompileTools.jl* to compile all solvers/deciders during package startup, reducing delay on first usage (formerly reached up to ~3 seconds for some algorithms) (#93).
+- Created the `MatrixBandwidth.ALGORITHMS` constant to index all available algorithms by submodule (#93).
 - Added "Supertype Hierarchy" sections to the docstrings of all subtypes (both concrete and abstract) (#90).
 - Added a section in `README.md` and the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
 
 ### Changed
 
-- Removed some unnecessary entries in `CHANGELOG.md` documenting super minor changes to documentation and code style (#91).
+- Removed some unnecessary entries in `CHANGELOG.md` documenting super minor changes to documentation and code style (#93).
 - Changed some user-facing parameters typed as `Int` to the more generic `Integer` (#90).
 
 ## [0.1.1] - 2025-07-26
