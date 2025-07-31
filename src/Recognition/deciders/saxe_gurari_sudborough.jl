@@ -16,6 +16,8 @@
 """
 struct SaxeGurariSudborough <: AbstractDecider end
 
+# push!(ALGORITHMS[:Recognition], SaxeGurariSudborough)
+
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
 function _bool_bandwidth_k_ordering(

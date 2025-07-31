@@ -124,6 +124,8 @@ algorithm," on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
 """
 struct DelCorsoManzini <: ExactSolver end
 
+push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManzini)
+
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
 _requires_symmetry(::DelCorsoManzini) = true
@@ -296,6 +298,8 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: ExactSolver
         return new{Integer}(depth)
     end
 end
+
+push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 

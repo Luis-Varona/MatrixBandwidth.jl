@@ -86,6 +86,8 @@ Similarly, the underlying recognition subroutine for MB-PS is implemented in
 """
 struct DelCorsoManzini <: AbstractDecider end
 
+push!(ALGORITHMS[:Recognition], DelCorsoManzini)
+
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
 _requires_symmetry(::DelCorsoManzini) = true
@@ -232,6 +234,8 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: AbstractDecider
         return new{Integer}(depth)
     end
 end
+
+push!(ALGORITHMS[:Recognition], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 

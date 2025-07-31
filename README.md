@@ -75,6 +75,14 @@ The following algorithms are currently supported:
 
 (Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
 
+An index of all available algorithms by submodule may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
+
+```julia-repl
+julia> MatrixBandwidth.ALGORITHMS
+Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
+[...]
+```
+
 ## Installation
 
 The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:

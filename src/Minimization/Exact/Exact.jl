@@ -30,6 +30,7 @@ module Exact
 
 #! format: off
 import ..Recognition
+import ..ALGORITHMS
 import ..AbstractSolver
 import ..NotImplementedError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
@@ -41,6 +42,8 @@ using Combinatorics
 
 export CapraraSalazarGonzalez,
     DelCorsoManzini, DelCorsoManziniWithPS, SaxeGurariSudborough, BruteForceSearch
+
+ALGORITHMS[:Minimization][:Exact] = []
 
 include("types.jl")
 

@@ -28,6 +28,7 @@ This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 module Metaheuristic
 
 #! format: off
+import ..ALGORITHMS
 import ..AbstractSolver
 import ..NotImplementedError
 import .._requires_symmetry
@@ -35,6 +36,8 @@ import .._approach, .._bool_minimal_band_ordering
 #! format: on
 
 export SimulatedAnnealing, GeneticAlgorithm, GRASP
+
+ALGORITHMS[:Minimization][:Metaheuristic] = []
 
 include("types.jl")
 

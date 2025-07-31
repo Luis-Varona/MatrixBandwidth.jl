@@ -29,6 +29,7 @@ This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 module Heuristic
 
 #! format: off
+import ..ALGORITHMS
 import ..AbstractSolver
 import ..NotImplementedError, ..StructuralAsymmetryError
 import .._requires_symmetry
@@ -38,6 +39,8 @@ import .._approach, .._bool_minimal_band_ordering
 using DataStructures: Queue, enqueue!, dequeue!
 
 export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee
+
+ALGORITHMS[:Minimization][:Heuristic] = []
 
 include("utils.jl")
 include("types.jl")

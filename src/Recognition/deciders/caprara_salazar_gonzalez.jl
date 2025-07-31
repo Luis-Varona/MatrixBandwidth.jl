@@ -41,6 +41,8 @@ said minimization algorithm in
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 
+# push!(ALGORITHMS[:Recognition], CapraraSalazarGonzalez)
+
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
 _requires_symmetry(::CapraraSalazarGonzalez) = true

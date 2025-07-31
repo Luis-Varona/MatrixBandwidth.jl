@@ -34,6 +34,7 @@ This submodule is part of the
 module Recognition
 
 #! format: off
+import ..ALGORITHMS
 import ..AbstractAlgorithm, ..AbstractResult
 import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
@@ -51,6 +52,8 @@ export CapraraSalazarGonzalez, # Recognition algorithms
     DelCorsoManziniWithPS,
     SaxeGurariSudborough,
     BruteForceSearch
+
+ALGORITHMS[:Recognition] = []
 
 include("types.jl")
 include("core.jl")

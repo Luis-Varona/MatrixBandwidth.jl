@@ -68,15 +68,25 @@ The full documentation is available at
 module MatrixBandwidth
 
 using Random
+using PrecompileTools: @setup_workload, @compile_workload
 
 include("utils.jl")
 include("types.jl")
 include("core.jl")
 
+"""
+    const ALGORITHMS :: Dict{Symbol, Union{Dict{Symbol}, Vector}}
+
+A dictionary indexing the data types of all available algorithms by submodule.
+"""
+const ALGORITHMS = Dict{Symbol,Union{Dict{Symbol},Vector}}()
+
 include("Recognition/Recognition.jl")
 include("Minimization/Minimization.jl")
 
 using .Minimization, .Recognition
+
+include("startup.jl")
 
 #= Module exports: allows users to call solvers like `Minimization.GibbsPooleStockmeyer` and
 deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exported at the
