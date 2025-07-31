@@ -7,7 +7,7 @@ CurrentModule = MatrixBandwidth
   <tr>
     <td>Metadata</td>
     <td>
-      <img src="https://img.shields.io/badge/version-v0.1.1-pink.svg" alt="Version">
+      <img src="https://img.shields.io/badge/version-v0.1.2-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
     </td>
@@ -271,7 +271,7 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-The latest stable release of *MatrixBandwidth.jl* is `v0.1.1`. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by September 2025.
+The latest stable release of *MatrixBandwidth.jl* is v0.1.2. Although several algorithms are still under development, the bulk of the library is already functional and tested. I aim to complete development (including documentation and tests) of the remaining algorithms and other utility features by September 2025.
 
 ## Index
 
