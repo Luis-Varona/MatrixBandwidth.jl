@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.2] - 2025-07-31
+
 ### Added
 
 - Started using *PrecompileTools.jl* to compile all solvers/deciders during package startup, reducing delay on first usage (formerly reached up to ~3 seconds for some algorithms) (#93).
@@ -46,5 +48,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Released the initial stable version and added the package to Julia's General package registry.
 
 [unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.1.1...HEAD
+[0.1.2]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.0
