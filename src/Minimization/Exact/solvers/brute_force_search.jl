@@ -64,6 +64,8 @@ would take over an hour.
 """
 struct BruteForceSearch <: ExactSolver end
 
+push!(ALGORITHMS[:Minimization][:Exact], BruteForceSearch)
+
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
 _requires_symmetry(::BruteForceSearch) = false

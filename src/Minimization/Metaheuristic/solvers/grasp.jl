@@ -18,6 +18,8 @@ struct GRASP <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
 end
 
+# push!(ALGORITHMS[:Minimization][:Metaheuristic], GRASP)
+
 Base.summary(::GRASP) = "Greedy randomized adaptive search procedure (GRASP)"
 
 _requires_symmetry(::GRASP) = false

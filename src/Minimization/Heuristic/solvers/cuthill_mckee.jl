@@ -203,6 +203,8 @@ struct CuthillMcKee <: HeuristicSolver
     end
 end
 
+push!(ALGORITHMS[:Minimization][:Heuristic], CuthillMcKee)
+
 Base.summary(::CuthillMcKee) = "Cuthill–McKee"
 
 _requires_symmetry(::CuthillMcKee) = true
@@ -409,6 +411,8 @@ struct ReverseCuthillMcKee <: HeuristicSolver
         return new(node_selector)
     end
 end
+
+push!(ALGORITHMS[:Minimization][:Heuristic], ReverseCuthillMcKee)
 
 Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee"
 

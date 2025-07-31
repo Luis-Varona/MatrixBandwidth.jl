@@ -84,6 +84,8 @@ permutations up to reversal to ensure that the minimum bandwidth is found).
 """
 struct BruteForceSearch <: AbstractDecider end
 
+push!(ALGORITHMS[:Recognition], BruteForceSearch)
+
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
 _requires_symmetry(::BruteForceSearch) = false

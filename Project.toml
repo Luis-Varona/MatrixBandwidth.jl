@@ -4,19 +4,21 @@ keywords = ["matrix bandwidth", "minimization", "sparse matrices", "scientific c
 license = "MIT"
 authors = ["Luis M. B. Varona <lm.varona@outlook.com>"]
 description = "Fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition in Julia."
+homepage = "https://luis-varona.github.io/MatrixBandwidth.jl/"
 maintainers = ["Luis M. B. Varona <lm.varona@outlook.com>"]
 readme = "README.md"
 repository = "https://github.com/Luis-Varona/MatrixBandwidth.jl"
-homepage = "https://luis-varona.github.io/MatrixBandwidth.jl/"
 version = "0.1.1"
 
 [deps]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 Combinatorics = "1.0"
 DataStructures = "0.18.15"
+PrecompileTools = "1.2"
 Random = "1.10"
 julia = "1.10"

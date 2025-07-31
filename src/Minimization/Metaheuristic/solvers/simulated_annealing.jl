@@ -24,6 +24,8 @@ struct SimulatedAnnealing <: MetaheuristicSolver
     # TODO: Make constructor with default values
 end
 
+# push!(ALGORITHMS[:Minimization][:Metaheuristic], SimulatedAnnealing)
+
 Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 
 _requires_symmetry(::SimulatedAnnealing) = false

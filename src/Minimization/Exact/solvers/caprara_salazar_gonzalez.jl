@@ -38,6 +38,8 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 """
 struct CapraraSalazarGonzalez <: ExactSolver end
 
+# push!(ALGORITHMS[:Minimization][:Exact], CapraraSalazarGonzalez)
+
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
 _requires_symmetry(::CapraraSalazarGonzalez) = true

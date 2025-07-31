@@ -18,6 +18,8 @@ struct GeneticAlgorithm <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
 end
 
+# push!(ALGORITHMS[:Minimization][:Metaheuristic], GeneticAlgorithm)
+
 Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
 _requires_symmetry(::GeneticAlgorithm) = false

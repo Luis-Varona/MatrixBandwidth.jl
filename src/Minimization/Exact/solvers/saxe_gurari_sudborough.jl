@@ -16,6 +16,8 @@
 """
 struct SaxeGurariSudborough <: ExactSolver end
 
+# push!(ALGORITHMS[:Minimization][:Exact], SaxeGurariSudborough)
+
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
 _requires_symmetry(::SaxeGurariSudborough) = true
