@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Bumped compat for *DataStructures.jl* from `0.18.15` to `0.18.15 - 0.19` (#100).
 - Removed some unnecessary entries in `CHANGELOG.md` documenting super minor changes to documentation and code style (#93).
 - Changed some user-facing parameters typed as `Int` to the more generic `Integer` (#90).
 
