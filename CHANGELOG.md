@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.3] - 2025-08-05
+
+### Changed
+
+- Bumped compat for *DataStructures.jl* from `0.18.15` to `0.18.15 - 0.19` (#100).
+
 ## [0.1.2] - 2025-07-31
 
 ### Added
@@ -13,12 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Started using *PrecompileTools.jl* to compile all solvers/deciders during package startup, reducing delay on first usage (formerly reached up to ~3 seconds for some algorithms) (#93).
 - Created the `MatrixBandwidth.ALGORITHMS` constant to index all available algorithms by submodule (#93).
 - Added "Supertype Hierarchy" sections to the docstrings of all subtypes (both concrete and abstract) (#90).
-- Added a section in `README.md` and the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
+- Added a section in the `MatrixBandwidth` module docstring covering practical applications of matrix bandwidth reduction in engineering and scientific computing (#86).
 
 ### Changed
 
-- Bumped compat for *DataStructures.jl* from `0.18.15` to `0.18.15 - 0.19` (#100).
-- Removed some unnecessary entries in `CHANGELOG.md` documenting super minor changes to documentation and code style (#93).
 - Changed some user-facing parameters typed as `Int` to the more generic `Integer` (#90).
 
 ## [0.1.1] - 2025-07-26
@@ -48,7 +52,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Released the initial stable version of the package.
 
-[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.1.2...HEAD
+[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.3
 [0.1.2]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.1.0
