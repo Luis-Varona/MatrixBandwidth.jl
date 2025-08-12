@@ -7,7 +7,7 @@
 """
     TestCore
 
-Test suite for the core API of the `Minimization` submodule of the `MatrixBandwidth.jl`
+Test suite for the core API of the `Minimization` submodule of the *MatrixBandwidth.jl*
 package.
 """
 module TestCore

@@ -7,7 +7,7 @@
 """
     TestMinimization
 
-Test suite for the `Minimization` submodule of the `MatrixBandwidth.jl` package.
+Test suite for the `Minimization` submodule of the *MatrixBandwidth.jl* package.
 """
 module TestMinimization
 

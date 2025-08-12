@@ -7,7 +7,7 @@
 """
     TestHeuristic
 
-Test suite for the `Minimization.Heuristic` submodule of the `MatrixBandwidth.jl` package.
+Test suite for the `Minimization.Heuristic` submodule of the *MatrixBandwidth.jl* package.
 """
 module TestHeuristic
 

@@ -7,7 +7,7 @@
 """
     TestUtils
 
-Test suite for the root-level utility functions of the `MatrixBandwidth.jl` package.
+Test suite for the root-level utility functions of the *MatrixBandwidth.jl* package.
 """
 module TestUtils
 

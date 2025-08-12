@@ -68,7 +68,7 @@ struct RecognitionResult{
     end
 end
 
-# The `Base.show` override here takes heavy inspiration from the `Optim.jl` package
+# The `Base.show` override here takes heavy inspiration from the Optim.jl package
 function Base.show(io::IO, res::RecognitionResult)
     n = size(res.matrix, 1)
 

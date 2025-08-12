@@ -7,7 +7,7 @@
 """
     TestRecognition
 
-Test suite for the `Recognition` submodule of the `MatrixBandwidth.jl` package.
+Test suite for the `Recognition` submodule of the *MatrixBandwidth.jl* package.
 """
 module TestRecognition
 

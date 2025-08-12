@@ -13,7 +13,7 @@ is ``A`` (ignoring weights and self-loops) and performs a breadth-first search o
 connected component of ``G(A)``, starting from a low-degree node then visiting its neighbors
 in order of increasing degree. Particularly effective when ``A`` is sparse, this heuristic
 typically produces an ordering which induces a matrix bandwidth either equal to or very
-close to the true minimum [CM69; pp. 157--58](@cite).
+close to the true minimum [CM69, pp. 157--58].
 
 As noted above, the Cuthill–McKee algorithm requires structurally symmetric input (that is,
 ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
@@ -30,19 +30,19 @@ As noted above, the Cuthill–McKee algorithm requires structurally symmetric in
 # Performance
 Given an ``n×n`` input matrix ``A``, the Cuthill–McKee algorithm runs in ``O(n²)`` time.
 
-[CG80](@cite) provide a linear-time implementation in the number of nonzero entries of
-``A``, which is still quadratic when ``A`` is dense but often much faster when dealing with
-sparse matrices. However, this would require that ``A`` be stored as a graph or a sparse
-matrix, which runs counter to our desire to provide a bandwidth minimization API for all
+[CG80] provide a linear-time implementation in the number of nonzero entries of ``A``, which
+is still quadratic when ``A`` is dense but often much faster when dealing with sparse
+matrices. However, this would require that ``A`` be stored as a graph or a sparse matrix,
+which runs counter to our desire to provide a bandwidth minimization API for all
 `AbstractMatrix{<:Number}` types, including dense matrices. (In the future, however, we may
 indeed consider supporting this more performant implementation for sparse matrices.)
 
-It was found in [Geo71; pp. 114--15](@cite) that reversing the ordering produced by
-Cuthill–McKee tends to induce a more optimal *matrix profile* (a measure of how far, on
-average, nonzero entries are from the diagonal; see also [`MatrixBandwidth.profile`](@ref)).
-This so-called *reverse Cuthill–McKee* variant is preferred in almost all cases—see
+It was found in [Geo71, pp. 114--15] that reversing the ordering produced by Cuthill–McKee
+tends to induce a more optimal *matrix profile* (a measure of how far, on average, nonzero
+entries are from the diagonal; see also [`MatrixBandwidth.profile`](@ref)). This so-called
+*reverse Cuthill–McKee* variant is preferred in almost all cases—see
 [`ReverseCuthillMcKee`](@ref) and the associated method of `_bool_minimal_band_ordering` for
-    our implementation.
+our implementation.
 
 # Examples
 In the following examples, [`MatrixBandwidth.random_banded_matrix`](@ref) is used to
@@ -193,6 +193,18 @@ Results of Bandwidth Minimization Algorithm
 Note that the `node_selector` field must be of the form
 `(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+
+# References
+
+- [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
+    Cuthill–McKee algorithm*. BIT Numerical Mathematics **20**, 8–14 (1980).
+    https://doi.org/10.1007/BF01933580.
+- [CM69](@cite): E. Cuthill and J. McKee. *Reducing the bandwidth of sparse symmetric
+    matrices*. In: *Proceedings of the 24th National Conference of the ACM* (Brandon Systems
+    Press, 1969); pp. 157–72. https://doi.org/10.1145/800195.805928.
+- [Geo71](@cite): J. A. George. *Computer Implementation of the Finite Element Method*.
+    Ph.D. Thesis, Department of Computer Science, Stanford University (1971).
+    https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.
 """
 struct CuthillMcKee <: HeuristicSolver
     node_selector::Function
@@ -219,10 +231,10 @@ and self-loops) and performs a breadth-first search of each connected component 
 starting from a low-degree node then visiting its neighbors in order of increasing degree.
 Particularly effective when ``A`` is sparse, this heuristic typically produces an ordering
 which induces a matrix bandwidth either equal to or very close to the true minimum
-[CM69; pp. 157--58](@cite). The reverse Cuthill–McKee algorithm simply reverses the ordering
-produced by application of Cuthill–McKee; it was found in [Geo71; pp. 114--15](@cite) that
-although the bandwidth remains the same, this tends to produce a more optimal *matrix
-profile* (a measure of how far, on average, nonzero entries are from the diagonal; see also
+[CM69, pp. 157--58]. The reverse Cuthill–McKee algorithm simply reverses the ordering
+produced by application of Cuthill–McKee; it was found in [Geo71, pp. 114--15] that although
+the bandwidth remains the same, this tends to produce a more optimal *matrix profile* (a
+measure of how far, on average, nonzero entries are from the diagonal; see also
 [`MatrixBandwidth.profile`](@ref)).
 
 As noted above, the reverse Cuthill–McKee algorithm requires structurally symmetric input
@@ -233,10 +245,10 @@ As noted above, the reverse Cuthill–McKee algorithm requires structurally symm
 Given an ``n×n`` input matrix ``A``, the reverse Cuthill–McKee algorithm runs in ``O(n²)``
 time.
 
-[CG80](@cite) provide a linear-time implementation in the number of nonzero entries of
-``A``, which is still quadratic when ``A`` is dense but often much faster when dealing with
-sparse matrices. However, this would require that ``A`` be stored as a graph or a sparse
-matrix, which runs counter to our desire to provide a bandwidth minimization API for all
+[CG80] provide a linear-time implementation in the number of nonzero entries of ``A``, which
+is still quadratic when ``A`` is dense but often much faster when dealing with sparse
+matrices. However, this would require that ``A`` be stored as a graph or a sparse matrix,
+which runs counter to our desire to provide a bandwidth minimization API for all
 `AbstractMatrix{<:Number}` types, including dense matrices. (In the future, however, we may
 indeed consider supporting this more performant implementation for sparse matrices.)
 
@@ -402,6 +414,18 @@ an integer). If this is not the case, an `ArgumentError` is thrown upon construc
 See also the documentation for [`CuthillMcKee`](@ref)—the original (non-reversed) algorithm.
 (Indeed, the reverse Cuthill–McKee method of `_bool_minimal_band_ordering` is merely a
 wrapper around the Cuthill–McKee method.)
+
+# References
+
+- [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
+    Cuthill–McKee algorithm*. BIT Numerical Mathematics **20**, 8–14 (1980).
+    https://doi.org/10.1007/BF01933580.
+- [CM69](@cite): E. Cuthill and J. McKee. *Reducing the bandwidth of sparse symmetric
+    matrices*. In: *Proceedings of the 24th National Conference of the ACM* (Brandon Systems
+    Press, 1969); pp. 157–72. https://doi.org/10.1145/800195.805928.
+- [Geo71](@cite): J. A. George. *Computer Implementation of the Finite Element Method*.
+    Ph.D. Thesis, Department of Computer Science, Stanford University (1971).
+    https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.
 """
 struct ReverseCuthillMcKee <: HeuristicSolver
     node_selector::Function

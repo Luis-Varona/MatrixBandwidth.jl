@@ -13,17 +13,17 @@ matrix is ``A`` (ignoring weights and self-loops) and builds an ordering by iden
 pair of "endpoints" in the graph far from each other, constructing sets of levels from
 these endpoints, and merging these level structures in such a way that minimizes the size of
 the largest level in the final combined structure. Based on the classical reverse
-Cuthill–McKee algorithm [Geo71](@cite), this heuristic typically produces an ordering which
-induces a matrix bandwidth either equal to or very close to the true minimum, with
-improvements in bandwidths over reverse Cuthill–McKee more noticeable once input size
-exceeds ``400×400`` or so [GPS76; pp. 246--47](@cite).
+Cuthill–McKee algorithm [Geo71], this heuristic typically produces an ordering which induces
+a matrix bandwidth either equal to or very close to the true minimum, with improvements in
+bandwidths over reverse Cuthill–McKee more noticeable once input size exceeds ``400×400`` or
+so [GPS76, pp. 246--47].
 
 Whereas the original paper outlined a strategy for conditionally reversing the orderings of
-individual "connected components" [GPS76; p. 241](@cite) (treating the input matrix ``A`` as
-an undirected graph), this implementation instead reverses the entire final ordering in
-every case, similarly to [`ReverseCuthillMcKee`](@ref). Conditional reversals are not only
-more complex to implement but also slightly more time-consuming, with the only benefit being
-a marginally smaller *matrix profile* (a measure of how far, on average, nonzero entries are
+individual "connected components" (treating the input matrix ``A`` as an undirected graph)
+[GPS76, p. 241], this implementation instead reverses the entire final ordering in every
+case, similarly to [`ReverseCuthillMcKee`](@ref). Conditional reversals are not only more
+complex to implement but also slightly more time-consuming, with the only benefit being a
+marginally smaller *matrix profile* (a measure of how far, on average, nonzero entries are
 from the diagonal; see also [`MatrixBandwidth.profile`](@ref)). Since such reversal
 strategies do not affect matrix bandwidth (the primary focus of this package), we opt
 instead for the simpler unconditional reversal.
@@ -45,16 +45,16 @@ As noted above, the Gibbs–Poole–Stockmeyer algorithm requires structurally s
 Given an ``n×n`` input matrix ``A``, the Gibbs–Poole–Stockmeyer algorithm runs in ``O(n²)``
 time.
 
-[Lew82](@cite) provides a notably faster and more memory-efficient implementation, relying
-on sparse storage of the input matrix. However, this would run counter to our desire to
-provide a bandwidth minimization API for all `AbstractMatrix{<:Number}` types, including
-dense matrices. (In the future, however, we may indeed consider supporting this more
-performant implementation for sparse matrices.)
+[Lew82] provides a notably faster and more memory-efficient implementation, relying on
+sparse storage of the input matrix. However, this would run counter to our desire to provide
+a bandwidth minimization API for all `AbstractMatrix{<:Number}` types, including dense
+matrices. (In the future, however, we may indeed consider supporting this more performant
+implementation for sparse matrices.)
 
 On that note, Gibbs–Poole–Stockmeyer has been found to take considerably less time than
-reverse Cuthill–McKee when matrices are stored in sparse format [GPS76; pp. 246--47](@cite).
-The dense-matrix implementations of both algorithms in this package, however, result in
-reverse Cuthill–McKee consistently outperforming Gibbs–Poole–Stockmeyer in terms of runtime
+reverse Cuthill–McKee when matrices are stored in sparse format [GPS76, pp. 246--47]. The
+dense-matrix implementations of both algorithms in this package, however, result in reverse
+Cuthill–McKee consistently outperforming Gibbs–Poole–Stockmeyer in terms of runtime
 (although Gibbs–Poole–Stockmeyer still typically produces lower-bandwidth orderings for
 larger matrices). This further motivates the desire to implement a sparse version of both
 algorithms in the future.
@@ -208,6 +208,18 @@ Results of Bandwidth Minimization Algorithm
 Note that the `node_selector` field must be of the form
 `(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+
+# References
+
+- [Geo71](@cite): J. A. George. *Computer Implementation of the Finite Element Method*.
+    Ph.D. Thesis, Department of Computer Science, Stanford University (1971).
+    https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.
+- [GPS76](@cite): N. E. Gibbs, W. G. Poole Jr. and P. K. Stockmeyer. *An Algorithm for
+    Reducing the Bandwidth and Profile of a Sparse Matrix*. SIAM Journal on Numerical
+    Analysis **13**, 236–50 (1976). https://doi.org/10.1137/0713023.
+- [Lew82](@cite): J. G. Lewis. *Implementation of the Gibbs–Poole–Stockmeyer and Gibbs–King
+    Algorithms*. ACM Transactions on Mathematical Software **8**, 180–89 (1982).
+    https://doi.org/10.1145/355993.355998.
 """
 struct GibbsPooleStockmeyer <: HeuristicSolver
     node_selector::Function

@@ -73,7 +73,7 @@ struct MinimizationResult{A<:AbstractSolver,M<:AbstractMatrix{<:Number},O<:Vecto
     end
 end
 
-# The `Base.show` override here takes heavy inspiration from the `Optim.jl` package
+# The `Base.show` override here takes heavy inspiration from the Optim.jl package
 function Base.show(io::IO, res::MinimizationResult)
     n = size(res.matrix, 1)
 

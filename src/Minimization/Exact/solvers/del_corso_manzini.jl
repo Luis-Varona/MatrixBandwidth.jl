@@ -14,15 +14,15 @@ adding indices one at a time. Partial orderings are pruned not only by ensuring 
 adjacent pairs of currently placed indices are within ``k`` of each other but also by
 tracking the latest positions at which the remaining indices can be placed. This search is
 repeated with incrementing values of ``k`` until a bandwidth-``k`` ordering is found
-[DCM99](@cite), with ``k`` initialized to some lower bound on the minimum bandwidth of ``A``
-up to symmetric permutation.
+[DM99], with ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to
+symmetric permutation.
 
 Specifically, this implementation of the Del Corso–Manzini algorithm uses the
-``min(α(A), γ(A))`` lower bound from [CSG05; pp. 359--60](@cite) as the initial value of
-``k``. (Further implementation details can be found in the source code for
+``min(α(A), γ(A))`` lower bound from [CS05, pp. 359--60] as the initial value of ``k``.
+(Further implementation details can be found in the source code for
 [`bandwidth_lower_bound`](@ref).) This improves upon the original algorithm, which used the
 maximum number of nonzero off-diagonal entries in a single row as a lower bound on the
-minimum bandwidth of ``A`` up to symmetric permutation [DCM99; p. 192--93](@cite).
+minimum bandwidth of ``A`` up to symmetric permutation [DM99, p. 192--93].
 
 As noted above, the Del Corso–Manzini algorithm requires structurally symmetric input (that
 is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
@@ -44,9 +44,9 @@ Given an ``n×n`` input matrix ``A``, the Del Corso–Manzini algorithm runs in
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini, achieved
 only in the most pathological of cases. In practice, efficient pruning techniques and
-compatibility checks—along with [CSG05; pp. 359--60](@cite)'s relatively tight initial lower
-bound on the minimum bandwidth—result in approximately exponential growth in time complexity
-with respect to ``n``.
+compatibility checks—along with [CS05, pp. 359--60]'s relatively tight initial lower bound
+on the minimum bandwidth—result in approximately exponential growth in time complexity with
+respect to ``n``.
 
 Based on experimental results, the algorithm is feasible for ``n×n`` matrices up to
 ``n ≈ 100`` or so.
@@ -88,7 +88,7 @@ bandwidth-``10`` ordering, which is (we claim) optimal up to symmetric permutati
 cases, `random_banded_matrix(n, k)` *does* generate matrices with minimum bandwidth `< k`.
 Nevertheless, this example demonstrates that Del Corso–Manzini at the very least finds a
 good ordering, even though exact optimality—which *is* guaranteed by the original paper
-[DCM99](@cite)—is not explicitly verified.)
+[DM99]—is not explicitly verified.)
 ```jldoctest
 julia> using Random
 
@@ -119,8 +119,17 @@ Results of Bandwidth Minimization Algorithm
 
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini minimization algorithm
-here is designated the "MB-ID algorithm" in [DCM99; p. 191](@cite). The so-called "MB-PS
-algorithm," on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
+here is designated the "MB-ID algorithm" in [DM99, p. 191]. The so-called "MB-PS algorithm,"
+on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
+
+# References
+
+- [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
+    Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
+    https://doi.org/10.1287/ijoc.1040.0083.
+- [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
+    Minimization Problem*. Computing **62**, 189–203 (1999).
+    https://doi.org/10.1007/s006070050002.
 """
 struct DelCorsoManzini <: ExactSolver end
 
@@ -140,8 +149,8 @@ and columns of ``A`` for some fixed ``k ∈ ℕ``, adding indices one at a time.
 orderings are pruned not only by ensuring that adjacent pairs of currently placed indices
 are within ``k`` of each other but also by tracking the latest positions at which the
 remaining indices can be placed. This search is repeated with incrementing values of ``k``
-until a bandwidth-``k`` ordering is found [DCM99](@cite), with ``k`` initialized to some
-lower bound on the minimum bandwidth of ``A`` up to symmetric permutation.
+until a bandwidth-``k`` ordering is found [DM99], with ``k`` initialized to some lower bound
+on the minimum bandwidth of ``A`` up to symmetric permutation.
 
 The incorporation of perimeter search to this approach entails precomputing a "perimeter" of
 ``d``-permutations of row indices of ``A``, where ``d`` is a positive integer passed as a
@@ -155,11 +164,11 @@ selected.
 
 Like our implementation of the base Del Corso–Manzini algorithm (see
 [`DelCorsoManzini`](@ref)), this implementation uses the ``min(α(A), γ(A))`` lower bound
-from [CSG05; pp. 359--60](@cite) as the initial value of ``k``. (Further implementation
-details can be found in the source code for [`bandwidth_lower_bound`](@ref).) This improves
-upon the original algorithm, which used the maximum number of nonzero off-diagonal entries
-in a single row as a lower bound on the minimum bandwidth of ``A`` up to symmetric
-permutation [DCM99; p. 194](@cite).
+from [CS05, pp. 359--60] as the initial value of ``k``. (Further implementation details can
+be found in the source code for [`bandwidth_lower_bound`](@ref).) This improves upon the
+original algorithm, which used the maximum number of nonzero off-diagonal entries in a
+single row as a lower bound on the minimum bandwidth of ``A`` up to symmetric permutation
+[DM99, p. 194].
 
 As noted above, the Del Corso–Manzini algorithm with perimeter search requires structurally
 symmetric input (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is
@@ -197,9 +206,9 @@ algorithm with perimeter search runs in ``O(n! ⋅ nᴰ⁺¹)`` time, where ``D�
 
 Of course, this is but an upper bound on the time complexity of Del Corso–Manzini with
 perimeter search, achieved only in the most pathological of cases. In practice, efficient
-pruning techniques and compatibility checks—along with [CSG05; pp. 359--60](@cite)'s
-relatively tight initial lower bound on the minimum bandwidth—result in approximately
-exponential growth in time complexity with respect to ``n``.
+pruning techniques and compatibility checks—along with [CS05, pp. 359--60]'s relatively
+tight initial lower bound on the minimum bandwidth—result in approximately exponential
+growth in time complexity with respect to ``n``.
 
 Based on experimental results, the algorithm is feasible for ``n×n`` matrices up to
 ``n ≈ 100`` or so.
@@ -244,8 +253,8 @@ finds a bandwidth-``8`` ordering, which is (we claim) optimal up to symmetric pe
 (In some cases, `random_banded_matrix(n, k)` *does* generate matrices with minimum bandwidth
 `< k`. Nevertheless, this example demonstrates that Del Corso–Manzini at the very least
 finds a good ordering, even though exact optimality—which *is* guaranteed by the original
-paper [DCM99](@cite)—is not explicitly verified.) In this case, we set the depth parameter
-to ``4`` beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
+paper [DM99]—is not explicitly verified.) In this case, we set the depth parameter to ``4``
+beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
 
 ```jldoctest
 julia> using Random
@@ -277,9 +286,17 @@ Results of Bandwidth Minimization Algorithm
 
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini minimization algorithm
-with perimeter search here is designated the "MB-PS algorithm" in [DCM99; p. 193](@cite).
-The so-called "MB-ID algorithm," on the other hand, we implement in
-[`DelCorsoManzini`](@ref).
+with perimeter search here is designated the "MB-PS algorithm" in [DM99. p. 193]. The
+so-called "MB-ID algorithm," on the other hand, we implement in [`DelCorsoManzini`](@ref).
+
+# References
+
+- [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
+    Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
+    https://doi.org/10.1287/ijoc.1040.0083.
+- [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
+    Minimization Problem*. Computing **62**, 189–203 (1999).
+    https://doi.org/10.1007/s006070050002.
 """
 struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: ExactSolver
     depth::D

@@ -10,8 +10,15 @@
 A sample input for testing the Cuthill–McKee and reverse Cuthill–McKee algorithms.
 
 The original matrix bandwidth is 8, and the expected outputs are provided in
-[`RCM_ANSWERS`](@ref). This example is taken from [LLS+01](@cite) (converted from C++'s
-zero-based indexing to Julia's one-based indexing).
+[`RCM_ANSWERS`](@ref). This example is taken from [LLS+01] (converted from C++'s zero-based
+indexing to Julia's one-based indexing).
+
+# References
+
+- [LLS+01](@cite): A. Lumsdaine, L.-Q. Lee, J. G. Siek, D. Gregor and K. D. McGrath,
+    *example/cuthillmckeeordering.cpp*. Boost v1.37.0 documentation (2001). Accessed:
+    2025-06-10.
+    https://www.boost.org/doc/libs/1_37_0/libs/graph/example/cuthill_mckee_ordering.cpp.
 """
 const RCM_INPUT = let
     n = 10
@@ -42,8 +49,8 @@ end
 Examples of outputs when reverse Cuthill–McKee is correctly applied to [`RCM_INPUT`](@ref).
 
 The first element of each tuple is the bandwidth of the reordered matrix, and the second is
-the new ordering of the rows and columns. This example is taken from [LLS+01](@cite)
-(converted from C++'s zero-based indexing to Julia's one-based indexing).
+the new ordering of the rows and columns. This example is taken from [LLS+01] (converted
+from C++'s zero-based indexing to Julia's one-based indexing).
 
 Note that these are only some possible outputs, as different node selection heuristics may
 yield different starting points and thus different orderings. Given matching starting nodes,
@@ -51,6 +58,13 @@ however, these are the expected results.
 
 If testing Cuthill–McKee instead of reverse Cuthill–McKee, the orderings can simply be
 reversed, although bandwidths may differ in the general case.
+
+# References
+
+- [LLS+01](@cite): A. Lumsdaine, L.-Q. Lee, J. G. Siek, D. Gregor and K. D. McGrath,
+    *example/cuthillmckeeordering.cpp*. Boost v1.37.0 documentation (2001). Accessed:
+    2025-06-10.
+    https://www.boost.org/doc/libs/1_37_0/libs/graph/example/cuthill_mckee_ordering.cpp.
 """
 const RCM_ANSWERS = [
     (4, [9, 4, 1, 10, 3, 6, 2, 5, 8, 7]),

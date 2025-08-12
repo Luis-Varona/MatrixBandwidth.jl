@@ -7,7 +7,7 @@
 """
     TestCore
 
-Test suite for the core API of the `Recognition` submodule of the `MatrixBandwidth.jl`
+Test suite for the core API of the `Recognition` submodule of the *MatrixBandwidth.jl*
 package.
 """
 module TestCore

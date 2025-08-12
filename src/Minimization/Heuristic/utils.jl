@@ -25,12 +25,20 @@ otherwise, undefined behavior may arise.
 - `Int`: the index of the pseudo-peripheral node selected from the graph.
 
 # Notes
-This function takes heavy inspiration from the implementation in [Net25](@cite), which
-accepts a graph object as input and leverages several pre-existing functions in the
-`networkx` library. We herein repurpose the logic to work directly on adjacency matrices,
-avoiding reallocation overhead and an unnecessary dependency on `Graphs.jl`.
+This function takes heavy inspiration from the implementation in [Net25], which in turn is
+based on the algorithm described in [GL79]. Whereas the [Net25] implementation accepts a
+graph object as input and leverages several pre-existing functions in the networkx library,
+we repurpose the logic to work directly on adjacency matrices, avoiding reallocation
+overhead and an unnecessary dependency on the *Graphs.jl* package.
 
-[TODO: Specify the actual academic source for this, not just the NetworkX one.]
+# References
+
+- [GL79](@cite): A. George and J. W. Liu. *An Implementation of a Pseudoperipheral Node
+    Finder*. ACM Transactions on Mathematical Software **5**, 284–95 (1979).
+    https://doi.org/10.1145/355841.355845.
+- [Net25](@cite): NetworkX Developers. *Source code for networkx.utils.rcm*. NetworkX v3.5
+    documentation (2025). Accessed: 2025-06-11.
+    https://networkx.org/documentation/stable/_modules/networkx/utils/rcm.html.
 """
 function pseudo_peripheral_node(A::AbstractMatrix{Bool})
     n = size(A, 1)

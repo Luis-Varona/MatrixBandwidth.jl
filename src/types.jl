@@ -212,11 +212,16 @@ raised when one of these algorithms is called with a structurally asymmetric inp
 
 # Notes
 As noted in the error message for `StructuralAsymmetryError` instances, users may want to
-consider symmetrization techniques from [RS06](@cite) to minimize the bandwidth of
-structurally asymmetric matrices. (A prominent one is to simply replace ``A[i, j]`` with
-``1`` whenever ``A[i, j] = 0`` but ``A[j, i] ≠ 0``.) Of course, the reliability of
-minimization algorithms is diminished after such a transformation, so users should proceed
-with caution nonetheless.
+consider symmetrization techniques from [RS06] to minimize the bandwidth of structurally
+asymmetric matrices. (A prominent one is to simply replace ``A[i, j]`` with ``1`` whenever
+``A[i, j] = 0`` but ``A[j, i] ≠ 0``.) Of course, the reliability of minimization algorithms
+is diminished after such a transformation, so users should proceed with caution nonetheless.
+
+# References
+
+- [RS06](@cite): J. K. Reid and J. A. Scott. *Reducing the Total Bandwidth of a Sparse
+    Unsymmetric Matrix*. SIAM Journal on Matrix Analysis and Applications **28**, 805–21
+    (2006). https://doi.org/10.1137/050629938.
 """
 struct StructuralAsymmetryError <: Exception
     A::AbstractMatrix{<:Number}
