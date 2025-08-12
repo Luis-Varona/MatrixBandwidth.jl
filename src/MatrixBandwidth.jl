@@ -12,7 +12,7 @@ Fast algorithms for matrix bandwidth minimization and matrix bandwidth recogniti
 Reordering the rows and columns of a matrix to reduce its bandwidth has many practical
 applications in engineering and scientific computing. It is a common preprocessing step used
 to improve performance when solving linear systems, approximating partial differential
-equations, optimizing circuit layout, and more [Maf14; p. 184](@cite).
+equations, optimizing circuit layout, and more [Maf14, p. 184].
 
 Recall that the *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
@@ -64,6 +64,12 @@ matrix prior to any reordering.
 
 The full documentation is available at
 [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/).
+
+# References
+
+- [Maf14](@cite): L. O. Mafteiu-Scai. *The Bandwidths of a Matrix. A Survey of Algorithms*.
+    Annals of West University of Timisoara - Mathematics and Computer Science **52**,
+    183–223 (2014). https://doi.org/10.2478/awutm-2014-0019.
 """
 module MatrixBandwidth
 

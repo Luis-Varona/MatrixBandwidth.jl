@@ -15,8 +15,8 @@ the left and right ends. Partial orderings are pruned not only by ensuring that 
 pairs of currently placed indices are within ``k`` of each other but also by employing a
 branch-and-bound framework with lower bounds on bandwidtth compatibility computed via
 integer linear programming relaxations. This search is repeated with incrementing values of
-``k`` until a bandwidth-``k`` ordering is found [CSG05](@cite), with ``k`` initialized to
-some lower bound on the minimum bandwidth of ``A`` up to symmetric permutation.
+``k`` until a bandwidth-``k`` ordering is found [CS05], with ``k`` initialized to some lower
+bound on the minimum bandwidth of ``A`` up to symmetric permutation.
 
 As noted above, the Caprara–Salazar-González algorithm requires structurally symmetric input
 (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
@@ -32,12 +32,18 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 [TODO: Write here]
 
 # Notes
-This algorithm is not the main one described in the original paper [CSG05](@cite), which
-actually never explicitly presents a procedure for matrix bandwidth recognition. However,
-the paper does define a bandwidth minimization algorithm that repeatedly calls a recognition
+This algorithm is not the main one described in the original paper, which actually never
+explicitly presents a procedure for matrix bandwidth recognition [CS05]. However, the paper
+does define a bandwidth minimization algorithm that repeatedly calls a recognition
 subroutine—this is precisely the logic we implement here. (We do, however, also implement
 said minimization algorithm in
 [`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
+
+# References
+
+- [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
+    Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
+    https://doi.org/10.1287/ijoc.1040.0083.
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 

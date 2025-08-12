@@ -7,9 +7,9 @@
 """
     TestJET
 
-Static analysis with `JET.jl` for the `MatrixBandwidth.jl` package.
+Static analysis with *JET.jl* for the *MatrixBandwidth.jl* package.
 
-`JET.jl` offers a specialized static analyzer focusing primarily on type instabilities,
+*JET.jl* offers a specialized static analyzer focusing primarily on type instabilities,
 type errors, and other issues detectable by Julia's type inference system.
 """
 module TestJET

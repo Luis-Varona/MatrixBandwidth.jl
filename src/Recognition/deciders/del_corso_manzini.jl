@@ -13,7 +13,7 @@ symmetric permutation. The algorithm performs a depth-first search of all partia
 of the rows and columns of ``A``, adding indices one at a time. Partial orderings are pruned
 not only by ensuring that adjacent pairs of currently placed indices are within ``k`` of
 each other but also by tracking the latest positions at which the remaining indices can be
-placed [DCM99](@cite).
+placed [DM99].
 
 As noted above, the Del Corso–Manzini algorithm requires structurally symmetric input (that
 is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
@@ -72,17 +72,23 @@ Results of Bandwidth Recognition Algorithm
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini recognition algorithm
 here is essentially a wrapper around the underlying `AddNode` subroutine in what
-[DCM99; p. 191](@cite) terms the "MB-ID algorithm" for bandwidth minimization (not mere
-recognition). MB-ID (which we also implement in
+[DM99, p. 191] term the "MB-ID algorithm" for bandwidth minimization (not mere recognition).
+MB-ID (which we also implement in
 [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref)) calls this recognition
 procedure with incrementing values of ``k`` until a bandwidth-``k`` ordering is found, with
 ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
 permutation.
 
-[DCM99; p. 193](@cite) also describes an "MB-PS algorithm" for bandwidth minimization,
-which we implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref).
-Similarly, the underlying recognition subroutine for MB-PS is implemented in
+[DM99, p. 193] also describe an "MB-PS algorithm" for bandwidth minimization, which we
+implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref). Similarly,
+the underlying recognition subroutine for MB-PS is implemented in
 [`DelCorsoManziniWithPS`](@ref).
+
+# References
+
+- [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
+    Minimization Problem*. Computing **62**, 189–203 (1999).
+    https://doi.org/10.1007/s006070050002.
 """
 struct DelCorsoManzini <: AbstractDecider end
 
@@ -101,7 +107,7 @@ bandwidth at most ``k`` up to symmetric permutation. The base Del Corso–Manzin
 performs a depth-first search of all partial orderings of the rows and columns of ``A``,
 adding indices one at a time. Partial orderings are pruned not only by ensuring that
 adjacent pairs of currently placed indices are within ``k`` of each other but also by
-tracking the latest positions at which the remaining indices can be placed [DCM99](@cite).
+tracking the latest positions at which the remaining indices can be placed [DM99].
 
 The incorporation of perimeter search to this approach entails precomputing a "perimeter" of
 ``d``-permutations of row indices of ``A``, where ``d`` is a positive integer passed as a
@@ -206,16 +212,22 @@ Results of Bandwidth Recognition Algorithm
 # Notes
 For readers of the original paper, what we call the Del Corso–Manzini recognition algorithm
 with perimeter search here is essentially a wrapper around the underlying `AddNode1` and
-`Prune` subroutines in what [DCM99; p. 193](@cite) terms the "MB-PS algorithm" for bandwidth
+`Prune` subroutines in what [DM99, p. 193] term the "MB-PS algorithm" for bandwidth
 minimization (not mere recognition). MB-PS (which we also implement in
 [`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref)) calls this recognition
 procedure with incrementing values of ``k`` until a bandwidth-``k`` ordering is found, with
 ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
 permutation.
 
-[DCM99; p. 191](@cite) also describes an "MB-ID algorithm" for bandwidth minimization, which
-we implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref). Similarly, the
+[DM99, p. 191] also describe an "MB-ID algorithm" for bandwidth minimization, which we
+implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref). Similarly, the
 underlying recognition subroutine for MB-ID is implemented in [`DelCorsoManzini`](@ref).
+
+# References
+
+- [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
+    Minimization Problem*. Computing **62**, 189–203 (1999).
+    https://doi.org/10.1007/s006070050002.
 """
 struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: AbstractDecider
     depth::D
@@ -246,10 +258,10 @@ _requires_symmetry(::DelCorsoManziniWithPS) = true
 
 Compute a (hopefully) near-optimal Del Corso–Manzini perimeter search depth for `A`.
 
-Taking experimental results from [DCM99; pp. 197–199](@cite) into account, this function
-tries to approximate the optimal depth parameter as a function of both matrix size and
-density. This depth parameter determines how large of a "perimeter" of last-placed indices
-is precomputed in the Del Corso–Manzini algorithm with perimeter search.
+Taking experimental results from [DM99, pp. 197–99] into account, this function tries to
+approximate the optimal depth parameter as a function of both matrix size and density. This
+depth parameter determines how large of a "perimeter" of last-placed indices is precomputed
+in the Del Corso–Manzini algorithm with perimeter search.
 
 # Arguments
 - `A::AbstractMatrix{Bool}`: the (structurally symmetric and square) input matrix whose
@@ -261,11 +273,17 @@ is precomputed in the Del Corso–Manzini algorithm with perimeter search.
 
 # Notes
 See Tables 4, 5, and 6 from the original paper for more details on experimental results
-regarding the optimal perimeter search depth [DCM99; pp. 197–199](@cite).
+regarding the optimal perimeter search depth [DM99, pp. 197–99].
 
 See also [`DelCorsoManziniWithPS`](@ref) and
 [`MatrixBandwidth.Minimization.Exact.DelCorsoManziniWithPS`](@ref)) for our implementation
 of the relevant bandwidth recognition and bandwidth minimization algorithms, respectively.
+
+# References
+
+- [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
+    Minimization Problem*. Computing **62**, 189–203 (1999).
+    https://doi.org/10.1007/s006070050002.
 """
 function dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
     n = size(A, 1)

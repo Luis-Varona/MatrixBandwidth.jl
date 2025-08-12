@@ -15,12 +15,12 @@ are pruned not only by ensuring that adjacent pairs of currently placed indices 
 ``k`` of each other but also by employing a branch-and-bound framework with lower bounds on
 bandwidtth compatibility computed via integer linear programming relaxations. This search is
 repeated with incrementing values of ``k`` until a bandwidth-``k`` ordering is found
-[CSG05](@cite), with ``k`` initialized to some lower bound on the minimum bandwidth of ``A``
-up to symmetric permutation.
+[CS05], with ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to
+symmetric permutation.
 
 Specifically, this implementation of the Caprara–Salazar-González algorithm uses the
-``min(α(A), γ(A))`` lower bound from the original paper [CSG05; pp. 359--60](@cite) as the
-initial value of ``k``. (Further implementation details can be found in the source code for
+``min(α(A), γ(A))`` lower bound from the original paper [CS05, pp. 359--60] as the initial
+value of ``k``. (Further implementation details can be found in the source code for
 [`bandwidth_lower_bound`](@ref).)
 
 As noted above, the Caprara–Salazar-González algorithm requires structurally symmetric input
@@ -35,6 +35,12 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 
 # Examples
 [TODO: Write here]
+
+# References
+
+- [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
+    Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
+    https://doi.org/10.1287/ijoc.1040.0083.
 """
 struct CapraraSalazarGonzalez <: ExactSolver end
 

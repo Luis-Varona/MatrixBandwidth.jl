@@ -102,16 +102,16 @@ Compute the profile of `A` before any permutation of its rows and columns.
 The *profile* of a structurally symmetric ``n×n`` matrix ``A`` is traditionally defined as
 the sum of the distances from each diagonal entry to the leftmost nonzero entry in that
 row—in other words, ``∑ᵢ₌₁ⁿ (i - fᵢ)``, where each ``fᵢ`` is the smallest index such that
-``A[i, fᵢ] ≠ 0`` [Maf14; pp. 187-88](@cite). Generalizing this property to all square
-matrices, we define the *column profile* of a matrix to be the sum of the distances from
-each diagonal entry to the farthest (not necessarily topmost) nonzero entry in that column
-and the *row profile* to be the sum of the distances from each diagonal entry to the
-farthest (not necessarily leftmost) nonzero entry in that row. (Note that both of these
-properties are equal to traditional matrix profile for structurally symmetric matrices.)
+``A[i, fᵢ] ≠ 0`` [Maf14, pp. 187-88]. Generalizing this property to all square matrices, we
+define the *column profile* of a matrix to be the sum of the distances from each diagonal
+entry to the farthest (not necessarily topmost) nonzero entry in that column and the *row
+profile* to be the sum of the distances from each diagonal entry to the farthest (not
+necessarily leftmost) nonzero entry in that row. (Note that both of these properties are
+equal to traditional matrix profile for structurally symmetric matrices.)
 
 One of the most common contexts in which matrix profile is relevant is sparse matrix
-storage, where lower-profile matrices occupy less space in memory [Maf14; p.188](@cite).
-Since Julia's `SparseArrays` package defaults to compressed sparse column storage over
+storage, where lower-profile matrices occupy less space in memory [Maf14, p.188]. Since
+Julia's *SparseArrays.jl* package defaults to compressed sparse column storage over
 compressed sparse row, we therefore compute column profile by default unless the dimension
 is otherwise specified.
 
@@ -176,6 +176,12 @@ julia> profile(A, dim=:row)
 julia> profile(A, dim=:col)
 175
 ```
+
+# References
+
+- [Maf14](@cite): L. O. Mafteiu-Scai. *The Bandwidths of a Matrix. A Survey of Algorithms*.
+    Annals of West University of Timisoara - Mathematics and Computer Science **52**,
+    183–223 (2014). https://doi.org/10.2478/awutm-2014-0019.
 """
 function profile(A::AbstractMatrix{<:Number}; dim::Symbol=:col)
     if dim == :col
@@ -217,11 +223,10 @@ end
 """
     bandwidth_lower_bound(A) -> Int
 
-Compute a lower bound on the bandwidth of `A` using [CSG05; pp. 359--60](@cite)'s results.
+Compute a lower bound on the bandwidth of `A` using [CS05, pp. 359--60]'s results.
 
-`A` is assumed to be structurally symmetric, since the bound from
-[CSG05; pp.359--60](@cite) was discovered in the context of undirected graphs (whose
-adjacency matrices are symmetric).
+`A` is assumed to be structurally symmetric, since the bound from [CS05, pp.359--60] was
+discovered in the context of undirected graphs (whose adjacency matrices are symmetric).
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
@@ -279,6 +284,12 @@ tridiagonal matrices as bandwidth ``2``, and so on. Our definition, on the other
 more common in computer science contexts, treating diagonal matrices as bandwidth ``0`` and
 tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that the
 bandwidth of an empty matrix is simply ``0``.)
+
+# References
+
+- [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
+    Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
+    https://doi.org/10.1287/ijoc.1040.0083.
 """
 function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
     if !allequal(size(A))

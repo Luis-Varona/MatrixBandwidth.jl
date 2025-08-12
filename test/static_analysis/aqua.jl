@@ -7,9 +7,9 @@
 """
     TestAqua
 
-Static analysis with `Aqua.jl` for the `MatrixBandwidth.jl` package.
+Static analysis with *Aqua.jl* for the *MatrixBandwidth.jl* package.
 
-`Aqua.jl` offers a general static analyzer, checking for method ambiguities, undefined
+*Aqua.jl* offers a general static analyzer, checking for method ambiguities, undefined
 `export`s, unbound type parameters, stale dependencies, type piracies, precompilation
 issues, and more.
 """
