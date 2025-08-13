@@ -123,7 +123,6 @@ here is designated the "MB-ID algorithm" in [DM99, p. 191]. The so-called "MB-PS
 on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
 
 # References
-
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
     Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
     https://doi.org/10.1287/ijoc.1040.0083.
@@ -290,7 +289,6 @@ with perimeter search here is designated the "MB-PS algorithm" in [DM99. p. 193]
 so-called "MB-ID algorithm," on the other hand, we implement in [`DelCorsoManzini`](@ref).
 
 # References
-
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
     Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
     https://doi.org/10.1287/ijoc.1040.0083.

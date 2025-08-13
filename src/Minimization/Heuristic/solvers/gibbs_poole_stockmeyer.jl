@@ -210,7 +210,6 @@ Note that the `node_selector` field must be of the form
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
 
 # References
-
 - [Geo71](@cite): J. A. George. *Computer Implementation of the Finite Element Method*.
     Ph.D. Thesis, Department of Computer Science, Stanford University (1971).
     https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.

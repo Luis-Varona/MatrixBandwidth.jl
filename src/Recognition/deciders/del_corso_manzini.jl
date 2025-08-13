@@ -85,7 +85,6 @@ the underlying recognition subroutine for MB-PS is implemented in
 [`DelCorsoManziniWithPS`](@ref).
 
 # References
-
 - [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
     Minimization Problem*. Computing **62**, 189–203 (1999).
     https://doi.org/10.1007/s006070050002.
@@ -224,7 +223,6 @@ implement in [`MatrixBandwidth.Minimization.Exact.DelCorsoManzini`](@ref). Simil
 underlying recognition subroutine for MB-ID is implemented in [`DelCorsoManzini`](@ref).
 
 # References
-
 - [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
     Minimization Problem*. Computing **62**, 189–203 (1999).
     https://doi.org/10.1007/s006070050002.
@@ -280,7 +278,6 @@ See also [`DelCorsoManziniWithPS`](@ref) and
 of the relevant bandwidth recognition and bandwidth minimization algorithms, respectively.
 
 # References
-
 - [DM99](@cite): G. M. Del Corso and G. Manzini. *Finding Exact Solutions to the Bandwidth
     Minimization Problem*. Computing **62**, 189–203 (1999).
     https://doi.org/10.1007/s006070050002.

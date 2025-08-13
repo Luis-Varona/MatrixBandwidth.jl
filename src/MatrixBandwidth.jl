@@ -66,7 +66,6 @@ The full documentation is available at
 [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/).
 
 # References
-
 - [Maf14](@cite): L. O. Mafteiu-Scai. *The Bandwidths of a Matrix. A Survey of Algorithms*.
     Annals of West University of Timisoara - Mathematics and Computer Science **52**,
     183–223 (2014). https://doi.org/10.2478/awutm-2014-0019.

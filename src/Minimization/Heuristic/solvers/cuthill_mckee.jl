@@ -195,7 +195,6 @@ Note that the `node_selector` field must be of the form
 an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
 
 # References
-
 - [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
     Cuthill–McKee algorithm*. BIT Numerical Mathematics **20**, 8–14 (1980).
     https://doi.org/10.1007/BF01933580.
@@ -416,7 +415,6 @@ See also the documentation for [`CuthillMcKee`](@ref)—the original (non-revers
 wrapper around the Cuthill–McKee method.)
 
 # References
-
 - [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
     Cuthill–McKee algorithm*. BIT Numerical Mathematics **20**, 8–14 (1980).
     https://doi.org/10.1007/BF01933580.
