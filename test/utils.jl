@@ -24,6 +24,7 @@ const P = 0.1
     for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k)
         @test bandwidth(A) == k
+        @test MatrixBandwidth._is_structurally_symmetric(A)
     end
 end
 
@@ -31,6 +32,7 @@ end
     for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=rand())
         @test bandwidth(A) == k
+        @test MatrixBandwidth._is_structurally_symmetric(A)
     end
 end
 
@@ -45,15 +47,40 @@ end
         C = random_banded_matrix(n, k; p=p, rng=copy(rng))
         D = random_banded_matrix(n, k; p=p, rng=copy(rng))
 
-        @test all(bandwidth.([A, B, C, D]) .== k)
         @test A == B # Test determinism without a density parameter
         @test C == D # Test determinism with a density parameter
+
+        # `A == B` and `C == D`, so we only need to test `A` and `C`
+        @test bandwidth(A) == bandwidth(C) == k
+        @test MatrixBandwidth._is_structurally_symmetric(A)
+        @test MatrixBandwidth._is_structurally_symmetric(C)
     end
 end
 
-# TODO: Add tests for `random_banded_matrix` with sparse bands (`p = 1 / typemax(UInt128)`)
+@testset "`random_banded_matrix` – Sparse bands" begin
+    #= Essentially zero chance of any nonzero entries beyond the requisite one per
+    superdiagonal and subdiagonal up to the `k`ᵗʰ band. =#
+    p = 1 / typemax(UInt128)
 
-# TODO: Add tests for `random_banded_matrix` with full bands (`p = 1`)
+    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+        A = random_banded_matrix(n, k; p=p)
+        @test bandwidth(A) == k
+
+        for i in 1:k
+            # TODO: Write here
+        end
+    end
+end
+
+@testset "`random_banded_matrix` – Full bands" begin
+    p = 1 # Every offdiagonal entry within `k` indices of the diagonal should be nonzero
+
+    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1) # TODO: Start `k` at 1 instead, maybe?
+        A = random_banded_matrix(n, k; p=p)
+        @test bandwidth(A) == k
+        # TODO: Write here
+    end
+end
 
 @testset "`_find_direct_subtype`" begin
     abstract type Parent end
