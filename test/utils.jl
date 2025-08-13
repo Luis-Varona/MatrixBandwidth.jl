@@ -58,7 +58,7 @@ end
 end
 
 @testset "`random_banded_matrix` – Sparse bands" begin
-    #= Essentially zero chance of any nonzero entries beyond the requisite one per
+    #= There is essentially zero chance of any nonzero entries beyond the requisite one per
     superdiagonal and subdiagonal up to the `k`ᵗʰ band. =#
     p = 1 / typemax(UInt128)
 
@@ -67,18 +67,25 @@ end
         @test bandwidth(A) == k
 
         for i in 1:k
-            # TODO: Write here
+            #= There should be exactly one nonzero entry in each superdiagonal and
+            subdiagonal up to the `k`ᵗʰ band. =#
+            @test count(!iszero, Iterators.map(j -> A[j, j + i], 1:(n - i))) == 1
+            @test count(!iszero, Iterators.map(j -> A[j + i, j], 1:(n - i))) == 1
         end
     end
 end
 
 @testset "`random_banded_matrix` – Full bands" begin
-    p = 1 # Every offdiagonal entry within `k` indices of the diagonal should be nonzero
+    p = 1
 
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1) # TODO: Start `k` at 1 instead, maybe?
+    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=p)
         @test bandwidth(A) == k
-        # TODO: Write here
+        # All entries within `k` indices of the diagonal should be nonzero
+        @test all(
+            idx -> A[idx] != 0,
+            Iterators.filter(idx -> abs(idx[1] - idx[2]) <= k, CartesianIndices(A)),
+        )
     end
 end
 
