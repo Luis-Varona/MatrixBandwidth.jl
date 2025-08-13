@@ -218,7 +218,6 @@ asymmetric matrices. (A prominent one is to simply replace ``A[i, j]`` with ``1`
 is diminished after such a transformation, so users should proceed with caution nonetheless.
 
 # References
-
 - [RS06](@cite): J. K. Reid and J. A. Scott. *Reducing the Total Bandwidth of a Sparse
     Unsymmetric Matrix*. SIAM Journal on Matrix Analysis and Applications **28**, 805–21
     (2006). https://doi.org/10.1137/050629938.

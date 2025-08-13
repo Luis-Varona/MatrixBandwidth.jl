@@ -40,7 +40,6 @@ said minimization algorithm in
 [`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
 
 # References
-
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
     Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
     https://doi.org/10.1287/ijoc.1040.0083.

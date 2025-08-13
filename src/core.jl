@@ -178,7 +178,6 @@ julia> profile(A, dim=:col)
 ```
 
 # References
-
 - [Maf14](@cite): L. O. Mafteiu-Scai. *The Bandwidths of a Matrix. A Survey of Algorithms*.
     Annals of West University of Timisoara - Mathematics and Computer Science **52**,
     183–223 (2014). https://doi.org/10.2478/awutm-2014-0019.
@@ -286,7 +285,6 @@ tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that 
 bandwidth of an empty matrix is simply ``0``.)
 
 # References
-
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
     Provably Minimum Bandwidth*. INFORMS Journal on Computing **17**, 356–73 (2005).
     https://doi.org/10.1287/ijoc.1040.0083.

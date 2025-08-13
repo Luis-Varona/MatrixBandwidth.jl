@@ -32,7 +32,6 @@ we repurpose the logic to work directly on adjacency matrices, avoiding realloca
 overhead and an unnecessary dependency on the *Graphs.jl* package.
 
 # References
-
 - [GL79](@cite): A. George and J. W. Liu. *An Implementation of a Pseudoperipheral Node
     Finder*. ACM Transactions on Mathematical Software **5**, 284–95 (1979).
     https://doi.org/10.1145/355841.355845.

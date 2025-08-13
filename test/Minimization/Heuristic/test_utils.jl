@@ -14,7 +14,6 @@ The original matrix bandwidth is 8, and the expected outputs are provided in
 indexing to Julia's one-based indexing).
 
 # References
-
 - [LLS+01](@cite): A. Lumsdaine, L.-Q. Lee, J. G. Siek, D. Gregor and K. D. McGrath,
     *example/cuthillmckeeordering.cpp*. Boost v1.37.0 documentation (2001). Accessed:
     2025-06-10.
@@ -60,7 +59,6 @@ If testing Cuthill–McKee instead of reverse Cuthill–McKee, the orderings can
 reversed, although bandwidths may differ in the general case.
 
 # References
-
 - [LLS+01](@cite): A. Lumsdaine, L.-Q. Lee, J. G. Siek, D. Gregor and K. D. McGrath,
     *example/cuthillmckeeordering.cpp*. Boost v1.37.0 documentation (2001). Accessed:
     2025-06-10.
