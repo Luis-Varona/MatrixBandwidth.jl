@@ -39,7 +39,7 @@ import ..AbstractAlgorithm, ..AbstractResult
 import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
 import .._problem
-import .._is_structurally_symmetric, .._offdiag_nonzero_support
+import .._connected_components, .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
 using Combinatorics: combinations, permutations
