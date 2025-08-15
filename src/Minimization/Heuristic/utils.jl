@@ -117,35 +117,3 @@ function _assert_valid_node_selector(selector::Function)
 
     return nothing
 end
-
-# Find the indices of all connected components in an adjacency matrix
-function _connected_components(A::AbstractMatrix{Bool})
-    n = size(A, 1)
-    visited = falses(n)
-    queue = Queue{Int}()
-    components = Vector{Int}[]
-
-    for i in 1:n
-        if !visited[i]
-            visited[i] = true
-            enqueue!(queue, i)
-            component = Int[]
-
-            while !isempty(queue)
-                u = dequeue!(queue)
-                push!(component, u)
-
-                for v in findall(view(A, :, u))
-                    if !visited[v]
-                        visited[v] = true
-                        enqueue!(queue, v)
-                    end
-                end
-            end
-
-            push!(components, component)
-        end
-    end
-
-    return components
-end

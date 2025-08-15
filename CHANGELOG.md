@@ -8,8 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Finished unit tests for all root-level utility functions (#108).
+- Finished unit tests for all root-level utility functions (#108, #109).
 - Added **References** sections to docstrings for immediate readability in the REPL and in the source code without needing to open the Documenter-generated website (#105).
+
+### Changed
+
+- Moved the `_connected_components` function from `MatrixBandwidth.Minimization.Heuristic` to the root `MatrixBandwidth` module (specifically `src/utils.jl`) for universal access (#109).
 
 ## [0.1.3] - 2025-08-05
 

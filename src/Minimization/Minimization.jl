@@ -50,7 +50,8 @@ import ..AbstractAlgorithm, ..AbstractResult
 import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
 import .._requires_symmetry, .._problem
-import .._find_direct_subtype, .._is_structurally_symmetric, .._offdiag_nonzero_support
+import .._connected_components,
+    .._find_direct_subtype, .._is_structurally_symmetric, .._offdiag_nonzero_support
 #! format: on
 
 ALGORITHMS[:Minimization] = Dict{Symbol,Vector}()

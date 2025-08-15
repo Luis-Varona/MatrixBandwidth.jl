@@ -13,8 +13,8 @@ module TestCore
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization
-using SparseArrays
 using Graphs
+using SparseArrays
 using Test
 
 const MAX_ORDER1 = 80
