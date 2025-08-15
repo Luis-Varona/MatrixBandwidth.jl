@@ -12,11 +12,16 @@ Test suite for the root-level utility functions of the *MatrixBandwidth.jl* pack
 module TestUtils
 
 using MatrixBandwidth
+using Graphs
 using Random
 using SparseArrays
 using Test
 
-const RBM_MAX_ORDER = 20
+const RBM_MAX_ORDER = 50
+const CC_MAX_ORDER = 50
+const CC_NUM_ITER = 20
+const CC_MAX_DENSITY = 0.5
+const CC_MIN_NUM_COMPONENTS = 5
 const N = 100
 const P = 0.1
 
@@ -86,6 +91,61 @@ end
             idx -> A[idx] != 0,
             Iterators.filter(idx -> abs(idx[1] - idx[2]) <= k, CartesianIndices(A)),
         )
+    end
+end
+
+@testset "`_connected_components` – Singleton" begin
+    singleton = Graph(0)
+    adj_singleton = Bool.(adjacency_matrix(singleton))
+    ccs_singleton = MatrixBandwidth._connected_components(adj_singleton)
+
+    @test isempty(ccs_singleton)
+end
+
+@testset "`_connected_components` – Empty graphs (n ≤ $CC_MAX_ORDER)" begin
+    for n in 1:CC_MAX_ORDER
+        e_n = Graph(n)
+        adj_e_n = Bool.(adjacency_matrix(e_n))
+        ccs_e_n = MatrixBandwidth._connected_components(adj_e_n)
+
+        @test length(ccs_e_n) == n
+        @test all(cc -> length(cc) == 1, ccs_e_n)
+        @test sort!(vcat(ccs_e_n...)) == 1:n
+    end
+end
+
+@testset "`_connected_components` – Complete graphs (n ≤ $CC_MAX_ORDER)" begin
+    for n in 1:CC_MAX_ORDER
+        k_n = complete_graph(n)
+        adj_k_n = Bool.(adjacency_matrix(k_n))
+        ccs_k_n = MatrixBandwidth._connected_components(adj_k_n)
+
+        @test length(ccs_k_n) == 1
+        @test sort!(vcat(ccs_k_n...)) == 1:n
+    end
+end
+
+@testset "`_connected_components` – Random graphs (n ≤ $CC_MAX_ORDER)" begin
+    for n in 1:CC_MAX_ORDER, _ in 1:CC_NUM_ITER
+        g = erdos_renyi(n, CC_MAX_DENSITY * rand())
+        adj_g = Bool.(adjacency_matrix(g))
+        ccs_g = MatrixBandwidth._connected_components(adj_g)
+        trusted_ccs_g = connected_components(g) # From `Graphs.jl`
+
+        @test sort!(map(sort!, ccs_g)) == sort!(map(sort!, trusted_ccs_g))
+    end
+end
+
+max_n_next_test = CC_MAX_ORDER * CC_MIN_NUM_COMPONENTS
+
+@testset "`_connected_components` – Random disconnected graphs (n ≤ $max_n_next_test)" begin
+    for n in 1:CC_MAX_ORDER, _ in 1:CC_NUM_ITER
+        gs = map(_ -> erdos_renyi(n, CC_MAX_DENSITY * rand()), 1:CC_MIN_NUM_COMPONENTS)
+        g = reduce(blockdiag, gs)
+        ccs_g = MatrixBandwidth._connected_components(Bool.(adjacency_matrix(g)))
+        trusted_ccs_g = connected_components(g) # From `Graphs.jl`
+
+        @test sort!(map(sort!, ccs_g)) == sort!(map(sort!, trusted_ccs_g))
     end
 end
 
