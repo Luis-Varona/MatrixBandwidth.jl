@@ -26,3 +26,8 @@ function _bool_bandwidth_k_ordering(
     error("TODO: Not yet implemented")
     return nothing
 end
+
+function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
+    error("TODO: Not yet implemented")
+    return nothing
+end

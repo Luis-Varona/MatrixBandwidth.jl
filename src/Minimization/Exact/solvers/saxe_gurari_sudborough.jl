@@ -23,6 +23,23 @@ Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 _requires_symmetry(::SaxeGurariSudborough) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::SaxeGurariSudborough)
-    error("TODO: Not yet implemented")
-    return nothing
+    components = _connected_components(A)
+    sort!(components; by=length)
+
+    ordering = Vector{Int}(undef, size(A, 1))
+    k = bandwidth_lower_bound(A)
+    num_placed = 0
+
+    for component in components
+        submatrix = view(A, component, component)
+        component_ordering = Recognition._sgs_connected_ordering(submatrix, k)
+
+        while isnothing(component_ordering)
+            component_ordering = Recognition._sgs_connected_ordering(submatrix, k += 1)
+        end
+
+        ordering[(num_placed + 1):(num_placed += length(component))] .= component[component_ordering]
+    end
+
+    return ordering
 end
