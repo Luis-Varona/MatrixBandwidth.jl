@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- TODO: Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm for both bandwidth minimization and bandwidth recognition (#110).
 - Finished unit tests for all root-level utility functions (#108, #109).
 - Added **References** sections to docstrings for immediate readability in the REPL and in the source code without needing to open the Documenter-generated website (#105).
 

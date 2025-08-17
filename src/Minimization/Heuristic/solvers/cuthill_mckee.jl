@@ -442,8 +442,8 @@ _requires_symmetry(::ReverseCuthillMcKee) = true
 
 #= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
 allocating `component_orderings` or individual `component[component_ordering]` arrays.
-(Indeed, the only allocations performed here are those performed by `_connected_components`
-, individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
+(Indeed, the only allocations performed here are those performed by `_connected_components`,
+individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
     node_selector = solver.node_selector
     components = _connected_components(A)

@@ -20,9 +20,16 @@ struct SaxeGurariSudborough <: AbstractDecider end
 
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
+_requires_symmetry(::SaxeGurariSudborough) = true
+
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Integer, ::SaxeGurariSudborough
 )
+    error("TODO: Not yet implemented")
+    return nothing
+end
+
+function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     error("TODO: Not yet implemented")
     return nothing
 end
