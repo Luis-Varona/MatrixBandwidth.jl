@@ -19,7 +19,7 @@ using Test
 const MAX_ORDER = 7
 const NUM_ITER = 100
 
-@testset "DCM – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM decider – Bandwidth < k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, i in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -41,7 +41,7 @@ const NUM_ITER = 100
     end
 end
 
-@testset "DCM-PS (default depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (default depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -63,7 +63,7 @@ end
     end
 end
 
-@testset "DCM-PS (custom depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (custom depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -86,7 +86,7 @@ end
     end
 end
 
-@testset "DCM – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
+@testset "DCM decider – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -103,7 +103,7 @@ end
     end
 end
 
-@testset "DCM-PS (default depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (default depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -120,7 +120,7 @@ end
     end
 end
 
-@testset "DCM-PS (custom depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (custom depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)

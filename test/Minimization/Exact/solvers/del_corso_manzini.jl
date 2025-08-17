@@ -20,7 +20,7 @@ using Test
 const MAX_ORDER = 7
 const NUM_ITER = 100
 
-@testset "DCM – Brute force verification (n ≤ $MAX_ORDER)" begin
+@testset "DCM solver – Brute force verification (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -36,7 +36,7 @@ const NUM_ITER = 100
     end
 end
 
-@testset "DCM-PS (default depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS solver (default depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -52,7 +52,7 @@ end
     end
 end
 
-@testset "DCM-PS (custom depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS solver (custom depth) – Brute force verification (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)

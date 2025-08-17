@@ -33,7 +33,7 @@ include("../test_utils.jl")
 
 #= Check that the algorithm works on a known test case taken from the Boost v1.3.7
 documentation. (More details can be found in `test/heuristic/utils.jl`.) =#
-@testset "CM – Known test case" begin
+@testset "CM solver – Known test case" begin
     res = minimize_bandwidth(RCM_INPUT::BitMatrix, CuthillMcKee())
     ordering = res.ordering
     #= The answers are given in reverse order, so we cannot trust bandwidth to remain the
@@ -41,7 +41,7 @@ documentation. (More details can be found in `test/heuristic/utils.jl`.) =#
     @test reverse!(ordering) in last.(RCM_ANSWERS)
 end
 
-@testset "RCM – Known test case" begin
+@testset "RCM solver – Known test case" begin
     res = minimize_bandwidth(RCM_INPUT::BitMatrix, ReverseCuthillMcKee())
     answer = (res.bandwidth, res.ordering)
     @test answer in RCM_ANSWERS
@@ -52,7 +52,7 @@ columns have been shuffled. We vary the matrix size `n`, the number of connected
 `num_ccs` (as a stress test for Cuthill–McKee, which processes each connected component
 independently), and the original bandwidth `k`. We also vary the density of the off-diagonal
 bands (pre-shuffling). =#
-@testset "CM – Random matrices" begin
+@testset "CM solver – Random matrices" begin
     Random.seed!(7874336)
 
     sum_mult_errors = 0.0
@@ -87,7 +87,7 @@ bands (pre-shuffling). =#
     @test sum_mult_errors / error_count < 1.5
 end
 
-@testset "RCM – Random matrices" begin
+@testset "RCM solver – Random matrices" begin
     Random.seed!(7874336)
 
     sum_mult_errors = 0.0
