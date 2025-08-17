@@ -34,7 +34,7 @@ columns have been shuffled. We vary the matrix size `n`, the number of connected
 `num_ccs` (as a stress test for Gibbs–Poole–Stockmeyer, which processes each connected
 component independently), and the original bandwidth `k`. We also vary the density of the
 off-diagonal bands (pre-shuffling). =#
-@testset "GPS – Random matrices" begin
+@testset "GPS solver – Random matrices" begin
     Random.seed!(7874336)
 
     sum_mult_errors = 0.0
