@@ -17,16 +17,15 @@ using Random
 using SparseArrays
 using Test
 
-const RBM_MAX_ORDER = 50
-const CC_MAX_ORDER = 50
+const MAX_ORDER = 50
 const CC_NUM_ITER = 20
 const CC_MAX_DENSITY = 0.5
-const CC_MIN_NUM_COMPONENTS = 5
+const CC_MIN_NUM_CCS = 5
 const N = 100
 const P = 0.1
 
 @testset "`random_banded_matrix` – Default density" begin
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+    for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k)
         @test bandwidth(A) == k
         @test MatrixBandwidth._is_structurally_symmetric(A)
@@ -34,7 +33,7 @@ const P = 0.1
 end
 
 @testset "`random_banded_matrix` – Random densities" begin
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+    for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=rand())
         @test bandwidth(A) == k
         @test MatrixBandwidth._is_structurally_symmetric(A)
@@ -44,7 +43,7 @@ end
 @testset "`random_banded_matrix` – With RNGs" begin
     rng = MersenneTwister(228)
 
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+    for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; rng=copy(rng))
         B = random_banded_matrix(n, k; rng=copy(rng))
 
@@ -67,7 +66,7 @@ end
     superdiagonal and subdiagonal up to the `k`ᵗʰ band. =#
     p = 1 / typemax(UInt128)
 
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+    for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=p)
         @test bandwidth(A) == k
 
@@ -83,7 +82,7 @@ end
 @testset "`random_banded_matrix` – Full bands" begin
     p = 1
 
-    for n in 1:RBM_MAX_ORDER, k in 0:(n - 1)
+    for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=p)
         @test bandwidth(A) == k
         # All entries within `k` indices of the diagonal should be nonzero
@@ -102,8 +101,8 @@ end
     @test isempty(ccs_singleton)
 end
 
-@testset "`_connected_components` – Empty graphs (n ≤ $CC_MAX_ORDER)" begin
-    for n in 1:CC_MAX_ORDER
+@testset "`_connected_components` – Empty graphs (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER
         e_n = Graph(n)
         adj_e_n = Bool.(adjacency_matrix(e_n))
         ccs_e_n = MatrixBandwidth._connected_components(adj_e_n)
@@ -114,8 +113,8 @@ end
     end
 end
 
-@testset "`_connected_components` – Complete graphs (n ≤ $CC_MAX_ORDER)" begin
-    for n in 1:CC_MAX_ORDER
+@testset "`_connected_components` – Complete graphs (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER
         k_n = complete_graph(n)
         adj_k_n = Bool.(adjacency_matrix(k_n))
         ccs_k_n = MatrixBandwidth._connected_components(adj_k_n)
@@ -125,8 +124,8 @@ end
     end
 end
 
-@testset "`_connected_components` – Random graphs (n ≤ $CC_MAX_ORDER)" begin
-    for n in 1:CC_MAX_ORDER, _ in 1:CC_NUM_ITER
+@testset "`_connected_components` – Random graphs (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:CC_NUM_ITER
         g = erdos_renyi(n, CC_MAX_DENSITY * rand())
         adj_g = Bool.(adjacency_matrix(g))
         ccs_g = MatrixBandwidth._connected_components(adj_g)
@@ -136,11 +135,11 @@ end
     end
 end
 
-max_n_next_test = CC_MAX_ORDER * CC_MIN_NUM_COMPONENTS
+max_n_next_test = MAX_ORDER * CC_MIN_NUM_CCS
 
 @testset "`_connected_components` – Random disconnected graphs (n ≤ $max_n_next_test)" begin
-    for n in 1:CC_MAX_ORDER, _ in 1:CC_NUM_ITER
-        gs = map(_ -> erdos_renyi(n, CC_MAX_DENSITY * rand()), 1:CC_MIN_NUM_COMPONENTS)
+    for n in 1:MAX_ORDER, _ in 1:CC_NUM_ITER
+        gs = map(_ -> erdos_renyi(n, CC_MAX_DENSITY * rand()), 1:CC_MIN_NUM_CCS)
         g = reduce(blockdiag, gs)
         ccs_g = MatrixBandwidth._connected_components(Bool.(adjacency_matrix(g)))
         trusted_ccs_g = connected_components(g) # From `Graphs.jl`

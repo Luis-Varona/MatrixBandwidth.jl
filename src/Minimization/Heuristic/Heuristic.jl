@@ -43,12 +43,12 @@ export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee
 
 ALGORITHMS[:Minimization][:Heuristic] = []
 
-include("utils.jl")
+include("node_finders.jl")
 include("types.jl")
 
 include("solvers/gibbs_poole_stockmeyer.jl")
 include("solvers/cuthill_mckee.jl") # Defines both `CuthillMcKee` and `ReverseCuthillMcKee`
 
-const DEFAULT_SELECTOR = pseudo_peripheral_node
+const DEFAULT_NODE_FINDER = bi_criteria_node_finder
 
 end

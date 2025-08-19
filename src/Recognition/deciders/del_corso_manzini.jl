@@ -252,7 +252,7 @@ Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter sear
 _requires_symmetry(::DelCorsoManziniWithPS) = true
 
 """
-    dcm_ps_optimal_depth(A::AbstractMatrix{Bool}) -> Int
+    dcm_ps_optimal_depth(A) -> Int
 
 Compute a (hopefully) near-optimal Del Corso–Manzini perimeter search depth for `A`.
 

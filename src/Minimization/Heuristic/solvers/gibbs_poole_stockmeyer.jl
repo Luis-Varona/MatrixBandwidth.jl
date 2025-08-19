@@ -33,9 +33,9 @@ As noted above, the Gibbs–Poole–Stockmeyer algorithm requires structurally s
 ``1 ≤ i, j ≤ n``).
 
 # Fields
-- `node_selector::Function`: a function that selects a node from some connected component of
+- `node_finder::Function`: a function that selects a node from some connected component of
     the input matrix from which to start the breadth-first search. If no custom heuristic is
-    specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
+    specified, this field defaults to [`bi_criteria_node_finder`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Supertype Hierarchy
@@ -205,9 +205,9 @@ Results of Bandwidth Minimization Algorithm
 ```
 
 # Notes
-Note that the `node_selector` field must be of the form
-`(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
-an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+Note that the `node_finder` field must be of the form `(A::AbstractMatrix{Bool}) -> Integer`
+(i.e., it must take in an boolean matrix and return an integer). If this is not the case, an
+`ArgumentError` is thrown upon construction.
 
 # References
 - [Geo71](@cite): J. A. George. *Computer Implementation of the Finite Element Method*.
@@ -221,11 +221,11 @@ an integer). If this is not the case, an `ArgumentError` is thrown upon construc
     https://doi.org/10.1145/355993.355998.
 """
 struct GibbsPooleStockmeyer <: HeuristicSolver
-    node_selector::Function
+    node_finder::Function
 
-    function GibbsPooleStockmeyer(node_selector::Function=DEFAULT_SELECTOR)
-        _assert_valid_node_selector(node_selector)
-        return new(node_selector)
+    function GibbsPooleStockmeyer(node_finder::Function=DEFAULT_NODE_FINDER)
+        _assert_valid_node_finder(node_finder)
+        return new(node_finder)
     end
 end
 
@@ -240,12 +240,12 @@ allocating `component_orderings` or individual `component[component_ordering]` a
 (Indeed, the only allocations performed here are those performed by `_connected_components`
 , individual `_gps_connected_ordering_reversed` calls, and `collect` at the very end.) =#
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GibbsPooleStockmeyer)
-    node_selector = solver.node_selector
+    node_finder = solver.node_finder
     components = _connected_components(A)
 
     component_orderings = Iterators.map(
         component ->
-            _gps_connected_ordering_reversed(view(A, component, component), node_selector),
+            _gps_connected_ordering_reversed(view(A, component, component), node_finder),
         components,
     )
 
@@ -268,8 +268,8 @@ end
 Gibbs–Poole–Stockmeyer algorithm reverses the ordering, this "reversed" version does not do
 so (i.e., a double reversal, which implies no reversal at all). Instead, the reversal is
 carried out in the `_bool_minimal_band_ordering` method instead. =#
-function _gps_connected_ordering_reversed(A::AbstractMatrix{Bool}, node_selector::Function)
-    u, v = _pseudo_diameter_endpoints(A, node_selector)
+function _gps_connected_ordering_reversed(A::AbstractMatrix{Bool}, node_finder::Function)
+    u, v = _pseudo_diameter_endpoints(A, node_finder)
     levels_u = _level_structure(A, u)
     levels_v = _level_structure(A, v)
     levels = _combine_level_structures(A, levels_u, levels_v)
@@ -279,10 +279,10 @@ end
 
 # TODO: From this point onwards, more thorough inline comments are needed
 
-function _pseudo_diameter_endpoints(A::AbstractMatrix{Bool}, node_selector::Function)
+function _pseudo_diameter_endpoints(A::AbstractMatrix{Bool}, node_finder::Function)
     degrees = vec(sum(A; dims=1))
 
-    u = node_selector(A)
+    u = node_finder(A)
     levels_curr = _level_structure(A, u)
     last_level = levels_curr[end]
 

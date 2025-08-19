@@ -19,9 +19,9 @@ As noted above, the Cuthill–McKee algorithm requires structurally symmetric in
 ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 ≤ i, j ≤ n``).
 
 # Fields
-- `node_selector::Function`: a function that selects a node from some connected component of
+- `node_finder::Function`: a function that selects a node from some connected component of
     the input matrix from which to start the breadth-first search. If no custom heuristic is
-    specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
+    specified, this field defaults to [`bi_criteria_node_finder`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Supertype Hierarchy
@@ -75,7 +75,7 @@ julia> minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee())
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Cuthill–McKee
  * Approach: heuristic
- * Minimum Bandwidth: 5
+ * Minimum Bandwidth: 8
  * Original Bandwidth: 25
  * Matrix Size: 30×30
 ```
@@ -190,9 +190,9 @@ Results of Bandwidth Minimization Algorithm
 ```
 
 # Notes
-Note that the `node_selector` field must be of the form
-`(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
-an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+Note that the `node_finder` field must be of the form `(A::AbstractMatrix{Bool}) -> Integer`
+(i.e., it must take in an boolean matrix and return an integer). If this is not the case, an
+`ArgumentError` is thrown upon construction.
 
 # References
 - [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
@@ -206,11 +206,11 @@ an integer). If this is not the case, an `ArgumentError` is thrown upon construc
     https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.
 """
 struct CuthillMcKee <: HeuristicSolver
-    node_selector::Function
+    node_finder::Function
 
-    function CuthillMcKee(node_selector::Function=DEFAULT_SELECTOR)
-        _assert_valid_node_selector(node_selector)
-        return new(node_selector)
+    function CuthillMcKee(node_finder::Function=DEFAULT_NODE_FINDER)
+        _assert_valid_node_finder(node_finder)
+        return new(node_finder)
     end
 end
 
@@ -252,9 +252,9 @@ which runs counter to our desire to provide a bandwidth minimization API for all
 indeed consider supporting this more performant implementation for sparse matrices.)
 
 # Fields
-- `node_selector::Function`: a function that selects a node from some connected component of
+- `node_finder::Function`: a function that selects a node from some connected component of
     the input matrix from which to start the breadth-first search. If no custom heuristic is
-    specified, this field defaults to [`pseudo_peripheral_node`](@ref), which picks a node
+    specified, this field defaults to [`bi_criteria_node_finder`](@ref), which picks a node
     "farthest" from the others in the component (not necessarily the lowest-degree node).
 
 # Supertype Hierarchy
@@ -376,18 +376,18 @@ julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠑⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢛⢔⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠚⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢞⡵⡦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠫⢥⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
 ⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠡⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠫⣦⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⢿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠯⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠯⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠺⢆⡄⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣲⣄⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢻⣶⡀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣢⡀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠫⡦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢫⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢪⣶⣄⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢾⣳⡀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⣄⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⣧⡀⠀⎥
 ⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⣦⎦
 
 julia> bandwidth(A)
@@ -400,15 +400,15 @@ julia> res # Gets very close to the original bandwidth
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Reverse Cuthill–McKee
  * Approach: heuristic
- * Minimum Bandwidth: 9
+ * Minimum Bandwidth: 11
  * Original Bandwidth: 226
  * Matrix Size: 235×235
 ```
 
 # Notes
-Note that the `node_selector` field must be of the form
-`(A::AbstractMatrix{Bool}) -> Integer` (i.e., it must take in an boolean matrix and return
-an integer). If this is not the case, an `ArgumentError` is thrown upon construction.
+Note that the `node_finder` field must be of the form `(A::AbstractMatrix{Bool}) -> Integer`
+(i.e., it must take in an boolean matrix and return an integer). If this is not the case, an
+`ArgumentError` is thrown upon construction.
 
 See also the documentation for [`CuthillMcKee`](@ref)—the original (non-reversed) algorithm.
 (Indeed, the reverse Cuthill–McKee method of `_bool_minimal_band_ordering` is merely a
@@ -426,11 +426,11 @@ wrapper around the Cuthill–McKee method.)
     https://apps.dtic.mil/sti/tr/pdf/AD0726171.pdf.
 """
 struct ReverseCuthillMcKee <: HeuristicSolver
-    node_selector::Function
+    node_finder::Function
 
-    function ReverseCuthillMcKee(node_selector::Function=DEFAULT_SELECTOR)
-        _assert_valid_node_selector(node_selector)
-        return new(node_selector)
+    function ReverseCuthillMcKee(node_finder::Function=DEFAULT_NODE_FINDER)
+        _assert_valid_node_finder(node_finder)
+        return new(node_finder)
     end
 end
 
@@ -445,11 +445,11 @@ allocating `component_orderings` or individual `component[component_ordering]` a
 (Indeed, the only allocations performed here are those performed by `_connected_components`,
 individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
-    node_selector = solver.node_selector
+    node_finder = solver.node_finder
     components = _connected_components(A)
 
     component_orderings = Iterators.map(
-        component -> _cm_connected_ordering(view(A, component, component), node_selector),
+        component -> _cm_connected_ordering(view(A, component, component), node_finder),
         components,
     )
 
@@ -462,11 +462,11 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcK
 end
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee)
-    return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_selector)))
+    return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_finder)))
 end
 
 # Cuthill–McKee searches each connected component independently
-function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_selector::Function)
+function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_finder::Function)
     n = size(A, 1)
 
     ordering = Vector{Int}(undef, n)
@@ -474,7 +474,7 @@ function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_selector::Function
     degrees = vec(sum(A; dims=1))
     queue = Queue{Int}()
 
-    start = node_selector(A)
+    start = node_finder(A)
     visited[start] = true
     enqueue!(queue, start)
 
