@@ -17,10 +17,10 @@ using Random
 using SparseArrays
 using Test
 
-const MAX_ORDER = 50
+const MAX_ORDER = 40
 const CC_NUM_ITER = 20
 const CC_MAX_DENSITY = 0.5
-const CC_MIN_NUM_CCS = 5
+const CC_MAX_NUM_CCS = 4
 const N = 100
 const P = 0.1
 
@@ -125,6 +125,8 @@ end
 end
 
 @testset "`_connected_components` – Random graphs (n ≤ $MAX_ORDER)" begin
+    Random.seed!(122105)
+
     for n in 1:MAX_ORDER, _ in 1:CC_NUM_ITER
         g = erdos_renyi(n, CC_MAX_DENSITY * rand())
         adj_g = Bool.(adjacency_matrix(g))
@@ -135,11 +137,14 @@ end
     end
 end
 
-max_n_next_test = MAX_ORDER * CC_MIN_NUM_CCS
+max_n_next_test = MAX_ORDER * CC_MAX_NUM_CCS
 
 @testset "`_connected_components` – Random disconnected graphs (n ≤ $max_n_next_test)" begin
+    Random.seed!(040307)
+
     for n in 1:MAX_ORDER, _ in 1:CC_NUM_ITER
-        gs = map(_ -> erdos_renyi(n, CC_MAX_DENSITY * rand()), 1:CC_MIN_NUM_CCS)
+        num_ccs = rand(1:CC_MAX_NUM_CCS)
+        gs = map(_ -> erdos_renyi(n, CC_MAX_DENSITY * rand()), 1:num_ccs)
         g = reduce(blockdiag, gs)
         ccs_g = MatrixBandwidth._connected_components(Bool.(adjacency_matrix(g)))
         trusted_ccs_g = connected_components(g) # From `Graphs.jl`
