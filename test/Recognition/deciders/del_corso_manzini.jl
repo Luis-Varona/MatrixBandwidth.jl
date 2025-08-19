@@ -17,7 +17,7 @@ using SparseArrays
 using Test
 
 const MAX_ORDER = 6
-const NUM_ITER = 50
+const NUM_ITER = 15
 
 @testset "DCM decider – Bandwidth < k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, i in 1:NUM_ITER

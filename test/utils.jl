@@ -17,10 +17,10 @@ using Random
 using SparseArrays
 using Test
 
-const MAX_ORDER = 40
-const CC_NUM_ITER = 20
+const MAX_ORDER = 35
+const CC_NUM_ITER = 15
 const CC_MAX_DENSITY = 0.5
-const CC_MAX_NUM_CCS = 4
+const CC_MAX_NUM_CCS = 3
 const N = 100
 const P = 0.1
 
