@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Fleshed out documentation (particularly inline comments) for the Gibbs&ndash;Poole&ndash;Stockmeyer source code (#116).
 - Reduced the number of iterations and cases in some of the unit tests to cut down on runtime without affecting coverage (#112, #113).
 - Improved unit tests for the heuristic solvers with more edge cases and scenarios (including the use of custom node finders) (#112).
 - Changed the `DEFAULT_NODE_FINDER` constant for the heuristic solvers from `pseudo_peripheral_node_finder` to `bi_criteria_node_finder` (#112).

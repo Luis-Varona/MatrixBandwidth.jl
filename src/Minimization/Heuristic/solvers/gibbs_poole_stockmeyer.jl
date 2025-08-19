@@ -277,8 +277,10 @@ function _gps_connected_ordering_reversed(A::AbstractMatrix{Bool}, node_finder::
     return _number_nodes!(levels, u, v, A)
 end
 
-# TODO: From this point onwards, more thorough inline comments are needed
-
+#= Heuristically identify a pair of node that are "farthest" from each other in the
+connected component. This is done by generating and iterating over the level structure
+generated via a breadth-first search rooted at a node selected by `node_finder`, which
+should heuristically identify a node "farthest" from all others in the graph. =#
 function _pseudo_diameter_endpoints(A::AbstractMatrix{Bool}, node_finder::Function)
     degrees = vec(sum(A; dims=1))
 
@@ -308,6 +310,13 @@ function _pseudo_diameter_endpoints(A::AbstractMatrix{Bool}, node_finder::Functi
     return u, v
 end
 
+#= Given an adjacency matrix `A`, generate a level partition `L₁, L₂, …, Lₖ` of the graph
+represented by `A` rooted at the node `root`. The disjoint union of all levels is precisely
+the vertex set of the graph, with each level recursively defined as follows:
+    1. `L₁ = {root}`; and
+    2. `Lᵢ = {u ∈ N(v) | u ∉ L₁ ∪ L₂ ∪ … ∪ Lᵢ₋₁ and v ∈ Lᵢ₋₁}` for all `i ∈ {2, 3, …, k}`,
+        where `N(v)` is the set of neighbors of `v`.
+=#
 function _level_structure(A::AbstractMatrix{Bool}, root::Int)
     levels = Vector{Int}[]
     level_curr = [root]
@@ -330,6 +339,15 @@ function _level_structure(A::AbstractMatrix{Bool}, root::Int)
     return levels
 end
 
+#= Combine the level structures rooted at `u` and `v` into a single level structure
+`L₁, L₂, …, Lₖ` with lower width (i.e., fewer nodes in the largest level) still satisfying
+the following properties:
+    1. `⋃Lᵢ₌₁ᵏ` is the vertex set of the graph represented by `A`;
+    2. for every `u ∈ L₁`, `v ∈ N(u)` implies `v ∈ L₁ ∪ L₂`;
+    3. for every `i ∈ {2, 3, …, k - 1}` and `u ∈ Lᵢ`, `v ∈ N(u)` implies
+        `v ∈ Lᵢ₋₁ ∪ Lᵢ ∪ Lᵢ₊₁`; and
+    4. for every `u ∈ Lₖ`, `v ∈ N(u)` implies `v ∈ Lₖ₋₁ ∪ Lₖ`.
+=#
 function _combine_level_structures(
     A::AbstractMatrix{Bool}, levels_u::Vector{Vector{Int}}, levels_v::Vector{Vector{Int}}
 )
@@ -397,6 +415,8 @@ function _combine_level_structures(
     return levels
 end
 
+#= Number the nodes in the level structure `levels` in such a way that is likely to minimize
+the bandwidth of `A`. =#
 function _number_nodes!(
     levels::Vector{Vector{Int}}, u::Int, v::Int, A::AbstractMatrix{Bool}
 )
