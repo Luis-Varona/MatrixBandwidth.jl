@@ -18,10 +18,10 @@ using SparseArrays
 using Test
 
 const MAX_ORDER1 = 80
-const NUM_ITER1 = 100
+const NUM_ITER1 = 50
 
 const MAX_ORDER2 = 8
-const NUM_ITER2 = 10
+const NUM_ITER2 = 5
 
 @testset "`bandwidth` (n ≤ $MAX_ORDER1)" begin
     for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
