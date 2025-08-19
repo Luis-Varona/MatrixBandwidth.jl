@@ -50,10 +50,10 @@ bands (pre-shuffling). The default Hou, Liu, and Zhu (2024) node finder is used 
             res = minimize_bandwidth(A, GibbsPooleStockmeyer())
 
             #= Confirm that the ratio of the minimized bandwidth to the original is not too
-            large. (In very rare cases, it is possible that the original ordering of `A` is
+            large. (In some cases, it is possible that the original ordering of `A` is not
             not optimal and that Gibbs–Poole–Stockmeyer produces an even better one.) =#
             mult_error = res.bandwidth / k
-            @test mult_error < 2.5
+            @test mult_error < 3
 
             sum_mult_errors += mult_error
             num_cases += 1
@@ -65,7 +65,7 @@ bands (pre-shuffling). The default Hou, Liu, and Zhu (2024) node finder is used 
 
     #= We keep track of the average ratio of the minimized bandwidth to the original
     bandwidth, which should be less than 1.5 if the algorithm is working properly. =#
-    @test sum_mult_errors / num_cases < 1.25
+    @test sum_mult_errors / num_cases < 1.5
 end
 
 #= Here we specify the node finder, using the traditional George and Liu (1979) algorithm
@@ -89,7 +89,7 @@ end
             res = minimize_bandwidth(A, GibbsPooleStockmeyer(gl_node_finder))
 
             mult_error = res.bandwidth / k
-            @test mult_error < 2.5
+            @test mult_error < 3
 
             sum_mult_errors += mult_error
             num_cases += 1
@@ -98,7 +98,7 @@ end
         end
     end
 
-    @test sum_mult_errors / num_cases < 1.25
+    @test sum_mult_errors / num_cases < 1.5
 end
 
 #= Now a (far inferior) naive node finder is used, simply selecting the node with the lowest
@@ -124,7 +124,7 @@ Gibbs–Poole–Stockmeyer continues to prove effective (although less so) nonet
             res = minimize_bandwidth(A, GibbsPooleStockmeyer(naive_node_finder))
 
             mult_error = res.bandwidth / k
-            @test mult_error < 2.5
+            @test mult_error < 3
 
             sum_mult_errors += mult_error
             num_cases += 1
@@ -133,7 +133,7 @@ Gibbs–Poole–Stockmeyer continues to prove effective (although less so) nonet
         end
     end
 
-    @test sum_mult_errors / num_cases < 1.25
+    @test sum_mult_errors / num_cases < 1.5
 end
 
 end

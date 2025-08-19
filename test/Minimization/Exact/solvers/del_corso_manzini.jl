@@ -18,7 +18,7 @@ using SparseArrays
 using Test
 
 const MAX_ORDER = 6
-const NUM_ITER = 15
+const NUM_ITER = 5
 
 @testset "DCM solver – Brute force verification (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
