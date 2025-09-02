@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Tightened the `bandwidth_lower_bound` function for disconnected graphs by taking the maximum of the bounds computed for each connected component (#124).
 - Fixed some test names in the Del Corso&ndash;Manzini recognition algorithm test suite ("Bandwidth < k" was meant to be "Bandwidth > k", and "Bandwidth ≥ k" was meant to be "Bandwidth ≤ k") (#123).
 
 ## [0.1.3] - 2025-08-05
