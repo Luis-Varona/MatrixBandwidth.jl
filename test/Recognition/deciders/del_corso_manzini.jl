@@ -19,7 +19,59 @@ using Test
 const MAX_ORDER = 6
 const NUM_ITER = 5
 
-@testset "DCM decider – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM decider – Bandwidth ≤ k (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Ensure structural symmetry
+
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
+        k = rand(b:(n - 1))
+
+        res = has_bandwidth_k_ordering(A, k, DelCorsoManzini())
+        ordering = res.ordering
+
+        @test res.has_ordering
+        @test bandwidth(A[ordering, ordering]) <= k
+    end
+end
+
+@testset "DCM-PS decider (default depth) – Bandwidth ≤ k (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Ensure structural symmetry
+
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
+        k = rand(b:(n - 1))
+
+        res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS())
+        ordering = res.ordering
+
+        @test res.has_ordering
+        @test bandwidth(A[ordering, ordering]) <= k
+    end
+end
+
+@testset "DCM-PS decider (custom depth) – Bandwidth ≤ k (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Ensure structural symmetry
+
+        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
+        k = rand(b:(n - 1))
+        depth = rand(1:n)
+
+        res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS(depth))
+        ordering = res.ordering
+
+        @test res.has_ordering
+        @test bandwidth(A[ordering, ordering]) <= k
+    end
+end
+
+@testset "DCM decider – Bandwidth > k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, i in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -41,7 +93,7 @@ const NUM_ITER = 5
     end
 end
 
-@testset "DCM-PS decider (default depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (default depth) – Bandwidth > k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -63,7 +115,7 @@ end
     end
 end
 
-@testset "DCM-PS decider (custom depth) – Bandwidth < k (n ≤ $MAX_ORDER)" begin
+@testset "DCM-PS decider (custom depth) – Bandwidth > k (n ≤ $MAX_ORDER)" begin
     for n in 2:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
@@ -83,58 +135,6 @@ end
 
         @test !res.has_ordering
         @test isnothing(res.ordering)
-    end
-end
-
-@testset "DCM decider – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
-    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
-        density = rand()
-        A = sprand(n, n, density)
-        A = A + A' # Ensure structural symmetry
-
-        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
-        k = rand(b:(n - 1))
-
-        res = has_bandwidth_k_ordering(A, k, DelCorsoManzini())
-        ordering = res.ordering
-
-        @test res.has_ordering
-        @test bandwidth(A[ordering, ordering]) <= k
-    end
-end
-
-@testset "DCM-PS decider (default depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
-    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
-        density = rand()
-        A = sprand(n, n, density)
-        A = A + A' # Ensure structural symmetry
-
-        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
-        k = rand(b:(n - 1))
-
-        res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS())
-        ordering = res.ordering
-
-        @test res.has_ordering
-        @test bandwidth(A[ordering, ordering]) <= k
-    end
-end
-
-@testset "DCM-PS decider (custom depth) – Bandwidth ≥ k (n ≤ $MAX_ORDER)" begin
-    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
-        density = rand()
-        A = sprand(n, n, density)
-        A = A + A' # Ensure structural symmetry
-
-        b = minimize_bandwidth(A, Minimization.BruteForceSearch()).bandwidth
-        k = rand(b:(n - 1))
-        depth = rand(1:n)
-
-        res = has_bandwidth_k_ordering(A, k, DelCorsoManziniWithPS(depth))
-        ordering = res.ordering
-
-        @test res.has_ordering
-        @test bandwidth(A[ordering, ordering]) <= k
     end
 end
 

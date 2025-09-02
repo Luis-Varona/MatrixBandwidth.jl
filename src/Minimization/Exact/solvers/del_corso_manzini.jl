@@ -136,7 +136,7 @@ push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManzini)
 
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
-_requires_symmetry(::DelCorsoManzini) = true
+_requires_structural_symmetry(::DelCorsoManzini) = true
 
 """
     DelCorsoManziniWithPS{D} <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
@@ -318,7 +318,7 @@ push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 
-_requires_symmetry(::DelCorsoManziniWithPS) = true
+_requires_structural_symmetry(::DelCorsoManziniWithPS) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::DelCorsoManzini)
     n = size(A, 1)

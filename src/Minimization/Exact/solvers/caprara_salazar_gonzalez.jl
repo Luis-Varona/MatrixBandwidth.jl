@@ -47,7 +47,7 @@ struct CapraraSalazarGonzalez <: ExactSolver end
 
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
-_requires_symmetry(::CapraraSalazarGonzalez) = true
+_requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez)
     error("TODO: Not yet implemented")

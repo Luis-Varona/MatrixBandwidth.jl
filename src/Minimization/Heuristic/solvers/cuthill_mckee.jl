@@ -218,7 +218,7 @@ push!(ALGORITHMS[:Minimization][:Heuristic], CuthillMcKee)
 
 Base.summary(::CuthillMcKee) = "Cuthill–McKee"
 
-_requires_symmetry(::CuthillMcKee) = true
+_requires_structural_symmetry(::CuthillMcKee) = true
 
 """
     ReverseCuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
@@ -438,7 +438,7 @@ push!(ALGORITHMS[:Minimization][:Heuristic], ReverseCuthillMcKee)
 
 Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee"
 
-_requires_symmetry(::ReverseCuthillMcKee) = true
+_requires_structural_symmetry(::ReverseCuthillMcKee) = true
 
 #= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
 allocating `component_orderings` or individual `component[component_ordering]` arrays.

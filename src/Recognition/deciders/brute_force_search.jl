@@ -88,7 +88,7 @@ push!(ALGORITHMS[:Recognition], BruteForceSearch)
 
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_symmetry(::BruteForceSearch) = false
+_requires_structural_symmetry(::BruteForceSearch) = false
 
 #= We take advantage of the laziness of `permutations` and `Iterators.filter` to avoid
 iterating over all orderings if a valid one is found early. =#

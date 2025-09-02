@@ -14,8 +14,8 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
 `AbstractSolver` must implement the following methods:
 - `Base.summary(::T) where {T<:AbstractSolver}`: returns a `String` indicating the name
     of the solver (e.g., `"Gibbs–Poole–Stockmeyer"`).
-- `_requires_symmetry(::T) where {T<:AbstractSolver}`: returns a `Bool` indicating
-    whether the solver requires the input matrix to be structurally symmetric.
+- `_requires_structural_symmetry(::T) where {T<:AbstractSolver}`: returns a `Bool`
+    indicating whether the solver requires the input matrix to be structurally symmetric.
 
 Direct subtypes of `AbstractSolver` must implement the following method:
 - `_approach(::T) where {T<:AbstractSolver}`: returns a `Symbol` indicating the

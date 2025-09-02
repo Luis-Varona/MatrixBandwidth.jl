@@ -8,17 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm (both the minimization solver and the recognition decider) (#123). (**NOTE:** Some documentation is still pending.)
 - Added `bi_criteria_node_finder` (an improvement upon `pseudo_peripheral_node_finder`) as a new node finder for the heuristic solvers (#112).
 - Finished unit tests for all root-level utility functions (#108, #109).
 - Added **References** sections to docstrings for immediate readability in the REPL and in the source code without needing to open the Documenter-generated website (#105).
 
 ### Changed
 
+- Renamed the `_requires_symmetry` internal function (used for input validation) to `_requires_structural_symmetry` (#123).
 - Reduced the number of iterations and cases in some of the unit tests to cut down on runtime without affecting coverage (#112, #113, #118, #119).
 - Fleshed out documentation (particularly inline comments) for the Gibbs&ndash;Poole&ndash;Stockmeyer source code (#116).
 - Improved unit tests for the heuristic solvers with more edge cases and scenarios (including the use of custom node finders) (#112).
 - Changed the `DEFAULT_NODE_FINDER` constant for the heuristic solvers from `pseudo_peripheral_node_finder` to `bi_criteria_node_finder` (#112).
 - Moved the `_connected_components` function from `MatrixBandwidth.Minimization.Heuristic` to the root `MatrixBandwidth` module (specifically `src/utils.jl`) for universal access (#109).
+
+### Fixed
+
+- Fixed some test names in the Del Corso&ndash;Manzini recognition algorithm test suite ("Bandwidth < k" was meant to be "Bandwidth > k", and "Bandwidth ≥ k" was meant to be "Bandwidth ≤ k") (#123).
 
 ## [0.1.3] - 2025-08-05
 
