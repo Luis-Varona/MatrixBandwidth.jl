@@ -233,7 +233,7 @@ push!(ALGORITHMS[:Minimization][:Heuristic], GibbsPooleStockmeyer)
 
 Base.summary(::GibbsPooleStockmeyer) = "Gibbs–Poole–Stockmeyer"
 
-_requires_symmetry(::GibbsPooleStockmeyer) = true
+_requires_structural_symmetry(::GibbsPooleStockmeyer) = true
 
 #= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
 allocating `component_orderings` or individual `component[component_ordering]` arrays.

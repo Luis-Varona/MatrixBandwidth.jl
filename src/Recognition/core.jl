@@ -59,7 +59,7 @@ function has_bandwidth_k_ordering(
         throw(RectangularMatrixError(A))
     end
 
-    if _requires_symmetry(decider) && !_is_structurally_symmetric(A)
+    if _requires_structural_symmetry(decider) && !_is_structurally_symmetric(A)
         throw(StructuralAsymmetryError(A, decider))
     end
 

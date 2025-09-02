@@ -31,7 +31,7 @@ module Metaheuristic
 import ..ALGORITHMS
 import ..AbstractSolver
 import ..NotImplementedError
-import .._requires_symmetry
+import .._requires_structural_symmetry
 import .._approach, .._bool_minimal_band_ordering
 #! format: on
 

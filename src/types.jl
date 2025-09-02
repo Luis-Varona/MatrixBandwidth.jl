@@ -13,8 +13,8 @@ Abstract base type for all matrix bandwidth minimization and recognition algorit
 Concrete subtypes of `AbstractAlgorithm` must implement the following methods:
 - `Base.summary(::T) where {T<:AbstractAlgorithm}`: returns a `String` indicating the name
     of the algorithm (e.g., `"Gibbs–Poole–Stockmeyer"`).
-- `_requires_symmetry(::T) where {T<:AbstractAlgorithm}`: returns a `Bool` indicating
-    whether the algorithm requires the input matrix to be structurally symmetric.
+- `_requires_structural_symmetry(::T) where {T<:AbstractAlgorithm}`: returns a `Bool`
+    indicating whether the algorithm requires the input matrix to be structurally symmetric.
 
 Direct subtypes of `AbstractAlgorithm` must implement the following method:
 - `_problem(::T) where {T<:AbstractAlgorithm}`: returns a `Symbol` indicating the
@@ -27,8 +27,8 @@ function Base.summary(::T) where {T<:AbstractAlgorithm}
 end
 
 # Indicate whether the algorithm requires the input matrix to be structurally symmetric
-function _requires_symmetry(::T) where {T<:AbstractAlgorithm}
-    throw(NotImplementedError(_requires_symmetry, T, AbstractAlgorithm))
+function _requires_structural_symmetry(::T) where {T<:AbstractAlgorithm}
+    throw(NotImplementedError(_requires_structural_symmetry, T, AbstractAlgorithm))
 end
 
 #= Indicate the matrix bandwidth problem tackled (e.g., `:minimization`). Each direct

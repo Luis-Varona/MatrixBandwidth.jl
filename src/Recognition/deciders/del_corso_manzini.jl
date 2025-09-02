@@ -95,7 +95,7 @@ push!(ALGORITHMS[:Recognition], DelCorsoManzini)
 
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
-_requires_symmetry(::DelCorsoManzini) = true
+_requires_structural_symmetry(::DelCorsoManzini) = true
 
 """
     DelCorsoManziniWithPS{D} <: AbstractDecider <: AbstractAlgorithm
@@ -249,7 +249,7 @@ push!(ALGORITHMS[:Recognition], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 
-_requires_symmetry(::DelCorsoManziniWithPS) = true
+_requires_structural_symmetry(::DelCorsoManziniWithPS) = true
 
 """
     dcm_ps_optimal_depth(A) -> Int

@@ -50,7 +50,7 @@ struct CapraraSalazarGonzalez <: AbstractDecider end
 
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
-_requires_symmetry(::CapraraSalazarGonzalez) = true
+_requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Integer, ::CapraraSalazarGonzalez

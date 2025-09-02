@@ -54,7 +54,7 @@ function minimize_bandwidth(
         throw(RectangularMatrixError(A))
     end
 
-    if _requires_symmetry(solver) && !_is_structurally_symmetric(A)
+    if _requires_structural_symmetry(solver) && !_is_structurally_symmetric(A)
         throw(StructuralAsymmetryError(A, solver))
     end
 

@@ -68,7 +68,7 @@ push!(ALGORITHMS[:Minimization][:Exact], BruteForceSearch)
 
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_symmetry(::BruteForceSearch) = false
+_requires_structural_symmetry(::BruteForceSearch) = false
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::BruteForceSearch)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of

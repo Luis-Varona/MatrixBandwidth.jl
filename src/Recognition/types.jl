@@ -14,8 +14,8 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
 `AbstractDecider` must implement the following methods:
 - `Base.summary(::T) where {T<:AbstractDecider}`: returns a `String` indicating the name
     of the decider (e.g., `"Caprara–Salazar-González"`).
-- `_requires_symmetry(::T) where {T<:AbstractDecider}`: returns a `Bool` indicating
-    whether the decider requires the input matrix to be structurally symmetric.
+- `_requires_structural_symmetry(::T) where {T<:AbstractDecider}`: returns a `Bool`
+    indicating whether the decider requires the input matrix to be structurally symmetric.
 
 # Supertype Hierarchy
 `AbstractDecider` <: [`AbstractAlgorithm`](@ref)

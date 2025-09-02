@@ -34,7 +34,7 @@ import ..ALGORITHMS
 import ..AbstractSolver
 import ..NotImplementedError, ..StructuralAsymmetryError
 import ..bandwidth, ..bandwidth_lower_bound
-import .._requires_symmetry
+import .._requires_structural_symmetry
 import .._connected_components
 import .._approach, .._bool_minimal_band_ordering
 #! format: on

@@ -22,7 +22,7 @@ end
 
 Base.summary(::GRASP) = "Greedy randomized adaptive search procedure (GRASP)"
 
-_requires_symmetry(::GRASP) = false
+_requires_structural_symmetry(::GRASP) = false
 
 function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
     error("TODO: Not yet implemented")
