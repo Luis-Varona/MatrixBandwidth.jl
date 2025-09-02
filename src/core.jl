@@ -226,6 +226,8 @@ Compute a lower bound on the bandwidth of `A` using [CS05, pp. 359--60]'s result
 
 `A` is assumed to be structurally symmetric, since the bound from [CS05, pp.359--60] was
 discovered in the context of undirected graphs (whose adjacency matrices are symmetric).
+Since the original algorithm is defined only for connected graphs, we compute the bound on
+each connected component of the graph represented by `A` and return the maximum of these.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
 ``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
@@ -308,40 +310,41 @@ function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
     that assume an adjacency matrix structure. =#
     A_bool = _offdiag_nonzero_support(A)
 
-    #= The bandwidth is trivially zero, so we return early. This also prevents `gamma` from
-    erroneously never being updated to 0.0, since `finite_nonzero_dists` would always be
-    empty if we were to skip this check. =#
-    if iszero(A_bool)
-        return 0
-    end
+    return maximum(
+        component -> _blb_connected(view(A_bool, component, component)),
+        _connected_components(A_bool),
+    )
+end
 
-    n = size(A_bool, 1)
+#= Compute Caprara and Salazar-González (2005)'s lower bound on the bandwidth of the
+connected graph represented by `A`. =#
+function _blb_connected(A::AbstractMatrix{Bool})
+    n = size(A, 1)
 
     # The bandwidth is trivially `n - 1`, so we return early
-    if all(A_bool[i, j] for i in 1:(n - 1) for j in (i + 1):n)
+    if all(A[i, j] for i in 1:(n - 1) for j in (i + 1):n)
         return n - 1
     end
 
-    # If `A_bool` is not symmetric, an error is thrown here
-    dist_matrix = _floyd_warshall_shortest_paths(A_bool)
+    # If `A` is not symmetric, an error is thrown here
+    dist_matrix = _floyd_warshall_shortest_paths(A)
     alpha = 0 # The minimum possible bandwidth is 0
     gamma = n - 1 # The maximum possible bandwidth is `n - 1`
 
     for dists in eachcol(dist_matrix)
-        # Exclude not only unreachable nodes but also self-distances (always 0)
-        finite_nonzero_dists = Int.(filter(k -> isfinite(k) && k != 0.0, dists))
+        nonzero_dists = Int.(filter(!iszero, dists)) # Exclude self-distances (always 0)
 
         # Only non-isolated nodes are used to update `alpha` and `gamma`
-        if !isempty(finite_nonzero_dists)
-            max_dist = maximum(finite_nonzero_dists)
+        if !isempty(nonzero_dists)
+            max_dist = maximum(nonzero_dists)
             alpha_cand = 0
             gamma_cand = 0
 
             #= Compute the `k`-hop neighborhood sizes for each distance `k ≥ 1`. Every node
             is a 0-hop neighbor of itself, so we add 1 after taking the cumulative sum
-            (since we filtered out self-distances in `finite_nonzero_dists`). =#
+            (since we filtered out self-distances in `nonzero_dists`). =#
             k_hop_neighborhood_sizes = zeros(Int, max_dist)
-            foreach(k -> k_hop_neighborhood_sizes[k] += 1, finite_nonzero_dists)
+            foreach(k -> k_hop_neighborhood_sizes[k] += 1, nonzero_dists)
             k_hop_neighborhood_sizes .= cumsum(k_hop_neighborhood_sizes) .+ 1
 
             for (k, num_k_hop_neighbors) in enumerate(k_hop_neighborhood_sizes)
