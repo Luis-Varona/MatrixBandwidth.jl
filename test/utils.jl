@@ -17,14 +17,14 @@ using Random
 using SparseArrays
 using Test
 
-const MAX_ORDER = 35
-const CC_NUM_ITER = 5
+const MAX_ORDER = 100
+const CC_NUM_ITER = 10
 const CC_MAX_DENSITY = 0.5
-const CC_MAX_NUM_CCS = 3
+const CC_MAX_NUM_CCS = 5
 const N = 100
 const P = 0.1
 
-@testset "`random_banded_matrix` – Default density" begin
+@testset "`random_banded_matrix` – Default density (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k)
         @test bandwidth(A) == k
@@ -32,7 +32,7 @@ const P = 0.1
     end
 end
 
-@testset "`random_banded_matrix` – Random densities" begin
+@testset "`random_banded_matrix` – Random densities (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, k in 0:(n - 1)
         A = random_banded_matrix(n, k; p=rand())
         @test bandwidth(A) == k
@@ -40,7 +40,7 @@ end
     end
 end
 
-@testset "`random_banded_matrix` – With RNGs" begin
+@testset "`random_banded_matrix` – With RNGs (n ≤ $MAX_ORDER)" begin
     rng = MersenneTwister(228)
 
     for n in 1:MAX_ORDER, k in 0:(n - 1)
@@ -61,7 +61,7 @@ end
     end
 end
 
-@testset "`random_banded_matrix` – Sparse bands" begin
+@testset "`random_banded_matrix` – Sparse bands (n ≤ $MAX_ORDER)" begin
     #= There is essentially zero chance of any nonzero entries beyond the requisite one per
     superdiagonal and subdiagonal up to the `k`ᵗʰ band. =#
     p = 1 / typemax(UInt128)
@@ -79,7 +79,7 @@ end
     end
 end
 
-@testset "`random_banded_matrix` – Full bands" begin
+@testset "`random_banded_matrix` – Full bands (n ≤ $MAX_ORDER)" begin
     p = 1
 
     for n in 1:MAX_ORDER, k in 0:(n - 1)

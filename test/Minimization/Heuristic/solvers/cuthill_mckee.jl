@@ -21,11 +21,10 @@ using Random
 using SparseArrays
 using Test
 
-const MAX_ORDER = 150
-const MAX_BAND = 15
+const MAX_ORDER = 400
+const MAX_BAND = 20
 const MAX_DENSITY = 0.5
-const MAX_CCS = 3
-const TEST_PROB = 0.3
+const MAX_CCS = 5
 
 include("../test_utils.jl")
 
@@ -60,28 +59,26 @@ bands (pre-shuffling). The default Hou, Liu, and Zhu (2024) node finder is used 
     num_cases = 0
 
     for n in 2:MAX_ORDER
-        if rand() < TEST_PROB # Randomly skip some orders to reduce test time
-            num_ccs = rand(1:min(MAX_CCS, n - 1))
-            k = rand(1:min(MAX_BAND, n - num_ccs))
-            p = MAX_DENSITY * rand()
+        num_ccs = rand(1:min(MAX_CCS, n - 1))
+        k = rand(1:min(MAX_BAND, n - num_ccs))
+        p = MAX_DENSITY * rand()
 
-            A = random_banded_discon_matrix(n, k, num_ccs, p)
-            perm = randperm(n)
-            A = A[perm, perm]
-            res = minimize_bandwidth(A, ReverseCuthillMcKee())
+        A = random_banded_discon_matrix(n, k, num_ccs, p)
+        perm = randperm(n)
+        A = A[perm, perm]
+        res = minimize_bandwidth(A, ReverseCuthillMcKee())
 
-            #= Confirm that the ratio of the minimized bandwidth to the original is not too
-            large. (In some cases, it is possible that the original ordering of `A` is not
-            optimal and that reverse Cuthill–McKee produces an even better one.) =#
-            mult_error = res.bandwidth / k
-            @test mult_error < 3
+        #= Confirm that the ratio of the minimized bandwidth to the original is not too
+        large. (In some cases, it is possible that the original ordering of `A` is not
+        optimal and that reverse Cuthill–McKee produces an even better one.) =#
+        mult_error = res.bandwidth / k
+        @test mult_error < 3
 
-            sum_mult_errors += mult_error
-            num_cases += 1
+        sum_mult_errors += mult_error
+        num_cases += 1
 
-            # Confirm that the ordering computed indeed yields the alleged bandwidth
-            @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
-        end
+        # Confirm that the ordering computed indeed yields the alleged bandwidth
+        @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
     end
 
     #= We keep track of the average ratio of the minimized bandwidth to the original
@@ -99,24 +96,22 @@ end
     num_cases = 0
 
     for n in 2:MAX_ORDER
-        if rand() < TEST_PROB # Randomly skip some orders to reduce test time
-            num_ccs = rand(1:min(MAX_CCS, n - 1))
-            k = rand(1:min(MAX_BAND, n - num_ccs))
-            p = MAX_DENSITY * rand()
+        num_ccs = rand(1:min(MAX_CCS, n - 1))
+        k = rand(1:min(MAX_BAND, n - num_ccs))
+        p = MAX_DENSITY * rand()
 
-            A = random_banded_discon_matrix(n, k, num_ccs, p)
-            perm = randperm(n)
-            A = A[perm, perm]
-            res = minimize_bandwidth(A, ReverseCuthillMcKee(gl_node_finder))
+        A = random_banded_discon_matrix(n, k, num_ccs, p)
+        perm = randperm(n)
+        A = A[perm, perm]
+        res = minimize_bandwidth(A, ReverseCuthillMcKee(gl_node_finder))
 
-            mult_error = res.bandwidth / k
-            @test mult_error < 3
+        mult_error = res.bandwidth / k
+        @test mult_error < 3
 
-            sum_mult_errors += mult_error
-            num_cases += 1
+        sum_mult_errors += mult_error
+        num_cases += 1
 
-            @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
-        end
+        @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
     end
 
     @test sum_mult_errors / num_cases < 1.5
@@ -134,24 +129,22 @@ Gibbs–Poole–Stockmeyer continues to prove effective (although less so) nonet
     num_cases = 0
 
     for n in 2:MAX_ORDER
-        if rand() < TEST_PROB # Randomly skip some orders to reduce test time
-            num_ccs = rand(1:min(MAX_CCS, n - 1))
-            k = rand(1:min(MAX_BAND, n - num_ccs))
-            p = MAX_DENSITY * rand()
+        num_ccs = rand(1:min(MAX_CCS, n - 1))
+        k = rand(1:min(MAX_BAND, n - num_ccs))
+        p = MAX_DENSITY * rand()
 
-            A = random_banded_discon_matrix(n, k, num_ccs, p)
-            perm = randperm(n)
-            A = A[perm, perm]
-            res = minimize_bandwidth(A, GibbsPooleStockmeyer(naive_node_finder))
+        A = random_banded_discon_matrix(n, k, num_ccs, p)
+        perm = randperm(n)
+        A = A[perm, perm]
+        res = minimize_bandwidth(A, GibbsPooleStockmeyer(naive_node_finder))
 
-            mult_error = res.bandwidth / k
-            @test mult_error < 3
+        mult_error = res.bandwidth / k
+        @test mult_error < 3
 
-            sum_mult_errors += mult_error
-            num_cases += 1
+        sum_mult_errors += mult_error
+        num_cases += 1
 
-            @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
-        end
+        @test bandwidth(A[res.ordering, res.ordering]) == res.bandwidth
     end
 
     @test sum_mult_errors / num_cases < 1.5
