@@ -161,16 +161,16 @@ function _farthest!(
     fill!(distances, typemax(Int))
     distances[v] = 0
     empty!(queue)
-    enqueue!(queue, v)
+    push!(queue, v)
 
     while !isempty(queue)
-        curr = dequeue!(queue)
+        curr = popfirst!(queue)
         neighbors = findall(view(A, :, curr))
 
         for neighbor in neighbors
             if distances[neighbor] == typemax(Int)
                 distances[neighbor] = distances[curr] + 1
-                enqueue!(queue, neighbor)
+                push!(queue, neighbor)
             end
         end
     end

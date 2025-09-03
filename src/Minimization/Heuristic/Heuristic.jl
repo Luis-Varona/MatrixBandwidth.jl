@@ -37,7 +37,7 @@ import .._connected_components
 import .._approach, .._bool_minimal_band_ordering
 #! format: on
 
-using DataStructures: Queue, enqueue!, dequeue!
+using DataStructures: Queue
 
 export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee
 

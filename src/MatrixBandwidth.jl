@@ -72,9 +72,34 @@ The full documentation is available at
 """
 module MatrixBandwidth
 
-using DataStructures: Queue, enqueue!, dequeue!
+using DataStructures
 using Random
 using PrecompileTools: @setup_workload, @compile_workload
+
+#= `enqueue!` and `dequeue!` were deprecated in `DataStructures.jl` v0.19 in favor of
+`Base.push!` and `Base.popfirst!`, respectively. To maintain backwards compatibility with
+older versions of `DataStructures.jl`, we define these methods here if necessary exactly as
+they are in the `DataStructures.jl` v0.19 source code. =#
+if pkgversion(DataStructures) < v"0.19"
+    function Base.push!(q::Queue, x)
+        push!(q.store, x)
+        return q
+    end
+
+    @doc """
+        push!(q::Queue, x)
+
+    Inserts the value `x` to the end of the queue `q`.
+    """ -> Base.push!
+
+    Base.popfirst!(s::Queue) = popfirst!(s.store)
+
+    @doc """
+        popfirst!(q::Queue)
+
+    Removes an element from the front of the queue `q` and returns it.
+    """ -> Base.popfirst!
+end
 
 include("utils.jl")
 include("types.jl")
