@@ -17,14 +17,12 @@ using Graphs
 using SparseArrays
 using Test
 
-const MAX_ORDER1 = 80
-const NUM_ITER1 = 50
-
+const MAX_ORDER1 = 100
 const MAX_ORDER2 = 8
-const NUM_ITER2 = 5
+const NUM_ITER = 10
 
 @testset "`bandwidth` (n ≤ $MAX_ORDER1)" begin
-    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
+    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
 
@@ -35,7 +33,7 @@ const NUM_ITER2 = 5
 end
 
 @testset "`profile` (n ≤ $MAX_ORDER1)" begin
-    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
+    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
 
@@ -73,7 +71,7 @@ end
 end
 
 @testset "`bandwidth_lower_bound` (n ≤ $MAX_ORDER2)" begin
-    for n in 1:MAX_ORDER2, _ in 1:NUM_ITER2
+    for n in 1:MAX_ORDER2, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
         A = A + A' # Ensure structural symmetry
@@ -86,7 +84,7 @@ end
 end
 
 @testset "`_floyd_warshall_shortest_paths` (n ≤ $MAX_ORDER1)" begin
-    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER1
+    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER
         density = rand()
         A = sprand(Bool, n, n, density)
         A = A .|| A' # Ensure structural symmetry

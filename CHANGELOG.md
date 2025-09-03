@@ -18,7 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Replaced all deprecated `DataStructures.enqueue!` and `DataStructures.dequeue!` calls with `Base.push!` and `Base.popfirst!`, respectively (#129).
 - Fleshed out and fixed a few typos in the documentation for the Del Corso&ndash;Manzini algorithms (#126).
 - Renamed the `_requires_symmetry` internal function (used for input validation) to `_requires_structural_symmetry` (#123).
-- Reduced the number of iterations and cases in some of the unit tests to cut down on runtime without affecting coverage (#112, #113, #118, #119).
 - Fleshed out documentation (particularly inline comments) for the Gibbs&ndash;Poole&ndash;Stockmeyer source code (#116).
 - Improved unit tests for the heuristic solvers with more edge cases and scenarios (including the use of custom node finders) (#112).
 - Changed the `DEFAULT_NODE_FINDER` constant for the heuristic solvers from `pseudo_peripheral_node_finder` to `bi_criteria_node_finder` (#112).

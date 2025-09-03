@@ -16,8 +16,8 @@ using MatrixBandwidth.Recognition
 using SparseArrays
 using Test
 
-const MAX_ORDER = 6
-const NUM_ITER = 5
+const MAX_ORDER = 8
+const NUM_ITER = 10
 
 @testset "DCM decider – Bandwidth ≤ k (n ≤ $MAX_ORDER)" begin
     for n in 1:MAX_ORDER, _ in 1:NUM_ITER
