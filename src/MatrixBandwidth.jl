@@ -33,6 +33,16 @@ fixed non-negative integer ``k ∈ ℕ``—an optimal permutation that fully min
 bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is
 decidable in ``O(nᵏ)`` time.
 
+Many algorithms for both problems exist in the literature, but implementations in the
+open-source ecosystem are scarce, with those that do exist primarily tackling older, less
+efficient algorithms. This not only makes it difficult for theoretical researchers to
+benchmark and compare new approaches but also precludes the application of more performant
+alternatives in real-life industry settings. This package aims to bridge this gap,
+presenting a unified interface for matrix bandwidth reduction algorithms in Julia. In
+addition to providing optimized implementations of many existing approaches,
+*MatrixBandwidth.jl* also allows for easy extensibility should researchers wish to test new
+ideas, filling a crucial niche in the current research landscape.
+
 The following algorithms are currently supported:
 - **Minimization**
     - *Exact*

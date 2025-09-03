@@ -51,6 +51,8 @@ The *matrix bandwidth minimization problem* involves finding a permutation matri
 
 On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is at most some fixed non-negative integer ``k \in \mathbb{N}``—an optimal permutation that fully minimizes the bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in ``O(n^k)`` time.
 
+Many algorithms for both problems exist in the literature, but implementations in the open-source ecosystem are scarce, with those that do exist primarily tackling older, less efficient algorithms. This not only makes it difficult for theoretical researchers to benchmark and compare new approaches but also precludes the application of more performant alternatives in real-life industry settings. This package aims to bridge this gap, presenting a unified interface for matrix bandwidth reduction algorithms in Julia. In addition to providing optimized implementations of many existing approaches, *MatrixBandwidth.jl* also allows for easy extensibility should researchers wish to test new ideas, filling a crucial niche in the current research landscape.
+
 ## Algorithms
 
 The following algorithms are currently supported:
@@ -191,7 +193,7 @@ julia> A[res_minimize_default.ordering, res_minimize_default.ordering]
 
 (We default to Gibbs–Poole–Stockmeyer because it is one of the most accurate heuristic algorithms—note how in this case, it produced a lower-bandwidth ordering than reverse Cuthill–McKee. Of course, if true optimality is required, an exact algorithm such as Caprara–Salazar-González should be used instead.)
 
-`has_bandwidth_k_ordering` similarly defaults to Caprara–Salazar-González, which we have not yet implemented, so users should specify which of the completed algorithms they wish to use in the meantime or else face an error:
+`has_bandwidth_k_ordering` similarly defaults to Caprara–Salazar-González, which is not yet implemented, so users should specify which of the completed algorithms they wish to use in the meantime or else face an error:
 
 ```julia-repl
 julia> res_recognize_default = has_bandwidth_k_ordering(A, 10)

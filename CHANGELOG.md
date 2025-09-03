@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Update the module docstring and `README.md` to include a paragraph on the motivation and goals of this package (#131).
 - Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm (both the minimization solver and the recognition decider) (#123, #126).
 - Added `bi_criteria_node_finder` (an improvement upon `pseudo_peripheral_node_finder`) as a new node finder for the heuristic solvers (#112).
 - Finished unit tests for all root-level utility functions (#108, #109).
