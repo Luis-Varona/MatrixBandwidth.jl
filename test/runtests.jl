@@ -11,6 +11,10 @@ const STATIC_ANALYZERS = ["Aqua", "JET"]
 const TEST_GROUPS = ["core", "utils"]
 const NESTED_TEST_SUITES = ["Minimization/Minimization.jl", "Recognition/Recognition.jl"]
 
+if haskey(ENV, "CI")
+    Base.Experimental.suppress_depwarnings(true)
+end
+
 # Run static analysis
 for analyzer in STATIC_ANALYZERS
     @info "Running static analysis with $analyzer"
