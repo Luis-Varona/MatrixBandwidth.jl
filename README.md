@@ -58,7 +58,7 @@ The following algorithms are currently supported:
     - Caprara&ndash;Salazar-González algorithm [**under development**]
     - Del Corso&ndash;Manzini algorithm
     - Del Corso&ndash;Manzini algorithm with perimeter search
-    - Saxe&ndash;Gurari&ndash;Sudborough algorithm [**under development**]
+    - Saxe&ndash;Gurari&ndash;Sudborough algorithm
     - Brute-force search
   - *Heuristic*
     - Gibbs&ndash;Poole&ndash;Stockmeyer algorithm
@@ -72,7 +72,7 @@ The following algorithms are currently supported:
   - Caprara&ndash;Salazar-González algorithm [**under development**]
   - Del Corso&ndash;Manzini algorithm
   - Del Corso&ndash;Manzini algorithm with perimeter search
-  - Saxe&ndash;Gurari&ndash;Sudborough algorithm [**under development**]
+  - Saxe&ndash;Gurari&ndash;Sudborough algorithm
   - Brute-force search
 
 (Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
