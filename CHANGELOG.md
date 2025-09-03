@@ -8,13 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm (both the minimization solver and the recognition decider) (#123). (**NOTE:** Some documentation is still pending.)
+- Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm (both the minimization solver and the recognition decider) (#123, #126).
 - Added `bi_criteria_node_finder` (an improvement upon `pseudo_peripheral_node_finder`) as a new node finder for the heuristic solvers (#112).
 - Finished unit tests for all root-level utility functions (#108, #109).
 - Added **References** sections to docstrings for immediate readability in the REPL and in the source code without needing to open the Documenter-generated website (#105).
 
 ### Changed
 
+- Fleshed out and fixed a few typos in the documentation for the Del Corso&ndash;Manzini algorithms (#126).
 - Renamed the `_requires_symmetry` internal function (used for input validation) to `_requires_structural_symmetry` (#123).
 - Reduced the number of iterations and cases in some of the unit tests to cut down on runtime without affecting coverage (#112, #113, #118, #119).
 - Fleshed out documentation (particularly inline comments) for the Gibbs&ndash;Poole&ndash;Stockmeyer source code (#116).

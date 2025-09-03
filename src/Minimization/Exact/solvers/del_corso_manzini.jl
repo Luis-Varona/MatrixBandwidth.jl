@@ -9,13 +9,14 @@
 
 The *Del Corso–Manzini minimization algorithm* is an exact method for minimizing the
 bandwidth of a structurally symmetric matrix ``A``. For a fixed ``k ∈ ℕ``, the algorithm
-performs a depth-first search of all partial orderings of the rows and columns of ``A``,
-adding indices one at a time. Partial orderings are pruned not only by ensuring that
-adjacent pairs of currently placed indices are within ``k`` of each other but also by
-tracking the latest positions at which the remaining indices can be placed. This search is
-repeated with incrementing values of ``k`` until a bandwidth-``k`` ordering is found
-[DM99], with ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to
-symmetric permutation.
+invokes a subroutine that determines whether ``A`` has bandwidth at most ``k`` up to
+symmetric permutation. This subroutine performs a depth-first search of all partial
+orderings of the rows and columns of ``A``, adding indices one at a time. Partial orderings
+are pruned not only by ensuring that adjacent pairs of currently placed indices are within
+``k`` of each other but also by tracking the latest positions at which the remaining indices
+can be placed. This search is repeated with incrementing values of ``k`` until a
+bandwidth-``k`` ordering is found [DM99], with ``k`` initialized to some lower bound on the
+minimum bandwidth of ``A`` up to symmetric permutation.
 
 Specifically, this implementation of the Del Corso–Manzini algorithm uses the
 ``min(α(A), γ(A))`` lower bound from [CS05, pp. 359--60] as the initial value of ``k``.
@@ -87,8 +88,8 @@ We now generate (and shuffle) a random ``40×40`` matrix with minimum bandwidth 
 bandwidth-``10`` ordering, which is (we claim) optimal up to symmetric permutation. (In some
 cases, `random_banded_matrix(n, k)` *does* generate matrices with minimum bandwidth `< k`.
 Nevertheless, this example demonstrates that Del Corso–Manzini at the very least finds a
-good ordering, even though exact optimality—which *is* guaranteed by the original paper
-[DM99]—is not explicitly verified.)
+quite good ordering, even though exact optimality—which *is* guaranteed by the original
+paper [DM99]—is not explicitly verified.)
 ```jldoctest
 julia> using Random
 
@@ -251,9 +252,9 @@ We now generate (and shuffle) a random ``30×30`` matrix with minimum bandwidth 
 finds a bandwidth-``8`` ordering, which is (we claim) optimal up to symmetric permutation.
 (In some cases, `random_banded_matrix(n, k)` *does* generate matrices with minimum bandwidth
 `< k`. Nevertheless, this example demonstrates that Del Corso–Manzini at the very least
-finds a good ordering, even though exact optimality—which *is* guaranteed by the original
-paper [DM99]—is not explicitly verified.) In this case, we set the depth parameter to ``4``
-beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
+finds a quite good ordering, even though exact optimality—which *is* guaranteed by the
+original paper [DM99]—is not explicitly verified.) In this case, we set the depth parameter
+to ``4`` beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
 
 ```jldoctest
 julia> using Random
