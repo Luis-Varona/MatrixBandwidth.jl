@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Replaced all deprecated `DataStructures.enqueue!` and `DataStructures.dequeue!` calls with `Base.push!` and `Base.popfirst!`, respectively (#129).
 - Fleshed out and fixed a few typos in the documentation for the Del Corso&ndash;Manzini algorithms (#126).
 - Renamed the `_requires_symmetry` internal function (used for input validation) to `_requires_structural_symmetry` (#123).
 - Reduced the number of iterations and cases in some of the unit tests to cut down on runtime without affecting coverage (#112, #113, #118, #119).

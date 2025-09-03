@@ -152,11 +152,11 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     empty_key = ((), ())
     parent[empty_key] = (nothing, nothing)
     nums_placed[empty_key] = 0
-    enqueue!(queue, empty_key)
+    push!(queue, empty_key)
     push!(visited, empty_key)
 
     while !isempty(queue)
-        key = dequeue!(queue)
+        key = popfirst!(queue)
         num_placed = nums_placed[key]
         region = collect(Int, key[1])
         dangling = Set{Tuple{Int,Int}}(key[2])
@@ -209,7 +209,7 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
                     if !(key_new in visited)
                         parent[key_new] = (key, v)
                         nums_placed[key_new] = num_placed_new
-                        enqueue!(queue, key_new)
+                        push!(queue, key_new)
                         push!(visited, key_new)
                     end
                 end
@@ -233,7 +233,7 @@ function _sgs_unassigned(
     unassigned = Set{Int}()
     processed = Set{Tuple{Int,Int}}(dangling)
     queue = Queue{Tuple{Int,Int}}()
-    foreach(edge -> enqueue!(queue, edge), dangling)
+    foreach(edge -> push!(queue, edge), dangling)
     visited = Set(region)
 
     @inline function _update_state!(node::Int)
@@ -245,13 +245,13 @@ function _sgs_unassigned(
 
             if !(edge in processed)
                 push!(processed, edge)
-                enqueue!(queue, edge)
+                push!(queue, edge)
             end
         end
     end
 
     while !isempty(queue)
-        (u, v) = dequeue!(queue)
+        (u, v) = popfirst!(queue)
 
         if !(u in visited)
             _update_state!(u)
