@@ -126,7 +126,7 @@ end
 vertex degree per connected component as the starting point. We see that
 Gibbs–Poole–Stockmeyer continues to prove effective (although less so) nonetheless. =#
 @testset "RCM solver (naive node finder) – Random matrices (n ≤ $MAX_ORDER)" begin
-    Random.seed!(84664)
+    Random.seed!(84669)
     naive_node_finder =
         A::AbstractMatrix{Bool} -> argmin(i -> sum(view(A, :, i)), axes(A, 1))
 

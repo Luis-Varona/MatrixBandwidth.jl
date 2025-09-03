@@ -184,8 +184,8 @@ Results of Bandwidth Recognition Algorithm
 ```
 
 Now, Del Corso–Manzini with perimeter search recognizes that a random ``35×35`` matrix has a
-minimum bandwidth at most ``8``. In this case, we explitily set the depth parameter to ``4``
-beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
+minimum bandwidth at most ``8``. In this case, we explicitly set the depth parameter to
+``4`` beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
 ```jldoctest
 julia> using Random, SparseArrays
 

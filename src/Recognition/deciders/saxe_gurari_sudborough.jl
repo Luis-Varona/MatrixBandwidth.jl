@@ -7,28 +7,33 @@
 """
     SaxeGurariSudborough <: AbstractDecider <: AbstractAlgorithm
 
-[TODO: Write here]
+The *Saxe–Gurari–Sudborough recognition algorithm* is a method for determining, given some
+fixed ``k ∈ ℕ``, whether a structurally symmetric matrix ``A`` has bandwidth at most ``k``
+up to symmetric permutation. The algorithm employs dynamic programming to search over
+equivalence classes of partial orderings, where two partial orderings of length ``l`` are
+equivalent if they share the same *active region*. (The active region of a partial ordering
+is defined as the sequence of the last ``min(k, l)`` vertices in the ordering taken together
+with all *dangling edges*—edges with one endpoint in the ordering and the other endpoint not
+yet in the ordering.) It extends these partial layouts one vertex at a time in a
+breadth-first manner, pruning implausible classes that violate bandwidth-``k`` constraints
+such as degree bounds on active vertices and excessive numbers of dangling edges [GS84].
+
+As noted above, the Saxe–Gurari–Sudborough algorithm requires structurally symmetric input
+(that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
+``1 ≤ i, j ≤ n``).
 
 # Supertype Hierarchy
 `SaxeGurariSudborough` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
-[TODO: Write here]
-
 # Performance
 Given an ``n×n`` input matrix ``A`` and threshold bandwidth ``k``, the
 Saxe–Gurari–Sudborough algorithm runs in ``O(nᵏ)`` time [GS84, p. 531]. This is an
-improvement upon the original ``O(nᵏ⁺¹)`` Saxe algorithm [Sax80, p. 363].
-
-Of course, when ``k < 3``, then the initial ``O(n³)`` bandwidth lower bound computation
-(specifically, [`bandwidth_lower_bound`](@ref)) performed in all
-[`has_bandwidth_k_ordering`](@ref) calls dominates the overall complexity (although the
+improvement upon the original ``O(nᵏ⁺¹)`` Saxe algorithm [Sax80, p. 363]. (Of course, when
+``k < 3``, then the initial ``O(n³)`` bandwidth lower bound computation performed in all
+[`has_bandwidth_k_ordering`](@ref) calls dominates the overall complexity, although the
 constant scaling factor of that subroutine is generally much smaller than that of the
 algorithm proper).
 
-# Examples
-[TODO: Write here]
-
-# Notes
 Whereas most bandwidth recognition algorithms are technically factorial-time (with respect
 to ``n``) in the worst case but practically always approximate exponential time complexity
 in real life (see: [`DelCorsoManzini`](@ref)), the ``O(nᵏ)`` upper bound on
@@ -37,7 +42,54 @@ cases. Indeed, these other types of algorithms tend to outperform Saxe–Gurari�
 for larger ``k``, given that their aggressive pruning strategies keep their effective search
 space very small in practice.
 
+# Examples
+We demonstrate both an affirmative and a negative result for the Saxe–Gurari–Sudborough
+recognition algorithm on a random ``20×20`` matrix:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(274);
+
+julia> (n, p) = (20, 0.08);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (3, 5);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.SaxeGurariSudborough())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Saxe–Gurari–Sudborough
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 12
+ * Matrix Size: 20×20
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.SaxeGurariSudborough())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Saxe–Gurari–Sudborough
+ * Bandwidth Threshold k: 5
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 12
+ * Matrix Size: 20×20
+```
+
+# Notes
+This general family of bandwidth recognition algorithms was conceived as a response to a
+question posed by [GGJK78, p. 494]: is the "bandwidth ≤ k?" problem NP-complete for
+arbitrary ``k``? [Sax80] answered this question in the negative by providing a ``O(nᵏ⁺¹)``
+algorithm, constructively proving that the problem is class P. Later, [GS84] improved upon
+this algorithm by reducing time complexity to ``O(nᵏ)``. Whereas the original Saxe algorithm
+considers extensions of partial orderings with any remaining unplaced vertex (of which there
+are ``O(n)`` at any point in the breadth-first search), the Gurari–Sudborough refinement
+only considers extensions with vertices reachable by paths beginning with a dangling edge
+that never again traverse a dangling edge [GS84, pp. 535–36].
+
 # References
+- [GGJK78](@cite): M. R. Garey, R. L. Graham, D. S. Johnson and D. E. Knuth. *Complexity
+    Results for Bandwidth Minimization*. SIAM Journal on Applied Mathematics **34**, 477–95
+    (1978). https://doi.org/10.1137/0134037.
 - [GS84](@cite): E. M. Gurari and I. H. Sudborough. *Improved dynamic programming algorithms
     for bandwidth minimization and the MinCut Linear Arrangement problem*. Journal of
     Algorithms **5**, 531–46 (1984). https://doi.org/10.1016/0196-6774(84)90006-3.
@@ -86,8 +138,7 @@ function _bool_bandwidth_k_ordering(
     return ordering
 end
 
-# TODO: After this point, more comprehensive inline comments are required.
-
+# Saxe–Gurari–Sudborough searches each connected component independently
 function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     n = size(A, 1)
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
@@ -111,9 +162,15 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
         dangling = Set{Tuple{Int,Int}}(key[2])
 
         if length(region) < k
+            #= The Gurari–Sudborough refinement of the original Saxe algorithm cuts time
+            complexity down from `O(nᵏ⁺¹)` to `O(nᵏ)` by only considering extensions with
+            vertices reachable by a path beginning with a dangling edge that never again
+            traverses a dangling edge. =#
             candidates = _sgs_unassigned(region, dangling, adj_lists)
         else
             u = region[1]
+            #= Indeed, there should be exactly one such edge; the lazy evaluation of
+            `Iterators.filter` allows us to break once said edge is found. =#
             edge = first(Iterators.filter(edge -> u in edge, dangling))
 
             if u == edge[1]
@@ -136,13 +193,6 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
                 if _sgs_layout_is_plausible(region_new, dangling_new, k)
                     num_placed_new = num_placed + 1
 
-                    # if !(key_new in visited)
-                    #     parent[key_new] = (key, v)
-                    #     nums_placed[key_new] = num_placed_new
-                    #     enqueue!(queue, key_new)
-                    #     push!(visited, key_new)
-                    # end
-
                     if num_placed_new == n
                         ordering = Vector{Int}(undef, n)
                         ordering[num_placed_new] = v
@@ -155,18 +205,6 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
 
                         return ordering
                     end
-
-                    # if num_placed_new == n
-                    #     ordering = Vector{Int}(undef, n)
-                    #     (key_new, v) = parent[key_new]
-
-                    #     while !isnothing(key_new)
-                    #         ordering[(num_placed_new -= 1) + 1] = v
-                    #         (key_new, v) = parent[key_new]
-                    #     end
-
-                    #     return ordering
-                    # end
 
                     if !(key_new in visited)
                         parent[key_new] = (key, v)
@@ -182,6 +220,9 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     return nothing
 end
 
+#= Return the set of vertices not yet in `region` reachable from `region` via paths
+beginning with a dangling edge that never again traverse a dangling edge. (If `dangling` is
+empty, then of course, all unassigned vertices are reachable.) =#
 function _sgs_unassigned(
     region::Vector{Int}, dangling::Set{Tuple{Int,Int}}, adj_lists::Vector{Vector{Int}}
 )
@@ -222,6 +263,7 @@ function _sgs_unassigned(
     return unassigned
 end
 
+# Update the set of dangling edges after adding `v` to `region`
 function _sgs_dangling_new(
     region::Vector{Int}, dangling::Set{Tuple{Int,Int}}, v::Int, adj_list::Vector{Int}
 )
@@ -235,6 +277,7 @@ function _sgs_dangling_new(
     return union!(dangling_new, additional_edges)
 end
 
+# Update the active region after adding `v` to `region`
 function _sgs_region_new(
     region_extended::Vector{Int}, dangling_new::Set{Tuple{Int,Int}}, k::Integer
 )
@@ -264,10 +307,14 @@ function _sgs_region_new(
     return region_new
 end
 
+#= Construct a hashable key for the current active region (taken together with the set of
+dangling edges). =#
 @inline function _sgs_key(region::Vector{Int}, dangling::Set{Tuple{Int,Int}})
     return (Tuple(region), Tuple(sort!(collect(dangling))))
 end
 
+#= Check whether the current layout is plausible given bandwidth-`k` constraints such as
+degree bounds on active vertices and excessive numbers of dangling edges. =#
 function _sgs_layout_is_plausible(
     region::Vector{Int}, dangling::Set{Tuple{Int,Int}}, k::Integer
 )
@@ -279,6 +326,8 @@ function _sgs_layout_is_plausible(
     )
 end
 
+#= Represent the (potential) edge between `u` and `v` as a sorted tuple for hashing
+purposes (as opposed to a Set). =#
 @inline function _pot_edge(u::Int, v::Int)
     return (min(u, v), max(u, v))
 end
