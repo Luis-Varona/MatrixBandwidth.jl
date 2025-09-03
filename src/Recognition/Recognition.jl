@@ -43,7 +43,7 @@ import .._connected_components, .._is_structurally_symmetric, .._offdiag_nonzero
 #! format: on
 
 using Combinatorics: combinations, permutations
-using DataStructures: Queue, enqueue!, dequeue!
+using DataStructures: Queue
 
 # THe output struct and core recognition function
 export RecognitionResult, has_bandwidth_k_ordering

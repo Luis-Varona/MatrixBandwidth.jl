@@ -72,7 +72,7 @@ The full documentation is available at
 """
 module MatrixBandwidth
 
-using DataStructures: Queue, enqueue!, dequeue!
+using DataStructures: Queue
 using Random
 using PrecompileTools: @setup_workload, @compile_workload
 

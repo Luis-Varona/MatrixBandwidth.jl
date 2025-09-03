@@ -155,17 +155,17 @@ function _connected_components(A::AbstractMatrix{Bool})
     for i in 1:n
         if !visited[i]
             visited[i] = true
-            enqueue!(queue, i)
+            push!(queue, i)
             component = Int[]
 
             while !isempty(queue)
-                u = dequeue!(queue)
+                u = popfirst!(queue)
                 push!(component, u)
 
                 for v in findall(view(A, :, u))
                     if !visited[v]
                         visited[v] = true
-                        enqueue!(queue, v)
+                        push!(queue, v)
                     end
                 end
             end
