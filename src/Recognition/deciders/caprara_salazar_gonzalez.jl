@@ -58,3 +58,64 @@ function _bool_bandwidth_k_ordering(
     error("TODO: Not yet implemented")
     return nothing
 end
+
+function _csg_layout_both_ways!(
+    ordering_buf::Vector{Int},
+    A::AbstractMatrix{Bool},
+    k::Integer,
+    dist_matrix::Matrix{Float64},
+    fixed_left::Vector{Int},
+    fixed_right::Vector{Int},
+    unselected::Set{Int},
+)
+    error("TODO: Not yet implemented")
+    return nothing
+end
+
+function _csg_solve_relaxation(
+    A::AbstractMatrix{Bool},
+    k::Integer,
+    dist_matrix::Matrix{Float64},
+    fixed_left::Vector{Int},
+    fixed_right::Vector{Int},
+    unselected::Set{Int},
+)
+    error("TODO: Not yet implemented")
+    return nothing
+end
+
+function _csg_solve_inner_ilp_earliest(
+    A::AbstractMatrix{Bool},
+    k::Integer,
+    dist_matrix::Matrix{Float64},
+    fixed_left::Vector{Int},
+    fixed_right::Vector{Int},
+    v::Int,
+)
+    error("TODO: Not yet implemented")
+    return nothing
+end
+
+function _csg_solve_inner_ilp_latest(
+    A::AbstractMatrix{Bool},
+    k::Integer,
+    dist_matrix::Matrix{Float64},
+    fixed_left::Vector{Int},
+    fixed_right::Vector{Int},
+    v::Int,
+)
+    error("TODO: Not yet implemented")
+    return nothing
+end
+
+function _csg_feasible_positions(
+    earliest_positions::Dict{Int,Int},
+    latest_positions::Dict{Int,Int},
+    fixed_left::Vector{Int},
+    fixed_right::Vector{Int},
+    unselected::Set{Int},
+    n::Int,
+)
+    error("TODO: Not yet implemented")
+    return nothing
+end
