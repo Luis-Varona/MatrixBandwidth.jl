@@ -23,6 +23,14 @@ Direct subtypes of `AbstractSolver` must implement the following method:
 
 # Supertype Hierarchy
 `AbstractSolver` <: [`AbstractAlgorithm`](@ref)
+
+# Notes
+To implement a new matrix bandwidth minimization algorithm, define a new concrete subtype of
+`AbstractSolver` (or of one of its abstract subtypes like [`MetaheuristicSolver`](@ref))
+then implement a corresponding
+`_minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Do *not* attempt
+to directly implement a new [`minimize_bandwidth`](@ref) method, as the function contains
+common preprocessing logic independent of the specific algorithm used.
 """
 abstract type AbstractSolver <: AbstractAlgorithm end
 

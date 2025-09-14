@@ -24,7 +24,7 @@ Base.summary(::GRASP) = "Greedy randomized adaptive search procedure (GRASP)"
 
 MatrixBandwidth._requires_structural_symmetry(::GRASP) = false
 
-function Minimization._bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
+function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, Solver::GRASP)
     error("TODO: Not yet implemented")
     return nothing
 end

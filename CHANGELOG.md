@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Added instructions to the documentation for extending the interface with new algorithms via `_minimize_bandwidth_impl` and `_has_bandwidth_k_ordering_impl` (#145).
+- Renamed `_bool_minimal_band_ordering` and `_bool_bandwidth_k_ordering` (the functions wherein new algorithm logic is defined) to `_minimize_bandwidth_impl` and `_has_bandwidth_k_ordering_impl`, respectively (#145).
 - Split up the `@index` and `@autodocs` blocks in the Documenter-generated website by submodule (#144).
 - Modified `minimize_bandwidth` to skip the algorithm call and simply use the original ordering in all cases when `bandwidth(A) == bandwidth_lower_bound(A)`, not just when `bandwidth(A) == 0` (#143).
 - Removed the export of `random_banded_matrix` from `MatrixBandwidth` (#140).

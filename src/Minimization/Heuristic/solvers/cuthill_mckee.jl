@@ -41,7 +41,7 @@ It was found in [Geo71, pp. 114--15] that reversing the ordering produced by Cut
 tends to induce a more optimal *matrix profile* (a measure of how far, on average, nonzero
 entries are from the diagonal; see also [`MatrixBandwidth.profile`](@ref)). This so-called
 *reverse Cuthill–McKee* variant is preferred in almost all cases—see
-[`ReverseCuthillMcKee`](@ref) and the associated method of `_bool_minimal_band_ordering` for
+[`ReverseCuthillMcKee`](@ref) and the associated method of `_minimize_bandwidth_impl` for
 our implementation.
 
 # Examples
@@ -415,8 +415,8 @@ Note that the `node_finder` field must be of the form `(A::AbstractMatrix{Bool})
 `ArgumentError` is thrown upon construction.
 
 See also the documentation for [`CuthillMcKee`](@ref)—the original (non-reversed) algorithm.
-(Indeed, the reverse Cuthill–McKee method of `_bool_minimal_band_ordering` is merely a
-wrapper around the Cuthill–McKee method.)
+(Indeed, the reverse Cuthill–McKee method of `_minimize_bandwidth_impl` is merely a wrapper
+around the Cuthill–McKee method.)
 
 # References
 - [CG80](@cite): W. M. Chan and A. George. *A linear time implementation of the reverse
@@ -448,7 +448,7 @@ MatrixBandwidth._requires_structural_symmetry(::ReverseCuthillMcKee) = true
 allocating `component_orderings` or individual `component[component_ordering]` arrays.
 (Indeed, the only allocations performed here are those performed by `connected_components`,
 individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::CuthillMcKee
 )
     node_finder = solver.node_finder
@@ -467,10 +467,10 @@ function Minimization._bool_minimal_band_ordering(
     )
 end
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee
 )
-    return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_finder)))
+    return reverse!(_minimize_bandwidth_impl(A, CuthillMcKee(solver.node_finder)))
 end
 
 # Cuthill–McKee searches each connected component independently

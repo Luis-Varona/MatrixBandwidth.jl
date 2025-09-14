@@ -240,7 +240,7 @@ MatrixBandwidth._requires_structural_symmetry(::GibbsPooleStockmeyer) = true
 allocating `component_orderings` or individual `component[component_ordering]` arrays.
 (Indeed, the only allocations performed here are those performed by `connected_components`,
 individual `_gps_connected_ordering_reversed` calls, and `collect` at the very end.) =#
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::GibbsPooleStockmeyer
 )
     node_finder = solver.node_finder
@@ -270,7 +270,7 @@ end
 #= Gibbs–Poole–Stockmeyer searches each connected component independently. Since the usual
 Gibbs–Poole–Stockmeyer algorithm reverses the ordering, this "reversed" version does not do
 so (i.e., a double reversal, which implies no reversal at all). Instead, the reversal is
-carried out in the `_bool_minimal_band_ordering` method instead. =#
+carried out in the `_minimize_bandwidth_impl` method instead. =#
 function _gps_connected_ordering_reversed(A::AbstractMatrix{Bool}, node_finder::Function)
     u, v = _pseudo_diameter_endpoints(A, node_finder)
     levels_u = _level_structure(A, u)

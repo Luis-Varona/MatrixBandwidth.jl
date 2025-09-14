@@ -19,6 +19,14 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
 
 # Supertype Hierarchy
 `AbstractDecider` <: [`AbstractAlgorithm`](@ref)
+
+# Notes
+To implement a new matrix bandwidth recognition algorithm, define a new concrete subtype of
+`AbstractDecider` then implement a corresponding
+`_has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)`
+method. Do *not* attempt to directly implement a new [`has_bandwidth_k_ordering`](@ref)
+method, as the function contains common preprocessing logic independent of the specific
+algorithm used.
 """
 abstract type AbstractDecider <: AbstractAlgorithm end
 

@@ -92,7 +92,9 @@ MatrixBandwidth._requires_structural_symmetry(::BruteForceSearch) = false
 
 #= We take advantage of the laziness of `permutations` and `Iterators.filter` to avoid
 iterating over all orderings if a valid one is found early. =#
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Integer, ::BruteForceSearch)
+function _has_bandwidth_k_ordering_impl(
+    A::AbstractMatrix{Bool}, k::Integer, ::BruteForceSearch
+)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#

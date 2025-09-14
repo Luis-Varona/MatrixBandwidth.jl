@@ -24,7 +24,7 @@ Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
 MatrixBandwidth._requires_structural_symmetry(::GeneticAlgorithm) = false
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::GeneticAlgorithm
 )
     error("TODO: Not yet implemented")
