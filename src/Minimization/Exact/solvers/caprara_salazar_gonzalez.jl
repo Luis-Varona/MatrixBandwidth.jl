@@ -43,13 +43,15 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 """
 struct CapraraSalazarGonzalez <: ExactSolver end
 
-# push!(ALGORITHMS[:Minimization][:Exact], CapraraSalazarGonzalez)
+# push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Exact], CapraraSalazarGonzalez)
 
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
-_requires_structural_symmetry(::CapraraSalazarGonzalez) = true
+MatrixBandwidth._requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez
+)
     error("TODO: Not yet implemented")
     return nothing
 end

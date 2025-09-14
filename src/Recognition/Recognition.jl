@@ -33,27 +33,30 @@ This submodule is part of the
 """
 module Recognition
 
-#! format: off
-import ..ALGORITHMS
-import ..AbstractAlgorithm, ..AbstractResult
-import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
-import ..bandwidth, ..bandwidth_lower_bound
-import .._problem
-import .._connected_components, .._is_structurally_symmetric, .._offdiag_nonzero_support
-#! format: on
+using MatrixBandwidth
+using MatrixBandwidth: NotImplementedError, RectangularMatrixError, StructuralAsymmetryError
+using MatrixBandwidth: connected_components, is_structurally_symmetric, offdiag_nz_support
+using MatrixBandwidth: _requires_structural_symmetry, _problem
 
 using Combinatorics: combinations, permutations
 using DataStructures: Queue
 
-# THe output struct and core recognition function
-export RecognitionResult, has_bandwidth_k_ordering
-export CapraraSalazarGonzalez, # Recognition algorithms
+export
+    # Types
+    AbstractDecider,
+    RecognitionResult,
+
+    # Core functions
+    has_bandwidth_k_ordering,
+
+    # Deciders
+    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
     SaxeGurariSudborough,
     BruteForceSearch
 
-ALGORITHMS[:Recognition] = []
+MatrixBandwidth.ALGORITHMS[:Recognition] = []
 
 include("types.jl")
 include("core.jl")

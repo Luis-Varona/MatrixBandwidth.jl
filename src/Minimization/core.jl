@@ -54,14 +54,14 @@ function minimize_bandwidth(
         throw(RectangularMatrixError(A))
     end
 
-    if _requires_structural_symmetry(solver) && !_is_structurally_symmetric(A)
+    if _requires_structural_symmetry(solver) && !is_structurally_symmetric(A)
         throw(StructuralAsymmetryError(A, solver))
     end
 
     #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
     values. We also set every diagonal entry to `false` for consistency with any algorithms
     that assume an adjacency matrix structure. =#
-    A_bool = _offdiag_nonzero_support(A)
+    A_bool = offdiag_nz_support(A)
 
     bandwidth_orig = bandwidth(A_bool)
 

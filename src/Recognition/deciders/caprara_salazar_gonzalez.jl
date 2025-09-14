@@ -46,11 +46,11 @@ said minimization algorithm in
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 
-# push!(ALGORITHMS[:Recognition], CapraraSalazarGonzalez)
+# push!(MatrixBandwidth.ALGORITHMS[:Recognition], CapraraSalazarGonzalez)
 
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
-_requires_structural_symmetry(::CapraraSalazarGonzalez) = true
+MatrixBandwidth._requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Integer, ::CapraraSalazarGonzalez

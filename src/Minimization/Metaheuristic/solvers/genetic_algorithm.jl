@@ -18,13 +18,15 @@ struct GeneticAlgorithm <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
 end
 
-# push!(ALGORITHMS[:Minimization][:Metaheuristic], GeneticAlgorithm)
+# push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic], GeneticAlgorithm)
 
 Base.summary(::GeneticAlgorithm) = "Genetic algorithm"
 
-_requires_structural_symmetry(::GeneticAlgorithm) = false
+MatrixBandwidth._requires_structural_symmetry(::GeneticAlgorithm) = false
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GeneticAlgorithm)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, solver::GeneticAlgorithm
+)
     error("TODO: Not yet implemented")
     return nothing
 end

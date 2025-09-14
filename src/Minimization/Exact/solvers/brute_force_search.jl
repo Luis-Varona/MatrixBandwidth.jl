@@ -64,13 +64,15 @@ would take over an hour.
 """
 struct BruteForceSearch <: ExactSolver end
 
-push!(ALGORITHMS[:Minimization][:Exact], BruteForceSearch)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Exact], BruteForceSearch)
 
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_structural_symmetry(::BruteForceSearch) = false
+MatrixBandwidth._requires_structural_symmetry(::BruteForceSearch) = false
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::BruteForceSearch)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, ::BruteForceSearch
+)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#

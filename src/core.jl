@@ -25,8 +25,7 @@ bandwidth of `A` by permuting its rows and columns—it simply computes its band
 - `::Int`: the bandwidth of `A`.
 
 # Performance
-Given an ``n×n`` input matrix ``A``, this relatively simple algorithm runs in ``O(n²)``
-time.
+Given an ``n×n`` input matrix, this relatively simple algorithm runs in ``O(n²)`` time.
 
 # Examples
 `bandwidth` correctly identifies the bandwidth of a pentadiagonal matrix as ``2`` and does
@@ -40,7 +39,7 @@ julia> (n, k) = (8, 2);
 
 julia> perm = randperm(n);
 
-julia> A = (!iszero).(random_banded_matrix(8, 2))
+julia> A = (!iszero).(MatrixBandwidth.random_banded_matrix(n, k))
 8×8 BitMatrix:
  1  0  0  0  0  0  0  0
  0  1  0  1  0  0  0  0
@@ -126,8 +125,7 @@ is otherwise specified.
 - `::Int`: the profile of `A` along the specified dimension.
 
 # Performance
-Given an ``n×n`` input matrix ``A``, this relatively simple algorithm runs in ``O(n²)``
-time.
+Given an ``n×n`` input matrix, this relatively simple algorithm runs in ``O(n²)`` time.
 
 # Examples
 `profile` computes the column profile of a matrix by default:
@@ -252,8 +250,6 @@ in ``O(n²)`` time).
     cases but not universally so.)
 
 # Examples
-The function correctly computes a bound less than (or equal to) the true minimum bandwidth
-of a matrix up to symmetric permutation:
 ```jldoctest
 julia> using Random, SparseArrays, Combinatorics
 
@@ -296,7 +292,7 @@ function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
         throw(RectangularMatrixError(A))
     end
 
-    if !_is_structurally_symmetric(A)
+    if !is_structurally_symmetric(A)
         throw(
             DomainError(
                 A,
@@ -308,11 +304,11 @@ function bandwidth_lower_bound(A::AbstractMatrix{<:Number})
     #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
     values. We also set every diagonal entry to `false` for consistency with any algorithms
     that assume an adjacency matrix structure. =#
-    A_bool = _offdiag_nonzero_support(A)
+    A_bool = offdiag_nz_support(A)
 
     return maximum(
         component -> _blb_connected(view(A_bool, component, component)),
-        _connected_components(A_bool),
+        connected_components(A_bool),
     )
 end
 
@@ -327,7 +323,7 @@ function _blb_connected(A::AbstractMatrix{Bool})
     end
 
     # If `A` is not symmetric, an error is thrown here
-    dist_matrix = _floyd_warshall_shortest_paths(A)
+    dist_matrix = floyd_warshall_shortest_paths(A)
     alpha = 0 # The minimum possible bandwidth is 0
     gamma = n - 1 # The maximum possible bandwidth is `n - 1`
 
@@ -361,30 +357,4 @@ function _blb_connected(A::AbstractMatrix{Bool})
     end
 
     return max(alpha, gamma) # Take the better lower bound on the matrix bandwidth
-end
-
-#= Compute a distance matrix from an `n×n` adjacency matrix `A` in `O(n³)` time. Relatively
-isolated pairs of nodes (unreachable from each other) are assigned a distance of `Inf`. `A`
-is assumed to be symmatric with an all-false diagonal. =#
-function _floyd_warshall_shortest_paths(A::AbstractMatrix{Bool})
-    n = size(A, 1)
-
-    D = Matrix{Float64}(undef, n, n)
-    foreach(i -> D[i, i] = 0.0, 1:n)
-
-    for i in 1:(n - 1), j in (i + 1):n
-        if A[i, j]
-            D[i, j] = D[j, i] = 1.0
-        else
-            D[i, j] = D[j, i] = Inf
-        end
-    end
-
-    for k in 1:n, i in 1:(n - 1), j in (i + 1):n
-        if D[i, j] > D[i, k] + D[k, j]
-            D[i, j] = D[j, i] = D[i, k] + D[k, j]
-        end
-    end
-
-    return D
 end

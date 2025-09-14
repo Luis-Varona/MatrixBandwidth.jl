@@ -35,8 +35,8 @@ As noted above, the Saxe–Gurari–Sudborough algorithm requires structurally s
 `SaxeGurariSudborough` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A``, the Saxe–Gurari–Sudborough algorithm runs in
-``O(nⁿ⁻¹)`` time:
+Given an ``n×n`` input matrix, the Saxe–Gurari–Sudborough algorithm runs in ``O(nⁿ⁻¹)``
+time:
 - For each underlying "bandwidth ≤ k" check, we call the Saxe–Gurari–Sudborough recognition
   algorithm, which runs in ``O(nᵏ)`` time [GS84, p. 531]. (This is an improvement upon the
   original ``O(nᵏ⁺¹)`` Saxe algorithm [Sax80, p. 363].)
@@ -98,7 +98,7 @@ julia> Random.seed!(937497);
 
 julia> (n, k, p) = (25, 5, 0.25);
 
-julia> A = random_banded_matrix(n, k; p=p);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k; p=p);
 
 julia> perm = randperm(n);
 
@@ -147,14 +147,16 @@ beginning with a dangling edge that never again traverse a dangling edge [GS84, 
 """
 struct SaxeGurariSudborough <: ExactSolver end
 
-push!(ALGORITHMS[:Minimization][:Exact], SaxeGurariSudborough)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Exact], SaxeGurariSudborough)
 
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
-_requires_structural_symmetry(::SaxeGurariSudborough) = true
+MatrixBandwidth._requires_structural_symmetry(::SaxeGurariSudborough) = true
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::SaxeGurariSudborough)
-    components = _connected_components(A)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, ::SaxeGurariSudborough
+)
+    components = connected_components(A)
     #= Heuristically, it is likelier that smaller components have lower bandwidth, so we
     process them first to keep `k` low for as long as possible (since the complexity of each
     recognition subroutine is exponential in `k`). =#

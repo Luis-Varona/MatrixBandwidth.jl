@@ -28,20 +28,26 @@ This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 """
 module Heuristic
 
-#! format: off
-import ..ALGORITHMS
-import ..AbstractSolver
-import ..NotImplementedError, ..StructuralAsymmetryError
-import .._requires_structural_symmetry
-import .._connected_components
-import .._approach, .._bool_minimal_band_ordering
-#! format: on
+using MatrixBandwidth
+using MatrixBandwidth: NotImplementedError, StructuralAsymmetryError
+using MatrixBandwidth: connected_components
+using MatrixBandwidth: _requires_structural_symmetry
+
+using MatrixBandwidth.Minimization
+using MatrixBandwidth.Minimization: _approach, _bool_minimal_band_ordering
 
 using DataStructures: Queue
 
-export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee
+export
+    # Types
+    HeuristicSolver,
 
-ALGORITHMS[:Minimization][:Heuristic] = []
+    # Heuristic solvers
+    GibbsPooleStockmeyer,
+    CuthillMcKee,
+    ReverseCuthillMcKee
+
+MatrixBandwidth.ALGORITHMS[:Minimization][:Heuristic] = []
 
 include("node_finders.jl")
 include("types.jl")

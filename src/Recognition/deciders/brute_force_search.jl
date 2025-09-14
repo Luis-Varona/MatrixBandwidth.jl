@@ -21,7 +21,7 @@ to check subsequent permutations.
 `BruteForceSearch` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A``, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
+Given an ``n×n`` input matrix, this brute-force algorithm runs in ``O(n! ⋅ n²)`` time:
 - Up to ``n!/2`` permutations may be checked (except when ``n = 1``, in which case
     ``1! = 1`` permutation is checked). This is, clearly, ``O(n!)``.
 - For each permutation, the [`bandwidth`](@ref) function is called on `view(A, perm, perm)`,
@@ -84,11 +84,11 @@ permutations up to reversal to ensure that the minimum bandwidth is found).
 """
 struct BruteForceSearch <: AbstractDecider end
 
-push!(ALGORITHMS[:Recognition], BruteForceSearch)
+push!(MatrixBandwidth.ALGORITHMS[:Recognition], BruteForceSearch)
 
 Base.summary(::BruteForceSearch) = "Brute-force search"
 
-_requires_structural_symmetry(::BruteForceSearch) = false
+MatrixBandwidth._requires_structural_symmetry(::BruteForceSearch) = false
 
 #= We take advantage of the laziness of `permutations` and `Iterators.filter` to avoid
 iterating over all orderings if a valid one is found early. =#

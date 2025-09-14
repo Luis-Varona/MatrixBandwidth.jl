@@ -22,4 +22,4 @@ poor-quality local minima.
 """
 abstract type MetaheuristicSolver <: AbstractSolver end
 
-_approach(::MetaheuristicSolver) = :metaheuristic
+Minimization._approach(::MetaheuristicSolver) = :metaheuristic
