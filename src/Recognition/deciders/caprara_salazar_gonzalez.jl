@@ -52,7 +52,7 @@ Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
 MatrixBandwidth._requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
-function _bool_bandwidth_k_ordering(
+function _has_bandwidth_k_ordering_impl(
     A::AbstractMatrix{Bool}, k::Integer, ::CapraraSalazarGonzalez
 )
     error("TODO: Not yet implemented")

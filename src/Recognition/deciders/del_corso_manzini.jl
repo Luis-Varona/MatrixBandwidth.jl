@@ -229,8 +229,8 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: AbstractDecider
 
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
     instantiation of the decider, as it depends on the input matrix as well. Hence, we use
-    `nothing` as a sentinel to indicate to `_bool_bandwidth_k_ordering` that a default depth
-    still needs to be computed upon the function call. =#
+    `nothing` as a sentinel to indicate to `_has_bandwidth_k_ordering_impl` that a default
+    depth still needs to be computed upon the function call. =#
     DelCorsoManziniWithPS() = new{Nothing}(nothing)
 
     function DelCorsoManziniWithPS(depth::Integer)
@@ -306,7 +306,9 @@ function dcm_ps_optimal_depth(A::AbstractMatrix{Bool})
     return round(Int, optimal_depth)
 end
 
-function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Integer, ::DelCorsoManzini)
+function _has_bandwidth_k_ordering_impl(
+    A::AbstractMatrix{Bool}, k::Integer, ::DelCorsoManzini
+)
     n = size(A, 1)
 
     ordering_buf = Vector{Int}(undef, n)
@@ -325,16 +327,16 @@ function _bool_bandwidth_k_ordering(A::AbstractMatrix{Bool}, k::Integer, ::DelCo
     )
 end
 
-function _bool_bandwidth_k_ordering(
+function _has_bandwidth_k_ordering_impl(
     A::AbstractMatrix{Bool}, k::Integer, ::DelCorsoManziniWithPS{Nothing}
 )
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
     instantiation of the decider, as it depends on the input matrix as well. =#
     decider_with_depth = DelCorsoManziniWithPS(dcm_ps_optimal_depth(A))
-    return _bool_bandwidth_k_ordering(A, k, decider_with_depth)
+    return _has_bandwidth_k_ordering_impl(A, k, decider_with_depth)
 end
 
-function _bool_bandwidth_k_ordering(
+function _has_bandwidth_k_ordering_impl(
     A::AbstractMatrix{Bool}, k::Integer, decider::DelCorsoManziniWithPS{Integer}
 )
     n = size(A, 1)

@@ -39,13 +39,20 @@ sections of the [`GibbsPooleStockmeyer`](@ref), [`CuthillMcKee`](@ref), and
 [`ReverseCuthillMcKee`](@ref) docstrings.]
 
 # Notes
-Some texts define matrix bandwidth to be the minimum non-negative integer ``k`` such that
-``A[i, j] = 0`` whenever ``|i - j| ≥ k`` instead, particularly in more mathematically-minded
-communities. Effectively, this definition treats diagonal matrices as bandwidth ``1``,
-tridiagonal matrices as bandwidth ``2``, and so on. Our definition, on the other hand, is
-more common in computer science contexts, treating diagonal matrices as bandwidth ``0`` and
-tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that the
-bandwidth of an empty matrix is simply ``0``.)
+To implement a new matrix bandwidth minimization algorithm, define a new concrete subtype of
+[`AbstractSolver`](@ref) (or of one of its abstract subtypes like
+[`MetaheuristicSolver`](@ref)) then implement a corresponding
+`_minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Do *not* attempt
+to directly implement a new `minimize_bandwidth` method, as the function contains common
+preprocessing logic independent of the specific algorithm used.
+
+Note also that some texts define matrix bandwidth to be the minimum non-negative integer
+``k`` such that ``A[i, j] = 0`` whenever ``|i - j| ≥ k`` instead, particularly in more
+mathematically-minded communities. Effectively, this definition treats diagonal matrices as
+bandwidth ``1``, tridiagonal matrices as bandwidth ``2``, and so on. Our definition, on the
+other hand, is more common in computer science contexts, treating diagonal matrices as
+bandwidth ``0`` and tridiagonal matrices as bandwidth ``1``. (Both definitions, however,
+agree that the bandwidth of an empty matrix is simply ``0``.)
 """
 function minimize_bandwidth(
     A::AbstractMatrix{<:Number}, solver::AbstractSolver=DEFAULT_SOLVER
@@ -70,9 +77,9 @@ function minimize_bandwidth(
         bandwidth_min = bandwidth_orig
         ordering = collect(axes(A_bool, 1)) # The original ordering
     else
-        #= We call the `_bool_minimal_band_ordering` helper function, which is the function
-        on which dispatch is actually defined for each concrete `AbstractSolver` subtype. =#
-        ordering = _bool_minimal_band_ordering(A_bool, solver)
+        #= We call the `_minimize_bandwidth_impl` helper function, which is the function on
+        which dispatch is actually defined for each concrete `AbstractSolver` subtype. =#
+        ordering = _minimize_bandwidth_impl(A_bool, solver)
         A_reordered = A_bool[ordering, ordering]
         bandwidth_min = bandwidth(A_reordered)
 
@@ -90,7 +97,7 @@ end
 #= Compute a minimal bandwidth ordering for a preprocessed `AbstractMatrix{Bool}`.
 Restricting entries to booleans can improve performance via cache optimizations, bitwise
 operations, etc. Each concrete subtype of `AbstractSolver` must implement its own
-`_bool_minimal_band_ordering` method to define the corresponding algorithm logic. =#
-function _bool_minimal_band_ordering(::AbstractMatrix{Bool}, ::T) where {T<:AbstractSolver}
-    throw(NotImplementedError(_bool_minimal_band_ordering, :solver, T, AbstractSolver))
+`_minimize_bandwidth_impl` method to define the corresponding algorithm logic. =#
+function _minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::T) where {T<:AbstractSolver}
+    throw(NotImplementedError(_minimize_bandwidth_impl, :solver, T, AbstractSolver))
 end

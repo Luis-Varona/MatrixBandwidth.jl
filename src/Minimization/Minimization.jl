@@ -75,9 +75,9 @@ export
     ReverseCuthillMcKee,
 
     # Metaheuristic solvers
+    GRASP,
     SimulatedAnnealing,
-    GeneticAlgorithm,
-    GRASP
+    GeneticAlgorithm
 
 MatrixBandwidth.ALGORITHMS[:Minimization] = Dict{Symbol,Vector}()
 

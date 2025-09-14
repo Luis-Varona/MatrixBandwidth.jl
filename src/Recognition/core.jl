@@ -44,13 +44,19 @@ Caprara and Salazar-González (2005). If this lower bound is greater than ``k```
 sections of the [`DelCorsoManzini`](@ref) and [`DelCorsoManziniWithPS`](@ref) docstrings.]
 
 # Notes
-Some texts define matrix bandwidth to be the minimum non-negative integer ``k`` such that
-``A[i, j] = 0`` whenever ``|i - j| ≥ k`` instead, particularly in more mathematically-minded
-communities. Effectively, this definition treats diagonal matrices as bandwidth ``1``,
-tridiagonal matrices as bandwidth ``2``, and so on. Our definition, on the other hand, is
-more common in computer science contexts, treating diagonal matrices as bandwidth ``0`` and
-tridiagonal matrices as bandwidth ``1``. (Both definitions, however, agree that the
-bandwidth of an empty matrix is simply ``0``.)
+To implement a new matrix bandwidth recognition algorithm, define a new concrete subtype of
+[`AbstractDecider`](@ref) then implement a corresponding
+`_has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)`
+method. Do *not* attempt to directly implement a new `has_bandwidth_k_ordering` method, as
+the function contains common preprocessing logic independent of the specific algorithm used.
+
+Note also that some texts define matrix bandwidth to be the minimum non-negative integer
+``k`` such that ``A[i, j] = 0`` whenever ``|i - j| ≥ k`` instead, particularly in more
+mathematically-minded communities. Effectively, this definition treats diagonal matrices as
+bandwidth ``1``, tridiagonal matrices as bandwidth ``2``, and so on. Our definition, on the
+other hand, is more common in computer science contexts, treating diagonal matrices as
+bandwidth ``0`` and tridiagonal matrices as bandwidth ``1``. (Both definitions, however,
+agree that the bandwidth of an empty matrix is simply ``0``.)
 """
 function has_bandwidth_k_ordering(
     A::AbstractMatrix{<:Number}, k::Integer, decider::AbstractDecider=DEFAULT_DECIDER
@@ -74,7 +80,7 @@ function has_bandwidth_k_ordering(
         values. We also set every diagonal entry to `false` for consistency with any algorithms
         that assume an adjacency matrix structure. =#
         A_bool = offdiag_nz_support(A)
-        ordering = _bool_bandwidth_k_ordering(A_bool, k, decider)
+        ordering = _has_bandwidth_k_ordering_impl(A_bool, k, decider)
     else
         ordering = nothing
     end
@@ -85,10 +91,10 @@ end
 #= Compute an ordering inducing a bandwidth of at most `k` for a preprocessed
 `AbstractMatrix{Bool}`, if one exists; otherwise, return `nothing`. Restricting entries to
 booleans can improve performance via cache optimizations, bitwise operations, etc. Each
-concrete subtype of `AbstractDecider` must implement its own `_bool_bandwidth_k_ordering`
-method to define the corresponding algorithm logic. =#
-function _bool_bandwidth_k_ordering(
+concrete subtype of `AbstractDecider` must implement its own
+`_has_bandwidth_k_ordering_impl` method to define the corresponding algorithm logic. =#
+function _has_bandwidth_k_ordering_impl(
     ::AbstractMatrix{Bool}, ::Integer, ::T
 ) where {T<:AbstractDecider}
-    throw(NotImplementedError(_bool_bandwidth_k_ordering, :decider, T, AbstractDecider))
+    throw(NotImplementedError(_has_bandwidth_k_ordering_impl, :decider, T, AbstractDecider))
 end

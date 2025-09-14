@@ -103,7 +103,7 @@ Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
 MatrixBandwidth._requires_structural_symmetry(::SaxeGurariSudborough) = true
 
-function _bool_bandwidth_k_ordering(
+function _has_bandwidth_k_ordering_impl(
     A::AbstractMatrix{Bool}, k::Integer, ::SaxeGurariSudborough
 )
     components = connected_components(A)

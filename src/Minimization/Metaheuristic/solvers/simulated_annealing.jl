@@ -30,7 +30,7 @@ Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 
 MatrixBandwidth._requires_structural_symmetry(::SimulatedAnnealing) = false
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::SimulatedAnnealing
 )
     error("TODO: Not yet implemented")

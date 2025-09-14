@@ -55,42 +55,6 @@ On the other hand, the *matrix bandwidth recognition problem* entails determinin
 
 Many algorithms for both problems exist in the literature, but implementations in the open-source ecosystem are scarce, with those that do exist primarily tackling older, less efficient algorithms. This not only makes it difficult for theoretical researchers to benchmark and compare new approaches but also precludes the application of more performant alternatives in real-life industry settings. This package aims to bridge this gap, presenting a unified interface for matrix bandwidth reduction algorithms in Julia. In addition to providing optimized implementations of many existing approaches, *MatrixBandwidth.jl* also allows for easy extensibility should researchers wish to test new ideas, filling a crucial niche in the current research landscape.
 
-## Algorithms
-
-The following algorithms are currently supported:
-
-- **Minimization**
-  - *Exact*
-    - Caprara–Salazar-González algorithm [**under development**]
-    - Del Corso–Manzini algorithm
-    - Del Corso–Manzini algorithm with perimeter search
-    - Saxe–Gurari–Sudborough algorithm
-    - Brute-force search
-  - *Heuristic*
-    - Gibbs–Poole–Stockmeyer algorithm
-    - Cuthill–McKee algorithm
-    - Reverse Cuthill–McKee algorithm
-  - *Metaheuristic*
-    - Greedy randomized adaptive search procedure (GRASP) [**under development**]
-    - Simulated annealing [**under development**]
-    - Genetic algorithm [**under development**]
-- **Recognition**
-  - Caprara–Salazar-González algorithm [**under development**]
-  - Del Corso–Manzini algorithm
-  - Del Corso–Manzini algorithm with perimeter search
-  - Saxe–Gurari–Sudborough algorithm
-  - Brute-force search
-
-(Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
-
-An index of all available algorithms by submodule may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
-
-```julia-repl
-julia> MatrixBandwidth.ALGORITHMS
-Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
-[...]
-```
-
 ## Installation
 
 The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:
@@ -234,6 +198,44 @@ julia> profile(A) # Profile prior to any reordering of rows and columns
 ```
 
 (Closely related to bandwidth, the *column profile* of a matrix is the sum of the distances from each diagonal entry to the farthest nonzero entry in that column, whereas the *row profile* is the sum of the distances from each diagonal entry to the farthest nonzero entry in that row. `profile(A)` computes the column profile of `A` by default, but it can also be used to compute the row profile.)
+
+## Algorithms
+
+The following algorithms are currently supported:
+
+- **Minimization**
+  - *Exact*
+    - Caprara–Salazar-González algorithm [**under development**]
+    - Del Corso–Manzini algorithm
+    - Del Corso–Manzini algorithm with perimeter search
+    - Saxe–Gurari–Sudborough algorithm
+    - Brute-force search
+  - *Heuristic*
+    - Gibbs–Poole–Stockmeyer algorithm
+    - Cuthill–McKee algorithm
+    - Reverse Cuthill–McKee algorithm
+  - *Metaheuristic*
+    - Greedy randomized adaptive search procedure (GRASP) [**under development**]
+    - Simulated annealing [**under development**]
+    - Genetic algorithm [**under development**]
+- **Recognition**
+  - Caprara–Salazar-González algorithm [**under development**]
+  - Del Corso–Manzini algorithm
+  - Del Corso–Manzini algorithm with perimeter search
+  - Saxe–Gurari–Sudborough algorithm
+  - Brute-force search
+
+(Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
+
+An index of all available algorithms by submodule may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
+
+```julia-repl
+julia> MatrixBandwidth.ALGORITHMS
+Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
+[...]
+```
+
+To extend the interface with a new matrix bandwidth minimization algorithm, define a new concrete subtype of `AbstractSolver` (or of one of its abstract subtypes like `MetaheuristicSolver`) then implement a corresponding `Minimization._minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Similarly, to implement a new bandwidth recognition algorithm, define a new concrete subtype of `AbstractDecider` then implement a corresponding `Recognition._has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)` method. Do *not* attempt to directly implement new `minimize_bandwidth` or `has_bandwidth_k_ordering` methods, as these functions contain common preprocessing logic independent of the specific algorithm used.
 
 ## Documentation
 

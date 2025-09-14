@@ -301,8 +301,8 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: ExactSolver
 
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
     instantiation of the solver, as it depends on the input matrix as well. Hence, we use
-    `nothing` as a sentinel to indicate to `_bool_minimal_band_ordering` that a default
-    depth still needs to be computed upon the function call. =#
+    `nothing` as a sentinel to indicate to `_minimize_bandwidth_impl` that a default depth
+    still needs to be computed upon the function call. =#
     DelCorsoManziniWithPS() = new{Nothing}(nothing)
 
     function DelCorsoManziniWithPS(depth::Integer)
@@ -320,9 +320,7 @@ Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter sear
 
 MatrixBandwidth._requires_structural_symmetry(::DelCorsoManziniWithPS) = true
 
-function Minimization._bool_minimal_band_ordering(
-    A::AbstractMatrix{Bool}, ::DelCorsoManzini
-)
+function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, ::DelCorsoManzini)
     n = size(A, 1)
 
     ordering_buf = Vector{Int}(undef, n)
@@ -357,16 +355,16 @@ function Minimization._bool_minimal_band_ordering(
     return ordering
 end
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Nothing}
 )
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
     instantiation of the solver, as it depends on the input matrix as well. =#
     solver_with_depth = DelCorsoManziniWithPS(Recognition.dcm_ps_optimal_depth(A))
-    return _bool_minimal_band_ordering(A, solver_with_depth)
+    return _minimize_bandwidth_impl(A, solver_with_depth)
 end
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Integer}
 )
     n = size(A, 1)

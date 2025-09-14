@@ -49,7 +49,7 @@ Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
 MatrixBandwidth._requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, ::CapraraSalazarGonzalez
 )
     error("TODO: Not yet implemented")

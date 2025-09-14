@@ -153,7 +153,7 @@ Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
 MatrixBandwidth._requires_structural_symmetry(::SaxeGurariSudborough) = true
 
-function Minimization._bool_minimal_band_ordering(
+function Minimization._minimize_bandwidth_impl(
     A::AbstractMatrix{Bool}, ::SaxeGurariSudborough
 )
     components = connected_components(A)

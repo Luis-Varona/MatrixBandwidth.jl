@@ -70,9 +70,7 @@ Base.summary(::BruteForceSearch) = "Brute-force search"
 
 MatrixBandwidth._requires_structural_symmetry(::BruteForceSearch) = false
 
-function Minimization._bool_minimal_band_ordering(
-    A::AbstractMatrix{Bool}, ::BruteForceSearch
-)
+function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, ::BruteForceSearch)
     #= `i₁, i₂, … iₙ` induces the same bandwidth as `iₙ, iₙ₋₁, … i₁`, so without loss of
     generality, we restrict our search to orderings such that `i₁ ≤ iₙ` (with equality
     checked just in case `n = 1`). =#

@@ -36,7 +36,7 @@ using MatrixBandwidth: _requires_structural_symmetry
 using MatrixBandwidth.Recognition
 
 using MatrixBandwidth.Minimization
-using MatrixBandwidth.Minimization: _approach, _bool_minimal_band_ordering
+using MatrixBandwidth.Minimization: _approach, _minimize_bandwidth_impl
 
 using Combinatorics
 
