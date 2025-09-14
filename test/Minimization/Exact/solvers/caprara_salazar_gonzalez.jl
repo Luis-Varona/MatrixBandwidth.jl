@@ -13,8 +13,26 @@ module TestCapraraSalazarGonzalez
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization
+using SparseArrays
 using Test
 
-# TODO: Write here
+const MAX_ORDER = 7
+const NUM_ITER = 10
+
+@testset "CSG solver – Brute force verification (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
+        density = rand()
+        A = sprand(n, n, density)
+        A = A + A' # Ensure structural symmetry
+
+        res_bf = minimize_bandwidth(A, BruteForceSearch())
+        res_csg = minimize_bandwidth(A, CapraraSalazarGonzalez())
+        ordering_csg = res_csg.ordering
+
+        @test res_bf.bandwidth ==
+            res_csg.bandwidth ==
+            bandwidth(A[ordering_csg, ordering_csg])
+    end
+end
 
 end

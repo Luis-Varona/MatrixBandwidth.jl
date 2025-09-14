@@ -9,14 +9,14 @@
 
 The *Caprara–Salazar-González recognition algorithm* is a method for determining, given some
 fixed ``k ∈ ℕ``, whether a structurally symmetric matrix ``A`` has a bandwidth at most ``k``
-up to symmetric permutation. The algorithm performs a bidirectional depth-first search of
-all partial orderings of the rows and columns of ``A``, adding indices one at a time to both
-the left and right ends. Partial orderings are pruned not only by ensuring that adjacent
-pairs of currently placed indices are within ``k`` of each other but also by employing a
-branch-and-bound framework with lower bounds on bandwidtth compatibility computed via
-integer linear programming relaxations. This search is repeated with incrementing values of
-``k`` until a bandwidth-``k`` ordering is found [CS05], with ``k`` initialized to some lower
-bound on the minimum bandwidth of ``A`` up to symmetric permutation.
+up to symmetric permutation. The algorithm performs a depth-first search of all partial
+orderings of the rows and columns of ``A``, adding indices one at a time. Partial orderings
+are pruned not only by ensuring that adjacent pairs of currently placed indices are within
+``k`` of each other but also by employing a branch-and-bound framework with lower bounds on
+bandwidth compatibility computed via integer linear programming relaxations. This search is
+repeated with incrementing values of ``k`` until a bandwidth-``k`` ordering is found [CS05],
+with ``k`` initialized to some lower bound on the minimum bandwidth of ``A`` up to symmetric
+permutation.
 
 As noted above, the Caprara–Salazar-González algorithm requires structurally symmetric input
 (that is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for
@@ -26,17 +26,47 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 `CapraraSalazarGonzalez` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
-[TODO: Write here]
+Given an ``n×n`` input matrix and threshold bandwidth ``k``, the Caprara–Salazar-González
+algorithm runs in ``O(n! ⋅ Tᵢₗₚ(n, n²))`` time, where ``Tᵢₗₚ(n, m)`` is the time taken to
+solve an integer linear programming (ILP) problem with ``O(n)`` variables and ``O(m)``
+constraints:
+
+- We perform a depth-first search of ``O(n!)`` partial orderings.
+- At each search node, we solve ILP relaxations with ``n`` variables and ``O(n²)``
+    constraints (given by the number of nonzero entries in the computed distance matrix),
+    taking ``Tᵢₗₚ(n, n²)`` time. (This dominates the ``O(n²)`` auxiliary computations needed
+    to set up the ILP.)
+- Therefore, the overall time complexity is ``O(n! ⋅ Tᵢₗₚ(n, n²))``.
+
+Note that ``Tᵢₗₚ(n, n²)`` has worst-case complexity ``O(2ⁿ)``, although this ultimately
+depends on the ILP solver used. (Here, we use the HiGHS solver from the `HiGHS.jl` package.)
+
+Of course, this is all but an upper bound on the time complexity of
+Caprara–Salazar-González, achieved only in the most pathological of cases. In practice,
+efficient pruning techniques and compatibility checks result in approximately exponential
+growth in time complexity with respect to ``n``.
 
 # Examples
 [TODO: Write here]
 
 # Notes
-This algorithm is not the main one described in the original paper, which actually never
-explicitly presents a procedure for matrix bandwidth recognition [CS05]. However, the paper
-does define a bandwidth minimization algorithm that repeatedly calls a recognition
-subroutine—this is precisely the logic we implement here. (We do, however, also implement
-said minimization algorithm in
+For readers of the original paper, what we call the Caprara–Salazar-González algorithm here
+is designated the `LAYOUT_LEFT_TO_RIGHT` algorithm in [CS05]. The paper also describes a
+`LAYOUT_BOTH_WAYS` algorithm that performs a bidirectional search by adding indices to both
+the left and right ends of the current partial ordering. However, this version is
+considerably more complex to implement, and we ran into problems enforcing ILP constraints
+on node pairs added to opposite ends of the ordering. In any case, computational results
+demonstrate that neither `LAYOUT_LEFT_TO_RIGHT` nor `LAYOUT_BOTH_WAYS` is consistently
+faster, and the paper states that there is no known heuristic for determining which version
+will be more performant for a given input [CS05, pp. 368--69]. Therefore, we opt to
+implement only `LAYOUT_LEFT_TO_RIGHT` as a matter of practicality, although future
+developers may wish to extend the interface with `LAYOUT_BOTH_WAYS` as well.
+
+Do also note that this algorithm is not the main `LAYOUT_LEFT_TO_RIGHT` procedure described
+in the original paper, which actually never explicitly tackles matrix bandwidth recognition
+[CS05]. However, the `LAYOUT_LEFT_TO_RIGHT` algorithm presented therein for bandwidth
+*minimization* does repeatedly call a recognition subroutine—this is precisely the logic we
+implement here. (We do, however, also implement said minimization algorithm in
 [`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
 
 # References
@@ -46,7 +76,7 @@ said minimization algorithm in
 """
 struct CapraraSalazarGonzalez <: AbstractDecider end
 
-# push!(MatrixBandwidth.ALGORITHMS[:Recognition], CapraraSalazarGonzalez)
+push!(MatrixBandwidth.ALGORITHMS[:Recognition], CapraraSalazarGonzalez)
 
 Base.summary(::CapraraSalazarGonzalez) = "Caprara–Salazar-González"
 
@@ -55,67 +85,162 @@ MatrixBandwidth._requires_structural_symmetry(::CapraraSalazarGonzalez) = true
 function _has_bandwidth_k_ordering_impl(
     A::AbstractMatrix{Bool}, k::Integer, ::CapraraSalazarGonzalez
 )
-    error("TODO: Not yet implemented")
-    return nothing
+    n = size(A, 1)
+
+    ordering_buf = Vector{Int}(undef, n)
+    dist_matrix = floyd_warshall_shortest_paths(A)
+    fixed = Int[]
+    unselected = Set(1:n)
+
+    return _csg_layout_left_to_right!(ordering_buf, A, k, dist_matrix, fixed, unselected)
 end
 
-function _csg_layout_both_ways!(
+# TODO: More comprehensive inline comments needed henceforth
+
+function _csg_layout_left_to_right!(
     ordering_buf::Vector{Int},
     A::AbstractMatrix{Bool},
     k::Integer,
     dist_matrix::Matrix{Float64},
-    fixed_left::Vector{Int},
-    fixed_right::Vector{Int},
+    fixed::Vector{Int},
     unselected::Set{Int},
 )
-    error("TODO: Not yet implemented")
-    return nothing
+    n = size(A, 1)
+
+    if isempty(unselected)
+        foreach(((i, node),) -> ordering_buf[i] = node, enumerate(fixed))
+        return ordering_buf
+    end
+
+    earliest_positions = _csg_solve_relaxation(A, k, dist_matrix, fixed, unselected)
+
+    if isnothing(earliest_positions) ||
+        !_csg_feasible_positions(earliest_positions, fixed, unselected, n)
+        return nothing
+    end
+
+    candidates = filter(v -> earliest_positions[v] == length(fixed) + 1, unselected)
+
+    res = iterate(candidates)
+    ordering = nothing
+
+    while (!isnothing(res) && isnothing(ordering))
+        candidate, state = res
+        fixed_new = vcat(fixed, candidate)
+        unselected_new = setdiff(unselected, candidate)
+
+        ordering = _csg_layout_left_to_right!(
+            ordering_buf, A, k, dist_matrix, fixed_new, unselected_new
+        )
+
+        res = iterate(candidates, state)
+    end
+
+    return ordering
 end
 
 function _csg_solve_relaxation(
     A::AbstractMatrix{Bool},
     k::Integer,
     dist_matrix::Matrix{Float64},
-    fixed_left::Vector{Int},
-    fixed_right::Vector{Int},
+    fixed::Vector{Int},
     unselected::Set{Int},
 )
-    error("TODO: Not yet implemented")
-    return nothing
+    earliest_positions = Dict{Int,Int}()
+    dists = Dict{Int,Float64}()
+
+    for node in unselected
+        if isempty(fixed)
+            dists[node] = Inf
+        else
+            dists[node] = minimum(dist_matrix[fixed, node])
+        end
+    end
+
+    computed_earliest = Dict{Int,Int}()
+
+    for node in sort!(collect(unselected); by=v -> dists[v])
+        earliest_val = _csg_solve_inner_ilp(
+            A, k, dist_matrix, fixed, computed_earliest, node
+        )
+
+        if isnothing(earliest_val)
+            return nothing
+        end
+
+        earliest_positions[node] = earliest_val
+        computed_earliest[node] = earliest_val
+    end
+
+    return earliest_positions
 end
 
-function _csg_solve_inner_ilp_earliest(
+function _csg_solve_inner_ilp(
     A::AbstractMatrix{Bool},
     k::Integer,
     dist_matrix::Matrix{Float64},
-    fixed_left::Vector{Int},
-    fixed_right::Vector{Int},
+    fixed::Vector{Int},
+    computed_earliest::Dict{Int,Int},
     v::Int,
 )
-    error("TODO: Not yet implemented")
-    return nothing
-end
+    n = size(A, 1)
 
-function _csg_solve_inner_ilp_latest(
-    A::AbstractMatrix{Bool},
-    k::Integer,
-    dist_matrix::Matrix{Float64},
-    fixed_left::Vector{Int},
-    fixed_right::Vector{Int},
-    v::Int,
-)
-    error("TODO: Not yet implemented")
-    return nothing
+    model = Model(HiGHS.Optimizer)
+    set_silent(model)
+
+    @variable(model, pos_v, Int)
+    @objective(model, Min, pos_v)
+
+    @constraint(model, pos_v >= length(fixed) + 1)
+    @constraint(model, pos_v <= n)
+
+    for (i, u) in enumerate(fixed)
+        dist_temp = dist_matrix[u, v]
+
+        if isfinite(dist_temp)
+            dist = Int(dist_temp)
+            @constraint(model, pos_v <= k * dist + i)
+            @constraint(model, pos_v >= i - k * dist)
+        end
+    end
+
+    for (u, pos_u) in computed_earliest
+        dist_temp = dist_matrix[u, v]
+
+        if isfinite(dist_temp)
+            dist = Int(dist_temp)
+            @constraint(model, pos_v >= pos_u - k * dist)
+            @constraint(model, pos_v <= pos_u + k * dist)
+        end
+    end
+
+    optimize!(model)
+
+    if termination_status(model) == OPTIMAL
+        solution = Int(value(pos_v))
+    else
+        solution = nothing
+    end
+
+    return solution
 end
 
 function _csg_feasible_positions(
-    earliest_positions::Dict{Int,Int},
-    latest_positions::Dict{Int,Int},
-    fixed_left::Vector{Int},
-    fixed_right::Vector{Int},
-    unselected::Set{Int},
-    n::Int,
+    earliest_positions::Dict{Int,Int}, fixed::Vector{Int}, unselected::Set{Int}, n::Int
 )
-    error("TODO: Not yet implemented")
-    return nothing
+    remaining = copy(unselected)
+
+    for i in (length(fixed) + 1):n
+        eligible_nodes = Iterators.filter(v -> earliest_positions[v] <= i, remaining)
+
+        if isempty(eligible_nodes)
+            return false
+        end
+
+        min_earliest_node = first(eligible_nodes)
+
+        delete!(remaining, min_earliest_node)
+    end
+
+    return true
 end

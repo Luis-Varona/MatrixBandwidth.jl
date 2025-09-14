@@ -46,10 +46,10 @@ ideas, filling a crucial niche in the current research landscape.
 The following algorithms are currently supported:
 - **Minimization**
     - *Exact*
-        - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
         - Del Corso–Manzini algorithm ([`Minimization.DelCorsoManzini`](@ref))
         - Del Corso–Manzini algorithm with perimeter search
             ([`Minimization.DelCorsoManziniWithPS`](@ref))
+        - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
         - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
         - Brute-force search ([`Minimization.BruteForceSearch`](@ref))
     - *Heuristic*
@@ -61,10 +61,10 @@ The following algorithms are currently supported:
         - Simulated annealing ([`Minimization.SimulatedAnnealing`](@ref))
         - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
-    - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
     - Del Corso–Manzini algorithm ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search
         ([`Recognition.DelCorsoManziniWithPS`](@ref))
+    - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
     - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 
