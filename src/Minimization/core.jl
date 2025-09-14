@@ -65,9 +65,9 @@ function minimize_bandwidth(
 
     bandwidth_orig = bandwidth(A_bool)
 
-    # If `A` is already diagonal/empty, no possible ordering can improve its bandwidth
-    if bandwidth_orig == 0
-        bandwidth_min = 0
+    # If `A` is already optimally ordered, no ordering can further reduce its bandwidth
+    if bandwidth_orig == bandwidth_lower_bound(A_bool)
+        bandwidth_min = bandwidth_orig
         ordering = collect(axes(A_bool, 1)) # The original ordering
     else
         #= We call the `_bool_minimal_band_ordering` helper function, which is the function
