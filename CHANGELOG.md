@@ -6,11 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- [IN PROGRESS] Implementing the Caprara&ndash;Salazar-Gonz&aacute;lez algorithm (both the minimization solver and the recognition decider), concurrently adding *JuMP.jl* as a notable dependency for integer linear programming (#137, TBD).
+
+### Changed
+
+- Removed the export of `random_banded_matrix` from `MatrixBandwidth` (#140).
+- Exported `AbstractAlgorithm` and `AbstractResult` from `MatrixBandwidth`, and exported their various subtypes from the appropriate submodules (#140).
+- Reformatted the export blocks in each submodule to be more in cohesive, similarly to how *Graphs.jl* does it (#140).
+- Removed the leading underscore from many (but not all) top-level utility functions (also renaming `_offdiag_nonzero_support` to `offdiag_nz_support`), adding docstrings to all of these (#140).
+- Refactored the import structure in submodules to do, e.g., `using MatrixBandwidth` in favor of a bunch of `import ..A, ..B, ..C` statements, similarly to how *Graphs.jl* does it (#140).
+
 ## [0.1.4] - 2025-09-03
 
 ### Added
 
-- Update the module docstring and `README.md` to include a paragraph on the motivation and goals of this package (#131).
+- Updated the module docstring and `README.md` to include a paragraph on the motivation and goals of this package (#131).
 - Implemented the Saxe&ndash;Gurari&ndash;Sudborough algorithm (both the minimization solver and the recognition decider) (#123, #126).
 - Added `bi_criteria_node_finder` (an improvement upon `pseudo_peripheral_node_finder`) as a new node finder for the heuristic solvers (#112).
 - Finished unit tests for all root-level utility functions (#108, #109).

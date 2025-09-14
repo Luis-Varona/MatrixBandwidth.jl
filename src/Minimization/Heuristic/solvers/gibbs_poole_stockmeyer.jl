@@ -42,8 +42,7 @@ As noted above, the Gibbs–Poole–Stockmeyer algorithm requires structurally s
 `GibbsPooleStockmeyer` <: [`HeuristicSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A``, the Gibbs–Poole–Stockmeyer algorithm runs in ``O(n²)``
-time.
+Given an ``n×n`` input matrix, the Gibbs–Poole–Stockmeyer algorithm runs in ``O(n²)`` time.
 
 [Lew82] provides a notably faster and more memory-efficient implementation, relying on
 sparse storage of the input matrix. However, this would run counter to our desire to provide
@@ -74,7 +73,7 @@ julia> Random.seed!(561);
 
 julia> (n, k) = (40, 7);
 
-julia> A = random_banded_matrix(n, k);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
 
 julia> perm = randperm(n);
 
@@ -109,7 +108,9 @@ julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
 julia> for i in 1:num_ccs # Some components may themselves be disconnected
            cc_size = rand(0:max_cc_size);
            cc_band = rand(1:min(max_band, cc_size - 1));
-           components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
        end
 
 julia> A = blockdiag(components...); # `A` has least 8 connected components
@@ -229,19 +230,21 @@ struct GibbsPooleStockmeyer <: HeuristicSolver
     end
 end
 
-push!(ALGORITHMS[:Minimization][:Heuristic], GibbsPooleStockmeyer)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Heuristic], GibbsPooleStockmeyer)
 
 Base.summary(::GibbsPooleStockmeyer) = "Gibbs–Poole–Stockmeyer"
 
-_requires_structural_symmetry(::GibbsPooleStockmeyer) = true
+MatrixBandwidth._requires_structural_symmetry(::GibbsPooleStockmeyer) = true
 
 #= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
 allocating `component_orderings` or individual `component[component_ordering]` arrays.
-(Indeed, the only allocations performed here are those performed by `_connected_components`
-, individual `_gps_connected_ordering_reversed` calls, and `collect` at the very end.) =#
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::GibbsPooleStockmeyer)
+(Indeed, the only allocations performed here are those performed by `connected_components`,
+individual `_gps_connected_ordering_reversed` calls, and `collect` at the very end.) =#
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, solver::GibbsPooleStockmeyer
+)
     node_finder = solver.node_finder
-    components = _connected_components(A)
+    components = connected_components(A)
 
     component_orderings = Iterators.map(
         component ->
@@ -373,10 +376,10 @@ function _combine_level_structures(
         assigned[node] = true
     end
 
-    components = _connected_components(A_working)
+    components = connected_components(A_working)
     sort!(components; by=length, rev=true)
 
-    for component in _connected_components(A_working)
+    for component in connected_components(A_working)
         sizes_curr = length.(levels)
         pot_sizes_u = copy(sizes_curr)
         pot_sizes_v = copy(sizes_curr)

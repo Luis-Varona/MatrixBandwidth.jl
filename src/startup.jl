@@ -22,7 +22,7 @@
             has_bandwidth_k_ordering(A, 2, decider_type())
         end
 
-        for solvers in values(ALGORITHMS[:Minimization]), solver_type in solvers
+        for solver_cat in values(ALGORITHMS[:Minimization]), solver_type in solver_cat
             minimize_bandwidth(A, solver_type())
         end
     end

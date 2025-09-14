@@ -13,7 +13,6 @@ module TestCore
 
 using MatrixBandwidth
 using MatrixBandwidth.Minimization
-using Graphs
 using SparseArrays
 using Test
 
@@ -80,21 +79,6 @@ end
         res = minimize_bandwidth(A, BruteForceSearch())
 
         @test k <= res.bandwidth
-    end
-end
-
-@testset "`_floyd_warshall_shortest_paths` (n ≤ $MAX_ORDER1)" begin
-    for n in 1:MAX_ORDER1, _ in 1:NUM_ITER
-        density = rand()
-        A = sprand(Bool, n, n, density)
-        A = A .|| A' # Ensure structural symmetry
-        g = Graph(A)
-
-        res_matband = MatrixBandwidth._floyd_warshall_shortest_paths(A)
-        res_graphs = floyd_warshall_shortest_paths(g).dists
-        res_graphs = replace(res_graphs, typemax(Int) => Inf)
-
-        @test res_matband == res_graphs
     end
 end
 

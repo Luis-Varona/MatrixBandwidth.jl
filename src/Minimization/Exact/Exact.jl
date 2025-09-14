@@ -28,23 +28,30 @@ This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 """
 module Exact
 
-#! format: off
-import ..Recognition
-import ..ALGORITHMS
-import ..AbstractSolver
-import ..NotImplementedError, ..StructuralAsymmetryError
-import ..bandwidth, ..bandwidth_lower_bound
-import .._requires_structural_symmetry
-import .._connected_components
-import .._approach, .._bool_minimal_band_ordering
-#! format: on
+using MatrixBandwidth
+using MatrixBandwidth: NotImplementedError, StructuralAsymmetryError
+using MatrixBandwidth: connected_components
+using MatrixBandwidth: _requires_structural_symmetry
+
+using MatrixBandwidth.Recognition
+
+using MatrixBandwidth.Minimization
+using MatrixBandwidth.Minimization: _approach, _bool_minimal_band_ordering
 
 using Combinatorics
 
-export CapraraSalazarGonzalez,
-    DelCorsoManzini, DelCorsoManziniWithPS, SaxeGurariSudborough, BruteForceSearch
+export
+    # Types
+    ExactSolver,
 
-ALGORITHMS[:Minimization][:Exact] = []
+    # Exact solvers
+    CapraraSalazarGonzalez,
+    DelCorsoManzini,
+    DelCorsoManziniWithPS,
+    SaxeGurariSudborough,
+    BruteForceSearch
+
+MatrixBandwidth.ALGORITHMS[:Minimization][:Exact] = []
 
 include("types.jl")
 

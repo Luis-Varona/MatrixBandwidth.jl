@@ -43,18 +43,43 @@ This submodule is part of the
 """
 module Minimization
 
-#! format: off
-import ..Recognition
-import ..ALGORITHMS
-import ..AbstractAlgorithm, ..AbstractResult
-import ..NotImplementedError, ..RectangularMatrixError, ..StructuralAsymmetryError
-import ..bandwidth, ..bandwidth_lower_bound
-import .._requires_structural_symmetry, .._problem
-import .._connected_components,
-    .._find_direct_subtype, .._is_structurally_symmetric, .._offdiag_nonzero_support
-#! format: on
+using MatrixBandwidth
+using MatrixBandwidth: NotImplementedError, RectangularMatrixError, StructuralAsymmetryError
+using MatrixBandwidth:
+    connected_components, is_structurally_symmetric, offdiag_nz_support, find_direct_subtype
+using MatrixBandwidth: _requires_structural_symmetry, _problem
 
-ALGORITHMS[:Minimization] = Dict{Symbol,Vector}()
+export
+    # Types
+    AbstractSolver,
+    MinimizationResult,
+
+    # Submodule types
+    ExactSolver,
+    HeuristicSolver,
+    MetaheuristicSolver,
+
+    # Core functions
+    minimize_bandwidth,
+
+    # Exact solvers
+    CapraraSalazarGonzalez,
+    DelCorsoManzini,
+    DelCorsoManziniWithPS,
+    SaxeGurariSudborough,
+    BruteForceSearch,
+
+    # Heuristic solvers
+    GibbsPooleStockmeyer,
+    CuthillMcKee,
+    ReverseCuthillMcKee,
+
+    # Metaheuristic solvers
+    SimulatedAnnealing,
+    GeneticAlgorithm,
+    GRASP
+
+MatrixBandwidth.ALGORITHMS[:Minimization] = Dict{Symbol,Vector}()
 
 include("types.jl")
 include("core.jl")
@@ -64,16 +89,6 @@ include("Heuristic/Heuristic.jl")
 include("Metaheuristic/Metaheuristic.jl")
 
 using .Exact, .Heuristic, .Metaheuristic
-
-# The output struct and core minimization function
-export MinimizationResult, minimize_bandwidth
-export CapraraSalazarGonzalez, # Exact solvers
-    DelCorsoManzini,
-    DelCorsoManziniWithPS,
-    SaxeGurariSudborough,
-    BruteForceSearch
-export GibbsPooleStockmeyer, CuthillMcKee, ReverseCuthillMcKee # Heuristic solvers
-export SimulatedAnnealing, GeneticAlgorithm, GRASP # Metaheuristic solvers
 
 const DEFAULT_SOLVER = GibbsPooleStockmeyer()
 

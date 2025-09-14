@@ -59,7 +59,7 @@ function has_bandwidth_k_ordering(
         throw(RectangularMatrixError(A))
     end
 
-    if _requires_structural_symmetry(decider) && !_is_structurally_symmetric(A)
+    if _requires_structural_symmetry(decider) && !is_structurally_symmetric(A)
         throw(StructuralAsymmetryError(A, decider))
     end
 
@@ -73,7 +73,7 @@ function has_bandwidth_k_ordering(
         #= We are only concerned with which (off-diagonal) entries are nonzero, not the actual
         values. We also set every diagonal entry to `false` for consistency with any algorithms
         that assume an adjacency matrix structure. =#
-        A_bool = _offdiag_nonzero_support(A)
+        A_bool = offdiag_nz_support(A)
         ordering = _bool_bandwidth_k_ordering(A_bool, k, decider)
     else
         ordering = nothing

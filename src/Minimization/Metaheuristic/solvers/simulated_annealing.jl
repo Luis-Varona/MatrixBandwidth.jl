@@ -24,13 +24,15 @@ struct SimulatedAnnealing <: MetaheuristicSolver
     # TODO: Make constructor with default values
 end
 
-# push!(ALGORITHMS[:Minimization][:Metaheuristic], SimulatedAnnealing)
+# push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic], SimulatedAnnealing)
 
 Base.summary(::SimulatedAnnealing) = "Simulated annealing"
 
-_requires_structural_symmetry(::SimulatedAnnealing) = false
+MatrixBandwidth._requires_structural_symmetry(::SimulatedAnnealing) = false
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::SimulatedAnnealing)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, solver::SimulatedAnnealing
+)
     error("TODO: Not yet implemented")
     return nothing
 end

@@ -23,4 +23,4 @@ find good solutions in a single pass.
 """
 abstract type HeuristicSolver <: AbstractSolver end
 
-_approach(::HeuristicSolver) = :heuristic
+Minimization._approach(::HeuristicSolver) = :heuristic

@@ -26,12 +26,12 @@ Direct subtypes of `AbstractSolver` must implement the following method:
 """
 abstract type AbstractSolver <: AbstractAlgorithm end
 
-_problem(::AbstractSolver) = :minimization
+MatrixBandwidth._problem(::AbstractSolver) = :minimization
 
 #= Indicate the category of solver (e.g., heuristic). Each direct subtype of
 `AbstractSolver` must implement its own `_approach` method. =#
 function _approach(::T) where {T<:AbstractSolver}
-    subtype = _find_direct_subtype(AbstractSolver, T)
+    subtype = find_direct_subtype(AbstractSolver, T)
     throw(NotImplementedError(_approach, subtype, AbstractSolver))
 end
 

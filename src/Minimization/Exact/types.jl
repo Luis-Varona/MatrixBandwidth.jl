@@ -21,4 +21,4 @@ solutions are required for small-to-medium-sized inputs (say, up to ``100×100``
 """
 abstract type ExactSolver <: AbstractSolver end
 
-_approach(::ExactSolver) = :exact
+Minimization._approach(::ExactSolver) = :exact

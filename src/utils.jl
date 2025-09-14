@@ -37,7 +37,7 @@ Generate a ``6×6`` matrix with bandwidth ``1`` and the maximum number of nonzer
 ```jldoctest
 julia> using Random
 
-julia> A = random_banded_matrix(6, 1; p=1, rng=MersenneTwister(1228))
+julia> A = MatrixBandwidth.random_banded_matrix(6, 1; p=1, rng=MersenneTwister(1228))
 6×6 Matrix{Float64}:
  0.310239  0.346413  0.0       0.0        0.0       0.0
  0.509981  0.917073  0.390771  0.0        0.0       0.0
@@ -54,7 +54,7 @@ Generate a ``7×7`` matrix with bandwidth ``3`` and band density ``0.3``:
 ```jldoctest
 julia> using Random
 
-julia> A = random_banded_matrix(7, 3; p=0.3, rng=MersenneTwister(0402))
+julia> A = MatrixBandwidth.random_banded_matrix(7, 3; p=0.3, rng=MersenneTwister(0402))
 7×7 Matrix{Float64}:
  0.0       0.132699  0.0       0.0       0.0  0.0       0.0
  0.869352  0.0       0.324319  0.926496  0.0  0.0       0.0
@@ -72,7 +72,7 @@ Generate an ``8×8`` diagonal (bandwidth ``0``) matrix with default band density
 ```jldoctest
 julia> using Random
 
-julia> A = random_banded_matrix(8, 0; rng=MersenneTwister(0102))
+julia> A = MatrixBandwidth.random_banded_matrix(8, 0; rng=MersenneTwister(0102))
 8×8 Matrix{Float64}:
  0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
  0.0  0.0762399  0.0       0.0       0.0  0.0      0.0  0.0
@@ -145,8 +145,47 @@ function random_banded_matrix(
     return A
 end
 
-# Find the indices of all connected components in an adjacency matrix
-function _connected_components(A::AbstractMatrix{Bool})
+"""
+    connected_components(A) -> Vector{Vector{Int}}
+
+Find the indices of all connected components of the graph whose adjacency matrix is `A`.
+
+`A` is assumed to be symmetric, representing an undirected graph.
+
+# Arguments
+- `A::AbstractMatrix{Bool}`: the adjacency matrix of the graph. Must be symmetric.
+
+# Returns
+- `::Vector{Vector{Int}}`: a vector of vectors, where each element is a vector of node
+    indices belonging to a connected component.
+
+# Examples
+```jldoctest
+julia> using Graphs
+
+julia> g = complement(complete_multipartite_graph([3, 4, 2]))
+{9, 10} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+9×9 SparseArrays.SparseMatrixCSC{Bool, Int64} with 20 stored entries:
+ ⋅  1  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ 1  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  1  1  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  1  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  1  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+
+julia> MatrixBandwidth.connected_components(A)
+3-element Vector{Vector{Int64}}:
+ [1, 2, 3]
+ [4, 5, 6, 7]
+ [8, 9]
+```
+"""
+function connected_components(A::AbstractMatrix{Bool})
     n = size(A, 1)
     visited = falses(n)
     queue = Queue{Int}()
@@ -177,8 +216,242 @@ function _connected_components(A::AbstractMatrix{Bool})
     return components
 end
 
-# Identify the highest supertype of `subtype` that is a subtype of `abstracttype`
-function _find_direct_subtype(abstracttype::Type, subtype::Type)
+"""
+    floyd_warshall_shortest_paths(A) -> Matrix{Float64}
+
+Compute a distance matrix from the adjacency matrix `A` using the Floyd–Warshall algorithm.
+
+Relatively isolated pairs of nodes (those unreachable from each other) are assigned
+distances of `Inf`.
+
+`A` is assumed to be symmetric with an all-false diagonal, representing a simple graph.
+
+# Arguments
+- `A::AbstractMatrix{Bool}`: the adjacency matrix of the graph. Must be symmetric with an
+    all-false diagonal.
+
+# Returns
+- `::Matrix{Float64}`: an `n×n` matrix `D`, where `D[i, j]` is the length of the shortest
+    path between nodes `i` and `j`, or `Inf` if no such path exists.
+
+# Performance
+Given an ``n×n`` input matrix, the Floyd–Warshall algorithm runs in ``O(n³)`` time, given
+that each level in the triple-nested loop iterates over ``O(n)`` entries.
+
+# Examples
+Floyd–Warshall finds the shortest distances between all pairs of nodes in a connected graph:
+```jldoctest
+julia> using Graphs
+
+julia> g = ladder_graph(5)
+{10, 13} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+10×10 SparseArrays.SparseMatrixCSC{Bool, Int64} with 26 stored entries:
+ ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ 1  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1
+ ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅
+
+julia> Int.(MatrixBandwidth.floyd_warshall_shortest_paths(A))
+10×10 Matrix{Int64}:
+ 0  1  2  3  4  1  2  3  4  5
+ 1  0  1  2  3  2  1  2  3  4
+ 2  1  0  1  2  3  2  1  2  3
+ 3  2  1  0  1  4  3  2  1  2
+ 4  3  2  1  0  5  4  3  2  1
+ 1  2  3  4  5  0  1  2  3  4
+ 2  1  2  3  4  1  0  1  2  3
+ 3  2  1  2  3  2  1  0  1  2
+ 4  3  2  1  2  3  2  1  0  1
+ 5  4  3  2  1  4  3  2  1  0
+```
+
+Floyd–Warshall assigns `Inf` to pairs of nodes in different connected components:
+```jldoctest
+julia> using Graphs
+
+julia> g = complement(wheel_graph(8))
+{8, 14} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+8×8 SparseArrays.SparseMatrixCSC{Bool, Int64} with 28 stored entries:
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  1  1  ⋅
+ ⋅  ⋅  ⋅  ⋅  1  1  1  1
+ ⋅  1  ⋅  ⋅  ⋅  1  1  1
+ ⋅  1  1  ⋅  ⋅  ⋅  1  1
+ ⋅  1  1  1  ⋅  ⋅  ⋅  1
+ ⋅  1  1  1  1  ⋅  ⋅  ⋅
+ ⋅  ⋅  1  1  1  1  ⋅  ⋅
+
+julia> MatrixBandwidth.floyd_warshall_shortest_paths(A)
+8×8 Matrix{Float64}:
+  0.0  Inf   Inf   Inf   Inf   Inf   Inf   Inf
+ Inf    0.0   2.0   1.0   1.0   1.0   1.0   2.0
+ Inf    2.0   0.0   2.0   1.0   1.0   1.0   1.0
+ Inf    1.0   2.0   0.0   2.0   1.0   1.0   1.0
+ Inf    1.0   1.0   2.0   0.0   2.0   1.0   1.0
+ Inf    1.0   1.0   1.0   2.0   0.0   2.0   1.0
+ Inf    1.0   1.0   1.0   1.0   2.0   0.0   2.0
+ Inf    2.0   1.0   1.0   1.0   1.0   2.0   0.0
+```
+"""
+function floyd_warshall_shortest_paths(A::AbstractMatrix{Bool})
+    n = size(A, 1)
+
+    D = Matrix{Float64}(undef, n, n)
+    foreach(i -> D[i, i] = 0.0, 1:n)
+
+    for i in 1:(n - 1), j in (i + 1):n
+        if A[i, j]
+            D[i, j] = D[j, i] = 1.0
+        else
+            D[i, j] = D[j, i] = Inf
+        end
+    end
+
+    for k in 1:n, i in 1:(n - 1), j in (i + 1):n
+        if D[i, j] > D[i, k] + D[k, j]
+            D[i, j] = D[j, i] = D[i, k] + D[k, j]
+        end
+    end
+
+    return D
+end
+
+"""
+    is_structurally_symmetric(A) -> Bool
+
+Check whether `A[i, j]` is nonzero if and only if `A[j, i]` is nonzero for all `i` and `j`.
+
+# Arguments
+- `A::AbstractMatrix{<:Number}`: the matrix to check for structural symmetry.
+
+# Returns
+- `::Bool`: whether `A` is structurally symmetric.
+
+# Examples
+```jldoctest
+julia> A = [4 0 9 -2; 0 0 1 0; 3 -1 5 0; 4 0 0 3]
+4×4 Matrix{Int64}:
+ 4   0  9  -2
+ 0   0  1   0
+ 3  -1  5   0
+ 4   0  0   3
+
+julia> MatrixBandwidth.is_structurally_symmetric(A)
+true
+
+julia> B = [1.12 2.36 0.00; 5.99 0.0 0.0; 0.0 3.1 -7.49]
+3×3 Matrix{Float64}:
+ 1.12  2.36   0.0
+ 5.99  0.0    0.0
+ 0.0   3.1   -7.49
+
+julia> MatrixBandwidth.is_structurally_symmetric(B)
+false
+```
+
+# Notes
+Instead of transposing `A` and allocating a new matrix, it suffices to iterate over all
+opposing pairs of off-diagonal entries.
+"""
+function is_structurally_symmetric(A::AbstractMatrix{<:Number})
+    (m, n) = size(A)
+    return m == n &&
+           all((A[i, j] != 0) == (A[j, i] != 0) for i in 1:(n - 1) for j in (i + 1):n)
+end
+
+"""
+    offdiag_nz_support(A) -> AbstractMatrix{Bool}
+
+Convert `A` to a boolean matrix and set all its diagonal entries to `false`.
+
+# Arguments
+- `A::AbstractMatrix{<:Number}`: the matrix to convert.
+
+# Returns
+- `::AbstractMatrix{Bool}`: the nonzero support of `A`, with all diagonal entries set to
+    `false`.
+
+# Examples
+```jldoctest
+julia> A = [0 2 0 7; 0 -8 0 3; -1 9 0 0; 0 0 0 5]
+4×4 Matrix{Int64}:
+  0   2  0  7
+  0  -8  0  3
+ -1   9  0  0
+  0   0  0  5
+
+julia> MatrixBandwidth.offdiag_nz_support(A)
+4×4 BitMatrix:
+ 0  1  0  1
+ 0  0  0  1
+ 1  1  0  0
+ 0  0  0  0
+```
+
+# Notes
+In the context of matrix bandwidth reduction algorithms (which are only concerned with the
+nonzero support of the input matrix), this improves performance via cache optimizations,
+availability of bitwise operations, etc.
+"""
+function offdiag_nz_support(A::AbstractMatrix{<:Number})
+    A_bool = (!iszero).(A)
+    foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
+    return A_bool
+end
+
+"""
+    find_direct_subtype(abstracttype, subtype) -> Type
+
+Identify the highest supertype of `subtype` that is also a subtype of `abstracttype`.
+
+# Arguments
+- `abstracttype::Type`: an abstract type.
+- `subtype::Type`: a subtype of `abstracttype`.
+
+# Returns
+- `::Type`: the direct subtype of `abstracttype` that is a supertype of `subtype`.
+
+# Examples
+```jldoctest
+julia> abstract type Parent end
+
+julia> abstract type Child1 <: Parent end
+
+julia> abstract type Grandchild1 <: Child1 end
+
+julia> struct Grandchild2 <: Child1 end
+
+julia> abstract type Child2 <: Parent end
+
+julia> struct Child3 <: Parent end
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child1)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Grandchild1)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Grandchild2)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child2)
+Child2
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child3)
+Child3
+```
+"""
+function find_direct_subtype(abstracttype::Type, subtype::Type)
     if !isabstracttype(abstracttype)
         throw(ArgumentError("Expected an abstract type, got $abstracttype"))
     end
@@ -192,32 +465,8 @@ function _find_direct_subtype(abstracttype::Type, subtype::Type)
     if parent === abstracttype
         child = subtype
     else
-        child = _find_direct_subtype(abstracttype, parent)
+        child = find_direct_subtype(abstracttype, parent)
     end
 
     return child
-end
-
-#= Check whether `A[i, j]` is nonzero if and only if `A[j, i]` is nonzero for all `i` and
-`j`. Instead of transposing `A` and allocating a new matrix, it suffices to iterate over all
-opposing pairs of off-diagonal entries. (`A` is assumed to be square.) =#
-function _is_structurally_symmetric(A::AbstractMatrix{<:Number})
-    n = size(A, 1)
-    return all((A[i, j] != 0) == (A[j, i] != 0) for i in 1:(n - 1) for j in (i + 1):n)
-end
-
-#= Convert `A` to a  to improve performance via cache optimizations, bitwise
-operations, etc. Any symmetric permutation preserves diagonal entries, so the diagonal of
-the output matrix is set to `false` for consistency with any algorithms that require an
-adjacency matrix structure. =#
-function _offdiag_nonzero_support(A::AbstractMatrix{T}) where {T<:Number}
-    if T === Bool
-        A_bool = BitMatrix(A) # Copy to avoid shared mutability
-    else
-        A_bool = (!iszero).(A)
-    end
-
-    foreach(i -> A_bool[i, i] = false, axes(A_bool, 1))
-
-    return A_bool
 end

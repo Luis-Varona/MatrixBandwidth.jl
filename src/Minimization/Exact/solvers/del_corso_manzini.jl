@@ -32,8 +32,7 @@ is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 �
 `DelCorsoManzini` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A``, the Del Corso–Manzini algorithm runs in
-``O(n! ⋅ n³)`` time:
+Given an ``n×n`` input matrix, the Del Corso–Manzini algorithm runs in ``O(n! ⋅ n³)`` time:
 - For each underlying "bandwidth ≤ ``k``" check, we perform a depth-first search of
     ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time, resulting in
@@ -97,7 +96,7 @@ julia> Random.seed!(0201);
 
 julia> (n, k) = (40, 10);
 
-julia> A = random_banded_matrix(n, k);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
 
 julia> perm = randperm(n);
 
@@ -133,11 +132,11 @@ on the other hand, we implement in [`DelCorsoManziniWithPS`](@ref).
 """
 struct DelCorsoManzini <: ExactSolver end
 
-push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManzini)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Exact], DelCorsoManzini)
 
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
-_requires_structural_symmetry(::DelCorsoManzini) = true
+MatrixBandwidth._requires_structural_symmetry(::DelCorsoManzini) = true
 
 """
     DelCorsoManziniWithPS{D} <: ExactSolver <: AbstractSolver <: AbstractAlgorithm
@@ -191,7 +190,7 @@ nonzero for ``1 ≤ i, j ≤ n``).
 `DelCorsoManziniWithPS` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A`` and perimeter search depth ``d``, the Del Corso–Manzini
+Given an ``n×n`` input matrix and perimeter search depth ``d``, the Del Corso–Manzini
 algorithm with perimeter search runs in ``O(n! ⋅ nᴰ⁺¹)`` time, where ``Dᴰ = max(d, 2)``:
 - For each underlying "bandwidth ≤ ``k``" check, we perform a depth-first search of
     ``O(n!)`` partial orderings.
@@ -263,7 +262,7 @@ julia> Random.seed!(78779);
 
 julia> (n, k, depth) = (30, 8, 4);
 
-julia> A = random_banded_matrix(n, k);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
 
 julia> perm = randperm(n);
 
@@ -315,13 +314,15 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: ExactSolver
     end
 end
 
-push!(ALGORITHMS[:Minimization][:Exact], DelCorsoManziniWithPS)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Exact], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 
-_requires_structural_symmetry(::DelCorsoManziniWithPS) = true
+MatrixBandwidth._requires_structural_symmetry(::DelCorsoManziniWithPS) = true
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::DelCorsoManzini)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, ::DelCorsoManzini
+)
     n = size(A, 1)
 
     ordering_buf = Vector{Int}(undef, n)
@@ -356,7 +357,7 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, ::DelCorsoManzini)
     return ordering
 end
 
-function _bool_minimal_band_ordering(
+function Minimization._bool_minimal_band_ordering(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Nothing}
 )
     #= We cannot compute a (hopefully) near-optimal perimeter search depth upon
@@ -365,7 +366,7 @@ function _bool_minimal_band_ordering(
     return _bool_minimal_band_ordering(A, solver_with_depth)
 end
 
-function _bool_minimal_band_ordering(
+function Minimization._bool_minimal_band_ordering(
     A::AbstractMatrix{Bool}, solver::DelCorsoManziniWithPS{Integer}
 )
     n = size(A, 1)

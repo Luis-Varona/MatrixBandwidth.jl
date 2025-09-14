@@ -59,7 +59,7 @@ julia> Random.seed!(13);
 
 julia> (n, k) = (30, 5);
 
-julia> A = random_banded_matrix(n, k);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
 
 julia> perm = randperm(n);
 
@@ -94,7 +94,9 @@ julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
 julia> for i in 1:num_ccs # Some components may themselves be disconnected
            cc_size = rand(1:max_cc_size);
            cc_band = rand(0:min(max_band, cc_size - 1));
-           components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
        end
 
 julia> A = blockdiag(components...); # `A` has least 7 connected components
@@ -214,11 +216,11 @@ struct CuthillMcKee <: HeuristicSolver
     end
 end
 
-push!(ALGORITHMS[:Minimization][:Heuristic], CuthillMcKee)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Heuristic], CuthillMcKee)
 
 Base.summary(::CuthillMcKee) = "Cuthill–McKee"
 
-_requires_structural_symmetry(::CuthillMcKee) = true
+MatrixBandwidth._requires_structural_symmetry(::CuthillMcKee) = true
 
 """
     ReverseCuthillMcKee <: HeuristicSolver <: AbstractSolver <: AbstractAlgorithm
@@ -275,7 +277,7 @@ julia> Random.seed!(87);
 
 julia> (n, k) = (35, 3);
 
-julia> A = random_banded_matrix(n, k);
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
 
 julia> perm = randperm(n);
 
@@ -310,7 +312,9 @@ julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
 julia> for i in 1:num_ccs # Some components may themselves be disconnected
            cc_size = rand(0:max_cc_size);
            cc_band = rand(1:min(max_band, cc_size - 1));
-           components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
        end
 
 julia> A = blockdiag(components...); # `A` has least 8 connected components
@@ -434,19 +438,21 @@ struct ReverseCuthillMcKee <: HeuristicSolver
     end
 end
 
-push!(ALGORITHMS[:Minimization][:Heuristic], ReverseCuthillMcKee)
+push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Heuristic], ReverseCuthillMcKee)
 
 Base.summary(::ReverseCuthillMcKee) = "Reverse Cuthill–McKee"
 
-_requires_structural_symmetry(::ReverseCuthillMcKee) = true
+MatrixBandwidth._requires_structural_symmetry(::ReverseCuthillMcKee) = true
 
 #= We take advantage of the laziness of `Iterators.map` and `Iterators.flatmap` to avoid
 allocating `component_orderings` or individual `component[component_ordering]` arrays.
-(Indeed, the only allocations performed here are those performed by `_connected_components`,
+(Indeed, the only allocations performed here are those performed by `connected_components`,
 individual `_cm_connected_ordering` calls, and `collect` at the very end.) =#
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcKee)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, solver::CuthillMcKee
+)
     node_finder = solver.node_finder
-    components = _connected_components(A)
+    components = connected_components(A)
 
     component_orderings = Iterators.map(
         component -> _cm_connected_ordering(view(A, component, component), node_finder),
@@ -461,7 +467,9 @@ function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::CuthillMcK
     )
 end
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee)
+function Minimization._bool_minimal_band_ordering(
+    A::AbstractMatrix{Bool}, solver::ReverseCuthillMcKee
+)
     return reverse!(_bool_minimal_band_ordering(A, CuthillMcKee(solver.node_finder)))
 end
 

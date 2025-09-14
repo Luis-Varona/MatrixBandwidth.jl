@@ -26,10 +26,10 @@ As noted above, the Saxe–Gurari–Sudborough algorithm requires structurally s
 `SaxeGurariSudborough` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A`` and threshold bandwidth ``k``, the
-Saxe–Gurari–Sudborough algorithm runs in ``O(nᵏ)`` time [GS84, p. 531]. This is an
-improvement upon the original ``O(nᵏ⁺¹)`` Saxe algorithm [Sax80, p. 363]. (Of course, when
-``k < 3``, then the initial ``O(n³)`` bandwidth lower bound computation performed in all
+Given an ``n×n`` input matrix and threshold bandwidth ``k``, the Saxe–Gurari–Sudborough
+algorithm runs in ``O(nᵏ)`` time [GS84, p. 531]. This is an improvement upon the original
+``O(nᵏ⁺¹)`` Saxe algorithm [Sax80, p. 363]. (Of course, when ``k < 3``, then the initial
+``O(n³)`` bandwidth lower bound computation performed in all
 [`has_bandwidth_k_ordering`](@ref) calls dominates the overall complexity, although the
 constant scaling factor of that subroutine is generally much smaller than that of the
 algorithm proper).
@@ -43,8 +43,6 @@ for larger ``k``, given that their aggressive pruning strategies keep their effe
 space very small in practice.
 
 # Examples
-We demonstrate both an affirmative and a negative result for the Saxe–Gurari–Sudborough
-recognition algorithm on a random ``20×20`` matrix:
 ```jldoctest
 julia> using Random, SparseArrays
 
@@ -99,16 +97,16 @@ that never again traverse a dangling edge [GS84, pp. 535–36].
 """
 struct SaxeGurariSudborough <: AbstractDecider end
 
-push!(ALGORITHMS[:Recognition], SaxeGurariSudborough)
+push!(MatrixBandwidth.ALGORITHMS[:Recognition], SaxeGurariSudborough)
 
 Base.summary(::SaxeGurariSudborough) = "Saxe–Gurari–Sudborough"
 
-_requires_structural_symmetry(::SaxeGurariSudborough) = true
+MatrixBandwidth._requires_structural_symmetry(::SaxeGurariSudborough) = true
 
 function _bool_bandwidth_k_ordering(
     A::AbstractMatrix{Bool}, k::Integer, ::SaxeGurariSudborough
 )
-    components = _connected_components(A)
+    components = connected_components(A)
     #= Smaller components take less time to process, so we do them first to heuristically
     break earlier in some situtations and avoid wasting time on larger components. =#
     sort!(components; by=length)

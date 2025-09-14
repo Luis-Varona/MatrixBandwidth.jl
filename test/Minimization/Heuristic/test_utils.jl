@@ -76,11 +76,11 @@ const RCM_ANSWERS = [
 Generate a random disconnected `n×n` matrix with bandwidth `k`.
 
 Specifically, this function generates `num_ccs` separate matrices with bandwidth precisely
-`k` using [`random_banded_matrix`](@ref) then combines them into a single block diagonal
-matrix. Treating the resulting matrix as the adjacency of a directed graph, this ensures
-that there are no edges between any of the blocks, guaranteeing that the resultant graph is
-disconnected with at least `num_ccs` connected components. (If any of the blocks themselves
-are disconnected, the graph may have even more than `num_ccs` components.)
+`k` using [`MatrixBandwidth.random_banded_matrix`](@ref) then combines them into a single
+block diagonal matrix. Treating the resulting matrix as the adjacency of a directed graph,
+this ensures that there are no edges between any of the blocks, guaranteeing that the
+resultant graph is disconnected with at least `num_ccs` connected components. (If any of the
+blocks themselves are disconnected, the graph may have even more than `num_ccs` components.)
 
 Since the Cuthill–McKee and reverse Cuthill–McKee algorithms are designed to work on
 connected components (or their matrix representations), this acts as a useful stress test
@@ -145,12 +145,12 @@ function random_banded_discon_matrix(n::Int, k::Int, num_ccs::Int, p::Real)
 
     components = Vector{SparseMatrixCSC{Float64,Int64}}(undef, num_ccs);
     # Ensure that at least one component (arbitrarily, the first) has bandwidth exactly `k`
-    components[1] = sparse(random_banded_matrix(cc_sizes[1], k; p=p));
+    components[1] = sparse(MatrixBandwidth.random_banded_matrix(cc_sizes[1], k; p=p));
 
     for i in 2:num_ccs # Some components may themselves be disconnected
         cc_size = cc_sizes[i]
         cc_band = rand(0:min(k, cc_size - 1));
-        components[i] = sparse(random_banded_matrix(cc_size, cc_band; p=p));
+        components[i] = sparse(MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p));
     end
 
     #= This matrix will have bandwidth precisely `k` with multiple connected components,

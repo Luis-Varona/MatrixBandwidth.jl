@@ -22,7 +22,7 @@ is, ``A[i, j]`` must be nonzero if and only if ``A[j, i]`` is nonzero for ``1 �
 `DelCorsoManzini` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A`` and threshold bandwidth ``k``, the Del Corso–Manzini
+Given an ``n×n`` input matrix and threshold bandwidth ``k``, the Del Corso–Manzini
 algorithm runs in ``O(n! ⋅ nk)`` time:
 - We perform a depth-first search of ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time.
@@ -37,8 +37,6 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 ``n ≈ 100`` or so.
 
 # Examples
-We demonstrate both an affirmative and a negative result for the Del Corso–Manzini
-recognition algorithm on a random ``40×40`` matrix:
 ```jldoctest
 julia> using Random, SparseArrays
 
@@ -91,11 +89,11 @@ the underlying recognition subroutine for MB-PS is implemented in
 """
 struct DelCorsoManzini <: AbstractDecider end
 
-push!(ALGORITHMS[:Recognition], DelCorsoManzini)
+push!(MatrixBandwidth.ALGORITHMS[:Recognition], DelCorsoManzini)
 
 Base.summary(::DelCorsoManzini) = "Del Corso–Manzini"
 
-_requires_structural_symmetry(::DelCorsoManzini) = true
+MatrixBandwidth._requires_structural_symmetry(::DelCorsoManzini) = true
 
 """
     DelCorsoManziniWithPS{D} <: AbstractDecider <: AbstractAlgorithm
@@ -139,9 +137,8 @@ nonzero for ``1 ≤ i, j ≤ n``).
 `DelCorsoManziniWithPS` <: [`AbstractDecider`](@ref) <: [`AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix ``A``, perimeter search depth ``d``, and threshold bandwidth
-``k``, the Del Corso–Manzini algorithm with perimeter search runs in ``O(n! ⋅ max(nᵈ, nk))``
-time:
+Given an ``n×n`` input matrix, perimeter search depth ``d``, and threshold bandwidth ``k``,
+the Del Corso–Manzini algorithm with perimeter search runs in ``O(n! ⋅ max(nᵈ, nk))`` time:
 - We perform a depth-first search of ``O(n!)`` partial orderings.
 - Checking plausibility of each partial ordering takes ``O(nk)`` time, and checking
     compatibility with all size-``d`` LPOs takes ``O(nᵈ)`` time. Thus, the overall time
@@ -245,11 +242,11 @@ struct DelCorsoManziniWithPS{D<:Union{Nothing,Integer}} <: AbstractDecider
     end
 end
 
-push!(ALGORITHMS[:Recognition], DelCorsoManziniWithPS)
+push!(MatrixBandwidth.ALGORITHMS[:Recognition], DelCorsoManziniWithPS)
 
 Base.summary(::DelCorsoManziniWithPS) = "Del Corso–Manzini with perimeter search"
 
-_requires_structural_symmetry(::DelCorsoManziniWithPS) = true
+MatrixBandwidth._requires_structural_symmetry(::DelCorsoManziniWithPS) = true
 
 """
     dcm_ps_optimal_depth(A) -> Int

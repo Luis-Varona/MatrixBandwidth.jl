@@ -22,7 +22,7 @@ As per the interface of supertype [`AbstractAlgorithm`](@ref), concrete subtypes
 """
 abstract type AbstractDecider <: AbstractAlgorithm end
 
-_problem(::AbstractDecider) = :recognition
+MatrixBandwidth._problem(::AbstractDecider) = :recognition
 
 """
     RecognitionResult{A,M,O} <: AbstractResult

@@ -2,6 +2,7 @@
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterCitations = "daee34ce-89f3-4625-b898-19384cb65244"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 MatrixBandwidth = "075aa41b-24fd-4573-b25f-92cae432c0f8"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"

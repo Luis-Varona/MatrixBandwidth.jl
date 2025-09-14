@@ -27,17 +27,23 @@ This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 """
 module Metaheuristic
 
-#! format: off
-import ..ALGORITHMS
-import ..AbstractSolver
-import ..NotImplementedError
-import .._requires_structural_symmetry
-import .._approach, .._bool_minimal_band_ordering
-#! format: on
+using MatrixBandwidth
+using MatrixBandwidth: NotImplementedError
+using MatrixBandwidth: _requires_structural_symmetry
 
-export SimulatedAnnealing, GeneticAlgorithm, GRASP
+using MatrixBandwidth.Minimization
+using MatrixBandwidth.Minimization: _approach, _bool_minimal_band_ordering
 
-ALGORITHMS[:Minimization][:Metaheuristic] = []
+export
+    # Types
+    MetaheuristicSolver,
+
+    # Metaheuristic solvers
+    GRASP,
+    SimulatedAnnealing,
+    GeneticAlgorithm
+
+MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic] = []
 
 include("types.jl")
 

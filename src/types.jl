@@ -7,7 +7,7 @@
 """
     AbstractAlgorithm
 
-Abstract base type for all matrix bandwidth minimization and recognition algorithms.
+Abstract base type for all matrix bandwidth reduction algorithms.
 
 # Interface
 Concrete subtypes of `AbstractAlgorithm` must implement the following methods:
@@ -34,14 +34,14 @@ end
 #= Indicate the matrix bandwidth problem tackled (e.g., `:minimization`). Each direct
 subtype of `AbstractAlgorithm` must implement its own `_problem` method. =#
 function _problem(::T) where {T<:AbstractAlgorithm}
-    subtype = _find_direct_subtype(AbstractAlgorithm, T)
+    subtype = find_direct_subtype(AbstractAlgorithm, T)
     throw(NotImplementedError(_problem, subtype, AbstractAlgorithm))
 end
 
 """
     AbstractResult
 
-Abstract base type for all matrix bandwidth problem results.
+Abstract base type for all matrix bandwidth reduction results.
 
 # Interface
 Concrete subtypes of `AbstractResult` *must* implement parametric types

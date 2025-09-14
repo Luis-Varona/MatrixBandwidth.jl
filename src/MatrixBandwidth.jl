@@ -115,10 +115,32 @@ include("utils.jl")
 include("types.jl")
 include("core.jl")
 
+export
+    # Submodules
+    Minimization,
+    Recognition,
+
+    # Types
+    AbstractAlgorithm,
+    AbstractResult,
+
+    # Core functions
+    bandwidth,
+    bandwidth_lower_bound,
+    profile,
+
+    # Submodule core functions
+    minimize_bandwidth,
+    has_bandwidth_k_ordering
+
 """
     const ALGORITHMS :: Dict{Symbol, Union{Dict{Symbol}, Vector}}
 
 A dictionary indexing the data types of all available algorithms by submodule.
+
+For instance, to access all metaheuristic minimization algorithms, use
+`MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic]`. Similarly, to access all
+recognition algorithms, use `MatrixBandwidth.ALGORITHMS[:Recognition]`.
 """
 const ALGORITHMS = Dict{Symbol,Union{Dict{Symbol},Vector}}()
 
@@ -128,25 +150,5 @@ include("Minimization/Minimization.jl")
 using .Minimization, .Recognition
 
 include("startup.jl")
-
-#= Module exports: allows users to call solvers like `Minimization.GibbsPooleStockmeyer` and
-deciders `like Recognition.CapraraSalazarGonzalez`. Solvers/deciders are not exported at the
-top level due to name conflicts between `Minimization` and `Recognition`. =#
-export Minimization, Recognition
-
-#= Core exports:
-- Compute the original bandwidth (before any reordering).
-- Compute Caprara and Salazar-González (2005)'s lower bound on bandwidth in `O(n³)`. (This
-    bound is tight in many non-trivial cases but not universally so.)
-- Compute the original profile (before any reordering).
-=#
-export bandwidth, bandwidth_lower_bound, profile
-
-#= `Minimization` and `Recognition` exports: the core bandwidth minimization and recognition
-functions. =#
-export minimize_bandwidth, has_bandwidth_k_ordering
-
-# Utility exports: just a random banded matrix generator for now. Useful for test data.
-export random_banded_matrix
 
 end

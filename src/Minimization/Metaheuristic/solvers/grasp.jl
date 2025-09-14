@@ -18,13 +18,13 @@ struct GRASP <: MetaheuristicSolver
     # TODO: Define fields and constructor (for default values)
 end
 
-# push!(ALGORITHMS[:Minimization][:Metaheuristic], GRASP)
+# push!(MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic], GRASP)
 
 Base.summary(::GRASP) = "Greedy randomized adaptive search procedure (GRASP)"
 
-_requires_structural_symmetry(::GRASP) = false
+MatrixBandwidth._requires_structural_symmetry(::GRASP) = false
 
-function _bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
+function Minimization._bool_minimal_band_ordering(A::AbstractMatrix{Bool}, Solver::GRASP)
     error("TODO: Not yet implemented")
     return nothing
 end
