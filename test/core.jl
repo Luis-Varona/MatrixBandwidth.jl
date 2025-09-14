@@ -12,7 +12,6 @@ Test suite for the core API of the *MatrixBandwidth.jl* package.
 module TestCore
 
 using MatrixBandwidth
-using MatrixBandwidth.Minimization
 using SparseArrays
 using Test
 
@@ -76,7 +75,7 @@ end
         A = A + A' # Ensure structural symmetry
 
         k = bandwidth_lower_bound(A)
-        res = minimize_bandwidth(A, BruteForceSearch())
+        res = minimize_bandwidth(A, Minimization.BruteForceSearch())
 
         @test k <= res.bandwidth
     end
