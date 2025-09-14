@@ -2,22 +2,52 @@
 CurrentModule = MatrixBandwidth
 ```
 
-# MatrixBandwidth.jl – Private API
+# Private API Documentation
 
 Documentation for [MatrixBandwidth](https://github.com/Luis-Varona/MatrixBandwidth.jl)'s private API.
 
 !!! note
     The following documentation covers only the private API of the package. For public details, see the [public API documentation](public_api.md).
 
+## `MatrixBandwidth`
+
 ```@autodocs
-Modules = [
-    MatrixBandwidth,
-    MatrixBandwidth.Minimization,
-    MatrixBandwidth.Minimization.Exact,
-    MatrixBandwidth.Minimization.Heuristic,
-    MatrixBandwidth.Minimization.Metaheuristic,
-    MatrixBandwidth.Recognition,
-]
+Modules = [MatrixBandwidth]
+Public = false
+```
+
+## `MatrixBandwidth.Minimization`
+
+```@autodocs
+Modules = [MatrixBandwidth.Minimization]
+Public = false
+```
+
+## `MatrixBandwidth.Minimization.Exact`
+
+```@autodocs
+Modules = [MatrixBandwidth.Minimization.Exact]
+Public = false
+```
+
+## `MatrixBandwidth.Minimization.Heuristic`
+
+```@autodocs
+Modules = [MatrixBandwidth.Minimization.Heuristic]
+Public = false
+```
+
+## `MatrixBandwidth.Minimization.Metaheuristic`
+
+```@autodocs
+Modules = [MatrixBandwidth.Minimization.Metaheuristic]
+Public = false
+```
+
+## `MatrixBandwidth.Recognition`
+
+```@autodocs
+Modules = [MatrixBandwidth.Recognition]
 Public = false
 ```
 

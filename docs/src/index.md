@@ -2,6 +2,8 @@
 CurrentModule = MatrixBandwidth
 ```
 
+# MatrixBandwidth.jl
+
 ```@raw html
 <table>
   <tr>
@@ -277,5 +279,38 @@ The latest stable release of *MatrixBandwidth.jl* is v0.1.4. Although several al
 
 ## Index
 
+### `MatrixBandwidth`
+
 ```@index
+Modules = [MatrixBandwidth]
+```
+
+### `MatrixBandwidth.Minimization`
+
+```@index
+Modules = [MatrixBandwidth.Minimization]
+```
+
+### `MatrixBandwidth.Minimization.Exact`
+
+```@index
+Modules = [MatrixBandwidth.Minimization.Exact]
+```
+
+### `MatrixBandwidth.Minimization.Heuristic`
+
+```@index
+Modules = [MatrixBandwidth.Minimization.Heuristic]
+```
+
+### `MatrixBandwidth.Minimization.Metaheuristic`
+
+```@index
+Modules = [MatrixBandwidth.Minimization.Metaheuristic]
+```
+
+### `MatrixBandwidth.Recognition`
+
+```@index
+Modules = [MatrixBandwidth.Recognition]
 ```
