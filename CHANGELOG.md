@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Split up the `@index` and `@autodocs` blocks in the Documenter-generated website by submodule (#144).
 - Modified `minimize_bandwidth` to skip the algorithm call and simply use the original ordering in all cases when `bandwidth(A) == bandwidth_lower_bound(A)`, not just when `bandwidth(A) == 0` (#143).
 - Removed the export of `random_banded_matrix` from `MatrixBandwidth` (#140).
 - Exported `AbstractAlgorithm` and `AbstractResult` from `MatrixBandwidth`, and exported their various subtypes from the appropriate submodules (#140).

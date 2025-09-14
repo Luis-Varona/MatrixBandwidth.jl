@@ -28,8 +28,8 @@ makedocs(;
     plugins=[bib],
     pages=[
         "Home" => "index.md",
-        "Public API" => "public_api.md",
-        "Private API" => "private_api.md",
+        "Public API Documentation" => "public_api.md",
+        "Private API Documentation" => "private_api.md",
     ],
 )
 
