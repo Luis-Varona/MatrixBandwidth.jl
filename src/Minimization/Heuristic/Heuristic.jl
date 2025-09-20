@@ -19,9 +19,9 @@ and escape local minima; instead, they rely on straightforward deterministic pro
 find good solutions in a single pass.
 
 The following heuristic algorithms are currently supported:
-- Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
-- Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
-- Reverse Cuthill–McKee algorithm ([`ReverseCuthillMcKee`](@ref))
+- Gibbs–Poole–Stockmeyer ([`GibbsPooleStockmeyer`](@ref))
+- Cuthill–McKee ([`CuthillMcKee`](@ref))
+- Reverse Cuthill–McKee ([`ReverseCuthillMcKee`](@ref))
 
 This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
