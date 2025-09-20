@@ -17,10 +17,8 @@ Although metaheuristic approaches are often slower than heuristic ones (but cert
 faster than exact ones), they shine in complex cases where the latter may get trapped in
 poor-quality local minima.
 
-The following metaheuristic algorithms are currently supported:
-- Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
-- Simulated annealing ([`SimulatedAnnealing`](@ref))
-- Genetic algorithm ([`GeneticAlgorithm`](@ref))
+No metaheuristic algorithms are currently supported, but several are under development and
+will be added in a future release.
 
 This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
@@ -40,15 +38,21 @@ export
 
     # Metaheuristic solvers
     GRASP,
+    PSOHC,
     SimulatedAnnealing,
-    GeneticAlgorithm
+    GeneticAlgorithm,
+    AntColony,
+    TabuSearch
 
 MatrixBandwidth.ALGORITHMS[:Minimization][:Metaheuristic] = []
 
 include("types.jl")
 
+include("solvers/grasp.jl")
+include("solvers/psohc.jl")
 include("solvers/simulated_annealing.jl")
 include("solvers/genetic_algorithm.jl")
-include("solvers/grasp.jl")
+include("solvers/ant_colony.jl")
+include("solvers/tabu_search.jl")
 
 end

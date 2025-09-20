@@ -258,10 +258,6 @@ The following algorithms are currently supported:
     - Gibbs–Poole–Stockmeyer
     - Cuthill–McKee
     - Reverse Cuthill–McKee
-  - *Metaheuristic*
-    - Greedy randomized adaptive search procedure (GRASP) [**under development**]
-    - Simulated annealing [**under development**]
-    - Genetic algorithm [**under development**]
 - **Recognition**
   - Del Corso–Manzini
   - Del Corso–Manzini with perimeter search
@@ -269,7 +265,14 @@ The following algorithms are currently supported:
   - Saxe–Gurari–Sudborough
   - Brute-force search
 
-(Although the API is already stable with the bulk of the library already functional and tested, the metaheuristic minimization algorithms remain under development. Whenever one of these algorithms is called, the error `ERROR: TODO: Not yet implemented` is raised.)
+The following metaheuristic minimization algorithms are currently also under development and will be added in a future release:
+
+- Greedy randomized adaptive search procedure (GRASP)
+- Particle swarm optimization with hill climbing (PSO-HC)
+- Simulated annealing
+- Genetic algorithm
+- Ant colony optimization
+- Tabu search
 
 An index of all available algorithms by submodule (not including the unfinished metaheuristic algorithms) may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
 

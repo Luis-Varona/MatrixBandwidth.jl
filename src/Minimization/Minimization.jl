@@ -33,10 +33,9 @@ The following algorithms are currently supported:
     - Gibbs–Poole–Stockmeyer ([`GibbsPooleStockmeyer`](@ref))
     - Cuthill–McKee ([`CuthillMcKee`](@ref))
     - Reverse Cuthill–McKee ([`ReverseCuthillMcKee`](@ref))
-- *Metaheuristic*
-    - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
-    - Simulated annealing ([`SimulatedAnnealing`](@ref))
-    - Genetic algorithm ([`GeneticAlgorithm`](@ref))
+
+(Several metaheuristic algorithms are currently also under development and will be added in
+a future release.)
 
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.
@@ -76,8 +75,11 @@ export
 
     # Metaheuristic solvers
     GRASP,
+    PSOHC,
     SimulatedAnnealing,
-    GeneticAlgorithm
+    GeneticAlgorithm,
+    AntColony,
+    TabuSearch
 
 MatrixBandwidth.ALGORITHMS[:Minimization] = Dict{Symbol,Vector}()
 

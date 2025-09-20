@@ -56,16 +56,15 @@ The following algorithms are currently supported:
         - Gibbs–Poole–Stockmeyer ([`Minimization.GibbsPooleStockmeyer`](@ref))
         - Cuthill–McKee ([`Minimization.CuthillMcKee`](@ref))
         - Reverse Cuthill–McKee ([`Minimization.ReverseCuthillMcKee`](@ref))
-    - *Metaheuristic*
-        - Greedy randomized adaptive search procedure (GRASP) ([`Minimization.GRASP`](@ref))
-        - Simulated annealing ([`Minimization.SimulatedAnnealing`](@ref))
-        - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
     - Del Corso–Manzini ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini with perimeter search ([`Recognition.DelCorsoManziniWithPS`](@ref))
     - Caprara–Salazar-González ([`Recognition.CapraraSalazarGonzalez`](@ref))
     - Saxe–Gurari–Sudborough ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
+
+(Several metaheuristic minimization algorithms are currently also under development and will
+be added in a future release.)
 
 This package also exports several additional core functions, including (but not limited to)
 [`bandwidth`](@ref) and [`profile`](@ref) to compute the original bandwidth and profile of a
