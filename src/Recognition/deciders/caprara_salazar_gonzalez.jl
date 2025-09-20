@@ -48,6 +48,8 @@ growth in time complexity with respect to ``n``.
 
 # Examples
 ```jldoctest
+julia> using Random, SparseArrays
+
 julia> Random.seed!(17);
 
 julia> (n, p) = (10, 0.17);
