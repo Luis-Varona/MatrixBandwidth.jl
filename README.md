@@ -66,65 +66,82 @@ julia> using Random, SparseArrays
 
 julia> Random.seed!(8675309);
 
-julia> A = sprand(40, 40, 0.02); A = A + A' # Ensure structural symmetry
-40×40 SparseMatrixCSC{Float64, Int64} with 82 stored entries:
-⎡⠀⠀⠂⠘⠀⠀⠐⠀⠀⠀⠀⠀⠆⠀⠀⠀⠂⠄⠈⠀⎤
-⎢⣈⠀⠤⠃⠀⠀⠀⠈⠀⠀⠀⠀⠂⠂⠀⠀⠀⠂⠀⠄⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠚⠀⠀⠀⠀⠀⠂⠁⠀⠀⠀⠀⎥
-⎢⠐⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠢⠀⠈⠀⠀⠂⡄⎥
-⎢⠀⠀⠀⠀⠚⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠠⠀⠒⎥
-⎢⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠂⠨⠂⠀⠀⠁⠀⎥
-⎢⠈⠁⠨⠀⠀⠀⠠⡀⠀⠀⠠⠀⠀⠀⠀⠂⠠⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠌⠀⡀⠀⠀⠀⠢⠂⠠⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠈⠄⠠⠀⠀⠀⠀⠀⠀⡐⠀⠀⠀⠂⠀⠀⢀⡰⠀⠀⎥
-⎣⠂⠀⠀⠄⠀⠀⠈⠤⢠⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
+julia> A = sprand(60, 60, 0.01); A = A + A' # Ensure structural symmetry
+60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
+⎡⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⠠⠀⢀⠀⠀⠒⠀⠀⠀⠀⠀⠀⡀⠨⠀⠀⠀⠀⎤
+⎢⠀⠀⠀⠀⠅⠀⠀⠀⠀⠀⠐⠀⠠⡀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠠⠀⠀⠀⠀⎥
+⎢⠀⠂⠁⠁⢀⠐⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⡀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠄⡀⠀⠀⎥
+⎢⠀⠂⠀⠢⠀⠀⠀⠀⠀⠀⠀⠄⠀⠀⠀⠀⢀⠀⠁⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠐⠀⠐⠀⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠁⠀⠀⎥
+⎢⢠⠀⠀⠀⠀⢀⠀⠠⢀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠊⠀⠀⢠⠀⠀⠀⠀⠀⠠⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⠁⠀⠀⠀⠄⠀⎥
+⎢⡀⡈⠈⡀⠀⠀⠆⠀⠀⠀⠁⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⠀⠀⠔⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠁⠀⠀⠀⠠⠄⠁⎦
 
 julia> res_minimize = minimize_bandwidth(A, Minimization.ReverseCuthillMcKee())
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Reverse Cuthill–McKee
  * Approach: heuristic
  * Minimum Bandwidth: 9
- * Original Bandwidth: 37
- * Matrix Size: 40×40
+ * Original Bandwidth: 51
+ * Matrix Size: 60×60
 
 julia> A[res_minimize.ordering, res_minimize.ordering]
-40×40 SparseMatrixCSC{Float64, Int64} with 82 stored entries:
-⎡⠪⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠒⡀⠈⠆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠈⠡⠄⠁⠁⠠⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠁⡀⠀⠀⠠⠀⠘⢄⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠈⢄⠀⠂⢀⠐⠀⠠⠁⢆⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠒⢄⠀⡀⠀⠀⠀⠌⢢⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⢄⡀⠄⠀⠀⠘⡄⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠒⠒⠤⢄⡱⡀⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠪⡢⎦
+60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
+⎡⠠⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⠠⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠠⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠠⡢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡀⠈⠀⠂⠀⢠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠢⣀⡸⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠪⡢⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢊⠐⢠⡀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠲⢄⡱⢀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠪⢂⡄⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠪⡢⎦
 ```
 
-Similarly, to determine whether said matrix has bandwidth *at most*, say, 10 (not necessarily caring about the true minimum) via the Del Corso&ndash;Manzini algorithm, you can run:
+Similarly, to determine whether said matrix has bandwidth *at most*, say, 3 (not necessarily caring about the true minimum) via the Saxe&ndash;Gurari&ndash;Sudborough algorithm, you can run:
 
 ```julia-repl
-julia> res_recognize = has_bandwidth_k_ordering(A, 10, Recognition.DelCorsoManzini())
+julia> res_recognize = has_bandwidth_k_ordering(A, 3, Recognition.SaxeGurariSudborough())
 Results of Bandwidth Recognition Algorithm
- * Algorithm: Del Corso–Manzini
- * Bandwidth Threshold k: 10
+ * Algorithm: Saxe–Gurari–Sudborough
+ * Bandwidth Threshold k: 3
  * Has Bandwidth ≤ k Ordering: true
- * Original Bandwidth: 37
- * Matrix Size: 40×40
+ * Original Bandwidth: 51
+ * Matrix Size: 60×60
 
 julia> A[res_recognize.ordering, res_recognize.ordering]
-40×40 SparseMatrixCSC{Float64, Int64} with 82 stored entries:
-⎡⠊⠀⠀⢀⡈⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⢀⠀⠀⢀⠀⠀⡐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⢆⠈⠀⠐⢀⠐⠀⠅⡀⠤⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠑⢀⠠⠄⠄⠊⠀⠈⠀⠀⠐⢀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠑⠀⡌⠂⠀⢀⠐⠀⠀⠀⠔⡀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠑⢀⠀⠀⠀⠀⠀⠀⠀⠐⠲⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠐⢀⠄⠀⠀⠀⠀⠀⠀⠁⢁⠄⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢰⡀⠀⠀⠀⠀⠀⠑⢀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠅⢀⢄⠀⠀⠀⠀⢀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠐⠀⢀⠀⠀⎦
+60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
+⎡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠠⠂⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠘⠀⡠⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠐⠊⠀⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡄⠉⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠪⢀⠔⢂⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠰⡊⠈⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠊⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⣀⡸⢀⡀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⡀⠈⢠⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⣀⡸⢂⡀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠰⡀⠈⠠⡀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⠊⡠⎦
 ```
+
+(In this case, though, it turns out that 3 *is* the true minimum bandwidth of the matrix, as can be verified by running `minimize_bandwidth` with any exact algorithm.)
 
 If no algorithm is explicitly specified, `minimize_bandwidth` defaults to the Gibbs&ndash;Poole&ndash;Stockmeyer algorithm:
 
@@ -133,32 +150,59 @@ julia> res_minimize_default = minimize_bandwidth(A)
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Gibbs–Poole–Stockmeyer
  * Approach: heuristic
- * Minimum Bandwidth: 6
- * Original Bandwidth: 37
- * Matrix Size: 40×40
+ * Minimum Bandwidth: 5
+ * Original Bandwidth: 51
+ * Matrix Size: 60×60
 
 julia> A[res_minimize_default.ordering, res_minimize_default.ordering]
-40×40 SparseMatrixCSC{Float64, Int64} with 82 stored entries:
-⎡⠪⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⠀⠀⡠⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠐⠀⠀⠑⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠑⠄⠀⠀⠌⢢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠈⠢⣁⠀⠀⠨⠆⢀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠈⠢⠆⠄⡡⠚⠄⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠚⠄⡀⠈⠦⣀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢣⠀⠀⠃⡀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠠⠎⡡⠢⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠂⢠⠒⎦
+60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
+⎡⠠⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠈⠠⡢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠠⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠠⡢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠄⠁⠀⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣀⣀⠘⠄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠡⠄⡡⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠢⣀⠘⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠪⢂⡄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢊⡰⢀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢤⠓⣠⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠚⠠⡢⎦
 ```
 
-(We default to Gibbs&ndash;Poole&ndash;Stockmeyer because it is one of the most accurate heuristic algorithms&mdash;note how in this case, it produced a lower-bandwidth ordering than reverse Cuthill&ndash;McKee. Of course, if true optimality is required, an exact algorithm such as Caprara&ndash;Salazar-González should be used instead.)
+(We default to Gibbs&ndash;Poole&ndash;Stockmeyer because it is one of the most accurate heuristic algorithms&mdash;note how in this case, it produced a lower-bandwidth ordering than reverse Cuthill&ndash;McKee. Of course, if true optimality is required, an exact algorithm should be used instead.)
 
-`has_bandwidth_k_ordering` similarly defaults to Caprara&ndash;Salazar-González, which is not yet implemented, so users should specify which of the completed algorithms they wish to use in the meantime or else face an error:
+`has_bandwidth_k_ordering` similarly defaults to the Del Corso&ndash;Manzini algorithm:
 
 ```julia-repl
-julia> res_recognize_default = has_bandwidth_k_ordering(A, 10)
-ERROR: TODO: Not yet implemented
-[...]
+julia> res_recognize_default = has_bandwidth_k_ordering(A, 6)
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * Bandwidth Threshold k: 6
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 51
+ * Matrix Size: 60×60
+
+julia> A[res_recognize_default.ordering, res_recognize_default.ordering]
+60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
+⎡⠀⠀⠄⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⢄⠁⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⢄⠀⠀⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠑⠀⡀⠀⠀⠌⠑⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠈⢆⠁⠀⠀⠀⠲⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠘⢠⡀⠐⠀⠀⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠄⠠⠀⠀⠐⢂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⢀⡀⠈⠀⡐⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢀⠠⠀⠀⠀⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⢤⠀⠀⠀⠔⠄⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠄⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠂⠀⠀⠀⠁⢀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠠⠂⢀⠑⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠐⠀⠀⠀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
 ```
 
 Complementing our various bandwidth minimization and recognition algorithms, *MatrixBandwidth.jl* exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix prior to any reordering:
@@ -199,9 +243,9 @@ The following algorithms are currently supported:
 
 - **Minimization**
   - *Exact*
-    - Caprara&ndash;Salazar-González algorithm [**under development**]
     - Del Corso&ndash;Manzini algorithm
     - Del Corso&ndash;Manzini algorithm with perimeter search
+    - Caprara&ndash;Salazar-González algorithm
     - Saxe&ndash;Gurari&ndash;Sudborough algorithm
     - Brute-force search
   - *Heuristic*
@@ -213,13 +257,13 @@ The following algorithms are currently supported:
     - Simulated annealing [**under development**]
     - Genetic algorithm [**under development**]
 - **Recognition**
-  - Caprara&ndash;Salazar-González algorithm [**under development**]
   - Del Corso&ndash;Manzini algorithm
   - Del Corso&ndash;Manzini algorithm with perimeter search
+  - Caprara&ndash;Salazar-González algorithm
   - Saxe&ndash;Gurari&ndash;Sudborough algorithm
   - Brute-force search
 
-(Although the API is already stable with the bulk of the library already functional and tested, a few algorithms remain under development. Whenever such an algorithm is used, the error `ERROR: TODO: Not yet implemented` is raised.)
+(Although the API is already stable with the bulk of the library already functional and tested, the metaheuristic minimization algorithms remain under development. Whenever one of these algorithms is called, the error `ERROR: TODO: Not yet implemented` is raised.)
 
 An index of all available algorithms by submodule may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
 

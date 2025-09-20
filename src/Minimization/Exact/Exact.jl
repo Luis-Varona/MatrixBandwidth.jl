@@ -17,9 +17,9 @@ therefore, are not feasible for large matrices, but they remain useful when prec
 solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
 
 The following exact algorithms are currently supported:
-- Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
 - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+- Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
 - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
 - Brute-force search ([`BruteForceSearch`](@ref))
 
@@ -30,7 +30,7 @@ module Exact
 
 using MatrixBandwidth
 using MatrixBandwidth: NotImplementedError, StructuralAsymmetryError
-using MatrixBandwidth: connected_components
+using MatrixBandwidth: connected_components, floyd_warshall_shortest_paths
 using MatrixBandwidth: _requires_structural_symmetry
 
 using MatrixBandwidth.Recognition
@@ -45,9 +45,9 @@ export
     ExactSolver,
 
     # Exact solvers
-    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
+    CapraraSalazarGonzalez,
     SaxeGurariSudborough,
     BruteForceSearch
 
@@ -55,9 +55,9 @@ MatrixBandwidth.ALGORITHMS[:Minimization][:Exact] = []
 
 include("types.jl")
 
-include("solvers/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("solvers/del_corso_manzini.jl")
+include("solvers/caprara_salazar_gonzalez.jl")
 include("solvers/saxe_gurari_sudborough.jl")
 include("solvers/brute_force_search.jl")
 

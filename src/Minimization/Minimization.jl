@@ -24,9 +24,9 @@ feasible for relatively small matrices.
 
 The following algorithms are currently supported:
 - *Exact*
-    - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
     - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
     - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+    - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
     - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
     - Brute-force search ([`BruteForceSearch`](@ref))
 - *Heuristic*
@@ -63,9 +63,9 @@ export
     minimize_bandwidth,
 
     # Exact solvers
-    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
+    CapraraSalazarGonzalez,
     SaxeGurariSudborough,
     BruteForceSearch,
 
