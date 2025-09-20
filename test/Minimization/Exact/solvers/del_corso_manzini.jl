@@ -43,12 +43,12 @@ end
         A = A + A' # Ensure structural symmetry
 
         res_bf = minimize_bandwidth(A, BruteForceSearch())
-        res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS())
-        ordering_dcm = res_dcm.ordering
+        res_dcm_ps = minimize_bandwidth(A, DelCorsoManziniWithPS())
+        ordering_dcm_ps = res_dcm_ps.ordering
 
         @test res_bf.bandwidth ==
-            res_dcm.bandwidth ==
-            bandwidth(A[ordering_dcm, ordering_dcm])
+            res_dcm_ps.bandwidth ==
+            bandwidth(A[ordering_dcm_ps, ordering_dcm_ps])
     end
 end
 
@@ -60,12 +60,12 @@ end
         depth = rand(1:n)
 
         res_bf = minimize_bandwidth(A, BruteForceSearch())
-        res_dcm = minimize_bandwidth(A, DelCorsoManziniWithPS(depth))
-        ordering_dcm = res_dcm.ordering
+        res_dcm_ps = minimize_bandwidth(A, DelCorsoManziniWithPS(depth))
+        ordering_dcm_ps = res_dcm_ps.ordering
 
         @test res_bf.bandwidth ==
-            res_dcm.bandwidth ==
-            bandwidth(A[ordering_dcm, ordering_dcm])
+            res_dcm_ps.bandwidth ==
+            bandwidth(A[ordering_dcm_ps, ordering_dcm_ps])
     end
 end
 

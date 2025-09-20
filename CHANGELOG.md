@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added doctest examples for the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions (#154).
 - Implemented the Caprara&ndash;Salazar-Gonz&aacute;lez algorithm (both the minimization solver and the recognition decider), concurrently adding *JuMP.jl* and *HiGHS.jl* as notable dependencies for integer linear programming (#137, #149, #152).
 
 ### Changed
@@ -22,6 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Reformatted the export blocks in each submodule to be more in cohesive, similarly to how *Graphs.jl* does it (#140).
 - Removed the leading underscore from many (but not all) top-level utility functions (also renaming `_offdiag_nonzero_support` to `offdiag_nz_support`), adding docstrings to all of these (#140).
 - Refactored the import structure in submodules to do, e.g., `using MatrixBandwidth` in favor of a bunch of `import ..A, ..B, ..C` statements, similarly to how *Graphs.jl* does it (#140).
+
+### Removed
+
+- Removed the empty test suites for the core functions of `MatrixBandwidth.Minimization` and `MatrixBandwidth.Recognition`, as `minimize_bandwidth` and `has_bandwidth_k_ordering` are already tested via the algorithm-specific test suites (#154).
 
 ## [0.1.4] - 2025-09-03
 
