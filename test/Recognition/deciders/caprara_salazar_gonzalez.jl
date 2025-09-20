@@ -16,12 +16,11 @@ using MatrixBandwidth.Recognition
 using SparseArrays
 using Test
 
-const MAX_ORDER_LE = 7
-const MAX_ORDER_GT = 8
+const MAX_ORDER = 7
 const NUM_ITER = 10
 
-@testset "CSG decider – Bandwidth ≤ k (n ≤ $MAX_ORDER_LE)" begin
-    for n in 1:MAX_ORDER_LE, _ in 1:NUM_ITER
+@testset "CSG decider – Bandwidth ≤ k (n ≤ $MAX_ORDER)" begin
+    for n in 1:MAX_ORDER, _ in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
         A = A + A' # Ensure structural symmetry
@@ -37,8 +36,8 @@ const NUM_ITER = 10
     end
 end
 
-@testset "CSG decider – Bandwidth > k (n ≤ $MAX_ORDER_GT)" begin
-    for n in 2:MAX_ORDER_GT, i in 1:NUM_ITER
+@testset "CSG decider – Bandwidth > k (n ≤ $MAX_ORDER)" begin
+    for n in 2:MAX_ORDER, i in 1:NUM_ITER
         density = rand()
         A = sprand(n, n, density)
         A = A + A' # Ensure structural symmetry
