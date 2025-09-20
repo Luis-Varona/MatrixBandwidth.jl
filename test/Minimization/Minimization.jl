@@ -11,7 +11,7 @@ Test suite for the `Minimization` submodule of the *MatrixBandwidth.jl* package.
 """
 module TestMinimization
 
-const TEST_GROUPS = ["core"]
+const TEST_GROUPS = []
 const NESTED_TEST_SUITES = [
     "Exact/Exact.jl", "Heuristic/Heuristic.jl", "Metaheuristic/Metaheuristic.jl"
 ]
