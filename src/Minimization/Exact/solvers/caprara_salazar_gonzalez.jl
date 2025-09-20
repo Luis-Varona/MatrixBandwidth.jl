@@ -56,7 +56,35 @@ relatively tight initial lower bound on the minimum bandwidth—result in approx
 exponential growth in time complexity with respect to ``n``.
 
 # Examples
-[TODO: Write here]
+We verify the optimality of the ordering found by Caprara–Salazar-González for a random
+``8×8`` matrix via a brute-force search over all possible permutations up to reversal:
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(5883);
+
+julia> (n, p) = (8, 0.25);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Brute-force search
+ * Approach: exact
+ * Minimum Bandwidth: 4
+ * Original Bandwidth: 7
+ * Matrix Size: 8×8
+
+julia> res_csg = minimize_bandwidth(A, Minimization.CapraraSalazarGonzalez())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Approach: exact
+ * Minimum Bandwidth: 4
+ * Original Bandwidth: 7
+ * Matrix Size: 8×8
+```
 
 # Notes
 For readers of the original paper, what we call the Caprara–Salazar-González algorithm here
@@ -70,6 +98,9 @@ faster, and the paper states that there is no known heuristic for determining wh
 will be more performant for a given input [CS05, pp. 368--69]. Therefore, we opt to
 implement only `LAYOUT_LEFT_TO_RIGHT` as a matter of practicality, although future
 developers may wish to extend the interface with `LAYOUT_BOTH_WAYS` as well.
+
+A final implementation detail worth noting is that we use HiGHS as our solver; it is one of
+the fastest open-source solvers available for mixed-integer linear programming.
 
 # References
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with

@@ -47,7 +47,33 @@ efficient pruning techniques and compatibility checks result in approximately ex
 growth in time complexity with respect to ``n``.
 
 # Examples
-[TODO: Write here]
+```jldoctest
+julia> Random.seed!(17);
+
+julia> (n, p) = (10, 0.17);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (3, 6);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.CapraraSalazarGonzalez())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 9
+ * Matrix Size: 10×10
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.CapraraSalazarGonzalez())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 6
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 9
+ * Matrix Size: 10×10
+```
 
 # Notes
 For readers of the original paper, what we call the Caprara–Salazar-González algorithm here
@@ -68,6 +94,9 @@ in the original paper, which actually never explicitly tackles matrix bandwidth 
 *minimization* does repeatedly call a recognition subroutine—this is precisely the logic we
 implement here. (We do, however, also implement said minimization algorithm in
 [`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
+
+A final implementation detail worth noting is that we use HiGHS as our solver; it is one of
+the fastest open-source solvers available for mixed-integer linear programming.
 
 # References
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
@@ -95,8 +124,6 @@ function _has_bandwidth_k_ordering_impl(
     return _csg_layout_left_to_right!(ordering_buf, A, k, dist_matrix, fixed, unselected)
 end
 
-# TODO: More comprehensive inline comments needed henceforth
-
 function _csg_layout_left_to_right!(
     ordering_buf::Vector{Int},
     A::AbstractMatrix{Bool},
@@ -120,7 +147,6 @@ function _csg_layout_left_to_right!(
     end
 
     candidates = filter(v -> earliest_positions[v] == length(fixed) + 1, unselected)
-
     res = iterate(candidates)
     ordering = nothing
 
@@ -139,6 +165,8 @@ function _csg_layout_left_to_right!(
     return ordering
 end
 
+#= Use integer-linear programming to determine the earliest feasible position of each node
+not yet placed in the ordering. =#
 function _csg_solve_relaxation(
     A::AbstractMatrix{Bool},
     k::Integer,
@@ -185,12 +213,16 @@ function _csg_solve_inner_ilp(
 )
     n = size(A, 1)
 
+    #= `HiGHS` is one of the fastest open-source solvers available for mixed-integer linear
+    programming. =#
     model = Model(HiGHS.Optimizer)
     set_silent(model)
 
     @variable(model, pos_v, Int)
     @objective(model, Min, pos_v)
 
+    #= The next placed node must be placed somewhere after all currently fixed nodes, but
+    (naturally) before the end of the ordering. =#
     @constraint(model, pos_v >= length(fixed) + 1)
     @constraint(model, pos_v <= n)
 
@@ -199,6 +231,10 @@ function _csg_solve_inner_ilp(
 
         if isfinite(dist_temp)
             dist = Int(dist_temp)
+            #= The difference in indices of `u` and `v` must be at most `k` times the
+            shortest-path distance between them. If `u` and `v` have distance 1, this
+            simplifies to the standard bandwidth constraint of adjacent nodes being at most
+            `k` indices apart. =#
             @constraint(model, pos_v <= k * dist + i)
             @constraint(model, pos_v >= i - k * dist)
         end
@@ -209,6 +245,10 @@ function _csg_solve_inner_ilp(
 
         if isfinite(dist_temp)
             dist = Int(dist_temp)
+            #= The difference in indices of `u` and `v` must be at most `k` times the
+            shortest-path distance between them. If `u` and `v` have distance 1, this
+            simplifies to the standard bandwidth constraint of adjacent nodes being at most
+            `k` indices apart. =#
             @constraint(model, pos_v >= pos_u - k * dist)
             @constraint(model, pos_v <= pos_u + k * dist)
         end
@@ -237,9 +277,7 @@ function _csg_feasible_positions(
             return false
         end
 
-        min_earliest_node = first(eligible_nodes)
-
-        delete!(remaining, min_earliest_node)
+        delete!(remaining, first(eligible_nodes))
     end
 
     return true
