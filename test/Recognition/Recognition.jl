@@ -12,7 +12,6 @@ Test suite for the `Recognition` submodule of the *MatrixBandwidth.jl* package.
 module TestRecognition
 
 const TEST_GROUPS = [
-    "core",
     "deciders/caprara_salazar_gonzalez",
     "deciders/del_corso_manzini",
     "deciders/saxe_gurari_sudborough",

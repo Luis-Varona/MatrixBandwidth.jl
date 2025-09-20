@@ -265,7 +265,7 @@ The following algorithms are currently supported:
 
 (Although the API is already stable with the bulk of the library already functional and tested, the metaheuristic minimization algorithms remain under development. Whenever one of these algorithms is called, the error `ERROR: TODO: Not yet implemented` is raised.)
 
-An index of all available algorithms by submodule may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
+An index of all available algorithms by submodule (not including the unfinished metaheuristic algorithms) may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
 
 ```julia-repl
 julia> MatrixBandwidth.ALGORITHMS
