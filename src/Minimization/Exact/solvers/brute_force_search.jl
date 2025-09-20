@@ -40,7 +40,7 @@ julia> Random.seed!(628318);
 
 julia> (n, p) = (8, 0.2);
 
-julia> A = sprand(Bool, n, n, p);
+julia> A = sprand(n, n, p);
 
 julia> A = A + A' # Ensure structural symmetry;
 

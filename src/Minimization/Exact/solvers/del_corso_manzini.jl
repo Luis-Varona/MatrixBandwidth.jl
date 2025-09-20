@@ -237,7 +237,7 @@ Results of Bandwidth Minimization Algorithm
  * Original Bandwidth: 8
  * Matrix Size: 9×9
 
-julia> res_dcm = minimize_bandwidth(A, Minimization.DelCorsoManziniWithPS())
+julia> res_dcm_ps = minimize_bandwidth(A, Minimization.DelCorsoManziniWithPS())
 Results of Bandwidth Minimization Algorithm
  * Algorithm: Del Corso–Manzini with perimeter search
  * Approach: exact
