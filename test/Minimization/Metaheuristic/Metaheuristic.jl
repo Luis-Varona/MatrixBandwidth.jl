@@ -13,7 +13,12 @@ package.
 module TestMetaheuristic
 
 const TEST_GROUPS = [
-    "solvers/grasp", "solvers/simulated_annealing", "solvers/genetic_algorithm"
+    "solvers/grasp",
+    "solvers/psohc",
+    "solvers/simulated_annealing",
+    "solvers/genetic_algorithm",
+    "solvers/ant_colony",
+    "solvers/tabu_search",
 ]
 
 for group in TEST_GROUPS

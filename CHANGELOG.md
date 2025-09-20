@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Declared additional unfinished metaheuristic minimization algorithms (`PSOHC`, `AntColony`, and `TabuSearch`) in `MatrixBandwidth.Minimization.Metaheuristic` (#155).
 - Added doctest examples for the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions (#154).
 - Implemented the Caprara&ndash;Salazar-Gonz&aacute;lez algorithm (both the minimization solver and the recognition decider), concurrently adding *JuMP.jl* and *HiGHS.jl* as notable dependencies for integer linear programming (#137, #149, #152, #156).
 
