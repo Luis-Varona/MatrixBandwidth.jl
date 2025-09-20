@@ -1,6 +1,6 @@
 name = "MatrixBandwidth"
 uuid = "075aa41b-24fd-4573-b25f-92cae432c0f8"
-keywords = ["matrix bandwidth", "minimization", "sparse matrices", "scientific computing"]
+keywords = ["matrix bandwidth", "sparse matrices", "optimization", "scientific computing", "julia"]
 license = "MIT"
 authors = ["Luis M. B. Varona <lm.varona@outlook.com>"]
 description = "Fast algorithms for matrix bandwidth minimization and recognition, written in Julia."
