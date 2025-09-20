@@ -17,10 +17,10 @@ therefore, are not feasible for large matrices, but they remain useful when prec
 solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
 
 The following exact algorithms are currently supported:
-- Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
-- Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-- Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
-- Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+- Del Corso–Manzini ([`DelCorsoManzini`](@ref))
+- Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
+- Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
 - Brute-force search ([`BruteForceSearch`](@ref))
 
 This submodule is part of the `MatrixBandwidth.Minimization` submodule of the

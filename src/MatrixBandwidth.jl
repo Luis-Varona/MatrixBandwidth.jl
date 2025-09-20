@@ -7,7 +7,7 @@
 """
     MatrixBandwidth
 
-Fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition in Julia.
+Fast algorithms for matrix bandwidth minimization and recognition, written in Julia.
 
 Reordering the rows and columns of a matrix to reduce its bandwidth has many practical
 applications in engineering and scientific computing. It is a common preprocessing step used
@@ -46,26 +46,25 @@ ideas, filling a crucial niche in the current research landscape.
 The following algorithms are currently supported:
 - **Minimization**
     - *Exact*
-        - Del Corso–Manzini algorithm ([`Minimization.DelCorsoManzini`](@ref))
-        - Del Corso–Manzini algorithm with perimeter search
+        - Del Corso–Manzini ([`Minimization.DelCorsoManzini`](@ref))
+        - Del Corso–Manzini with perimeter search
             ([`Minimization.DelCorsoManziniWithPS`](@ref))
-        - Caprara–Salazar-González algorithm ([`Minimization.CapraraSalazarGonzalez`](@ref))
-        - Saxe–Gurari–Sudborough algorithm ([`Minimization.SaxeGurariSudborough`](@ref))
+        - Caprara–Salazar-González ([`Minimization.CapraraSalazarGonzalez`](@ref))
+        - Saxe–Gurari–Sudborough ([`Minimization.SaxeGurariSudborough`](@ref))
         - Brute-force search ([`Minimization.BruteForceSearch`](@ref))
     - *Heuristic*
-        - Gibbs–Poole–Stockmeyer algorithm ([`Minimization.GibbsPooleStockmeyer`](@ref))
-        - Cuthill–McKee algorithm ([`Minimization.CuthillMcKee`](@ref))
-        - Reverse Cuthill–McKee algorithm ([`Minimization.ReverseCuthillMcKee`](@ref))
+        - Gibbs–Poole–Stockmeyer ([`Minimization.GibbsPooleStockmeyer`](@ref))
+        - Cuthill–McKee ([`Minimization.CuthillMcKee`](@ref))
+        - Reverse Cuthill–McKee ([`Minimization.ReverseCuthillMcKee`](@ref))
     - *Metaheuristic*
         - Greedy randomized adaptive search procedure (GRASP) ([`Minimization.GRASP`](@ref))
         - Simulated annealing ([`Minimization.SimulatedAnnealing`](@ref))
         - Genetic algorithm ([`Minimization.GeneticAlgorithm`](@ref))
 - **Recognition**
-    - Del Corso–Manzini algorithm ([`Recognition.DelCorsoManzini`](@ref))
-    - Del Corso–Manzini algorithm with perimeter search
-        ([`Recognition.DelCorsoManziniWithPS`](@ref))
-    - Caprara–Salazar-González algorithm ([`Recognition.CapraraSalazarGonzalez`](@ref))
-    - Saxe–Gurari–Sudborough algorithm ([`Recognition.SaxeGurariSudborough`](@ref))
+    - Del Corso–Manzini ([`Recognition.DelCorsoManzini`](@ref))
+    - Del Corso–Manzini with perimeter search ([`Recognition.DelCorsoManziniWithPS`](@ref))
+    - Caprara–Salazar-González ([`Recognition.CapraraSalazarGonzalez`](@ref))
+    - Saxe–Gurari–Sudborough ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 
 This package also exports several additional core functions, including (but not limited to)

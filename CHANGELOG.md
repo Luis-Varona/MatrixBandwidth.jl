@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Switched the default recognition decider from Caprara&ndash;Salazar-Gonz&aacute;lez to Del Corso&ndash;Manzini (#149).
 - Added instructions to the documentation for extending the interface with new algorithms via `_minimize_bandwidth_impl` and `_has_bandwidth_k_ordering_impl` (#145).
 - Renamed `_bool_minimal_band_ordering` and `_bool_bandwidth_k_ordering` (the functions wherein new algorithm logic is defined) to `_minimize_bandwidth_impl` and `_has_bandwidth_k_ordering_impl`, respectively (#145).
 - Split up the `@index` and `@autodocs` blocks in the Documenter-generated website by submodule (#144).

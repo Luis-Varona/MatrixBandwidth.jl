@@ -22,10 +22,10 @@ non-negative integer ``k ∈ ℕ``—an optimal permutation that fully minimizes
 ``O(nᵏ)`` time.
 
 The following algorithms are currently supported:
-- Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
-- Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-- Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
-- Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+- Del Corso–Manzini ([`DelCorsoManzini`](@ref))
+- Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
+- Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
 - Brute-force search ([`BruteForceSearch`](@ref))
 
 This submodule is part of the

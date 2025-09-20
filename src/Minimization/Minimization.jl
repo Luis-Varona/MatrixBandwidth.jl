@@ -24,15 +24,15 @@ feasible for relatively small matrices.
 
 The following algorithms are currently supported:
 - *Exact*
-    - Del Corso–Manzini algorithm ([`DelCorsoManzini`](@ref))
-    - Del Corso–Manzini algorithm with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-    - Caprara–Salazar-González algorithm ([`CapraraSalazarGonzalez`](@ref))
-    - Saxe–Gurari–Sudborough algorithm ([`SaxeGurariSudborough`](@ref))
+    - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
+    - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
+    - Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
+    - Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
     - Brute-force search ([`BruteForceSearch`](@ref))
 - *Heuristic*
-    - Gibbs–Poole–Stockmeyer algorithm ([`GibbsPooleStockmeyer`](@ref))
-    - Cuthill–McKee algorithm ([`CuthillMcKee`](@ref))
-    - Reverse Cuthill–McKee algorithm ([`ReverseCuthillMcKee`](@ref))
+    - Gibbs–Poole–Stockmeyer ([`GibbsPooleStockmeyer`](@ref))
+    - Cuthill–McKee ([`CuthillMcKee`](@ref))
+    - Reverse Cuthill–McKee ([`ReverseCuthillMcKee`](@ref))
 - *Metaheuristic*
     - Greedy randomized adaptive search procedure (GRASP) ([`GRASP`](@ref))
     - Simulated annealing ([`SimulatedAnnealing`](@ref))

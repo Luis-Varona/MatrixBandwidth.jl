@@ -39,7 +39,7 @@
 
 ## Overview
 
-*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and matrix bandwidth recognition. Reordering the rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering and scientific computing. It is a common preprocessing step used to improve performance when solving linear systems, approximating partial differential equations, optimizing circuit layout, and more.
+*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and recognition, written in Julia. Reordering the rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering and scientific computing. It is a common preprocessing step used to improve performance when solving linear systems, approximating partial differential equations, optimizing circuit layout, and more.
 
 Recall that the *bandwidth* of an *n*&times;*n* matrix *A* is the minimum non-negative integer *k* &isin; {0, 1, &hellip;, *n* - 1} such that *A<sub>i,j</sub>* = 0 whenever |*i* - *j*| > *k*. Equivalently, *A* has bandwidth *at most* *k* if all entries above the *k*<sup>th</sup> superdiagonal and below the *k*<sup>th</sup> subdiagonal are zero, and *A* has bandwidth *at least* *k* if there exists any nonzero entry in the *k*<sup>th</sup> superdiagonal or subdiagonal.
 
@@ -243,24 +243,24 @@ The following algorithms are currently supported:
 
 - **Minimization**
   - *Exact*
-    - Del Corso&ndash;Manzini algorithm
-    - Del Corso&ndash;Manzini algorithm with perimeter search
-    - Caprara&ndash;Salazar-González algorithm
-    - Saxe&ndash;Gurari&ndash;Sudborough algorithm
+    - Del Corso&ndash;Manzini
+    - Del Corso&ndash;Manzini with perimeter search
+    - Caprara&ndash;Salazar-González
+    - Saxe&ndash;Gurari&ndash;Sudborough
     - Brute-force search
   - *Heuristic*
-    - Gibbs&ndash;Poole&ndash;Stockmeyer algorithm
-    - Cuthill&ndash;McKee algorithm
-    - Reverse Cuthill&ndash;McKee algorithm
+    - Gibbs&ndash;Poole&ndash;Stockmeyer
+    - Cuthill&ndash;McKee
+    - Reverse Cuthill&ndash;McKee
   - *Metaheuristic*
     - Greedy randomized adaptive search procedure (GRASP) [**under development**]
     - Simulated annealing [**under development**]
     - Genetic algorithm [**under development**]
 - **Recognition**
-  - Del Corso&ndash;Manzini algorithm
-  - Del Corso&ndash;Manzini algorithm with perimeter search
-  - Caprara&ndash;Salazar-González algorithm
-  - Saxe&ndash;Gurari&ndash;Sudborough algorithm
+  - Del Corso&ndash;Manzini
+  - Del Corso&ndash;Manzini with perimeter search
+  - Caprara&ndash;Salazar-González
+  - Saxe&ndash;Gurari&ndash;Sudborough
   - Brute-force search
 
 (Although the API is already stable with the bulk of the library already functional and tested, the metaheuristic minimization algorithms remain under development. Whenever one of these algorithms is called, the error `ERROR: TODO: Not yet implemented` is raised.)
