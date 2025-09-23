@@ -23,6 +23,9 @@ docs/site/
 # environment.
 Manifest.toml
 
+# Local notes
+**/temp
+
 # Local metadata/configuration files
 **/.DS_Store
 .dist/
