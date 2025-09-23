@@ -7,8 +7,7 @@
 """
     TestMetaheuristic
 
-Test suite for the `Minimization.Metaheuristic` submodule of the *MatrixBandwidth.jl*
-package.
+Test suite for the `Minimization.Metaheuristic` submodule of the MatrixBandwidth.jl package.
 """
 module TestMetaheuristic
 

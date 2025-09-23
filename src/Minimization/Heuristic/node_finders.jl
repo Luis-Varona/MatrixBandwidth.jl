@@ -114,7 +114,7 @@ This function takes heavy inspiration from the implementation in [Net25], which 
 based on the algorithm described in [GL79]. Whereas the [Net25] implementation accepts a
 graph object as input and leverages several pre-existing functions in the networkx library,
 we repurpose the logic to work directly on adjacency matrices, avoiding reallocation
-overhead and an unnecessary dependency on the *Graphs.jl* package.
+overhead and an unnecessary dependency on the Graphs.jl package.
 
 # References
 - [GL79](@cite): A. George and J. W. Liu. *An Implementation of a Pseudoperipheral Node

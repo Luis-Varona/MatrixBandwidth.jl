@@ -10,19 +10,11 @@
 Exact, heuristic, and metaheuristic algorithms for matrix bandwidth minimization in Julia.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
-``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
-Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ
-superdiagonal and below the ``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least*
-``k`` if there exists any nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
+``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. The *matrix
+bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the
+bandwidth of ``PAPᵀ`` is minimized.
 
-The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such
-that the bandwidth of ``PAPᵀ`` is minimized; this is known to be NP-complete. Several
-heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still
-producing near-optimal orderings in practice, but exact methods (like
-Caprara–Salazar-González) are at least exponential in time complexity and thus are only
-feasible for relatively small matrices.
-
-The following algorithms are currently supported:
+The following matrix bandwidth minimization algorithms are currently available:
 - *Exact*
     - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
     - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
@@ -34,8 +26,11 @@ The following algorithms are currently supported:
     - Cuthill–McKee ([`CuthillMcKee`](@ref))
     - Reverse Cuthill–McKee ([`ReverseCuthillMcKee`](@ref))
 
-(Several metaheuristic algorithms are currently also under development and will be added in
-a future release.)
+Exact minimization algorithms always guarantee optimal orderings to minimize bandwidth,
+while heuristic minimization algorithms produce near-optimal solutions more quickly.
+Metaheuristic minimization algorithms employ iterative search frameworks to find better
+solutions than heuristic methods (albeit more slowly); no such algorithms are already
+implemented, but several (e.g., simulated annealing) are currently under development.
 
 This submodule is part of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.

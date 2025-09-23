@@ -10,18 +10,12 @@
 Algorithms for matrix bandwidth recognition in Julia.
 
 The *bandwidth* of an ``n×n`` matrix ``A`` is the minimum non-negative integer
-``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``.
-Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k``ᵗʰ
-superdiagonal and below the ``k``ᵗʰ subdiagonal are zero, and ``A`` has bandwidth *at least*
-``k`` if there exists any nonzero entry in the ``k``ᵗʰ superdiagonal or subdiagonal.
+``k ∈ \\{0, 1, …, n - 1\\}`` such that ``A[i, j] = 0`` whenever ``|i - j| > k``. The *matrix
+bandwidth recognition problem* entails determining whether there exists a permutation matrix
+``P`` such that the bandwidth of ``PAPᵀ`` is at most some fixed non-negative integer (an
+optimal permutation that fully minimizes the bandwidth of ``A`` is not required).
 
-The *matrix bandwidth recognition problem* entails determining whether there exists a
-permutation matrix ``P`` such that the bandwidth of ``PAPᵀ`` is at most some fixed
-non-negative integer ``k ∈ ℕ``—an optimal permutation that fully minimizes the bandwidth of
-``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in
-``O(nᵏ)`` time.
-
-The following algorithms are currently supported:
+The following matrix bandwidth recognition algorithms are currently available:
 - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
 - Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))

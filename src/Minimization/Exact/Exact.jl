@@ -16,7 +16,7 @@ polynomial-time heuristic approaches (e.g., Gibbs–Poole–Stockmeyer). Such me
 therefore, are not feasible for large matrices, but they remain useful when precise
 solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
 
-The following exact algorithms are currently supported:
+The following exact matrix bandwidth minimization algorithms are currently available:
 - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
 - Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))

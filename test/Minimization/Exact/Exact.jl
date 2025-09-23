@@ -7,7 +7,7 @@
 """
     TestExact
 
-Test suite for the `Minimization.Exact` submodule of the *MatrixBandwidth.jl* package.
+Test suite for the `Minimization.Exact` submodule of the MatrixBandwidth.jl package.
 """
 module TestExact
 
