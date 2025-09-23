@@ -18,7 +18,7 @@ iterative search frameworks (e.g., stochastic techniques) to survey the global s
 and escape local minima; instead, they rely on straightforward deterministic procedures to
 find good solutions in a single pass.
 
-The following heuristic algorithms are currently supported:
+The following heuristic matrix bandwidth minimization algorithms are currently available:
 - Gibbs–Poole–Stockmeyer ([`GibbsPooleStockmeyer`](@ref))
 - Cuthill–McKee ([`CuthillMcKee`](@ref))
 - Reverse Cuthill–McKee ([`ReverseCuthillMcKee`](@ref))

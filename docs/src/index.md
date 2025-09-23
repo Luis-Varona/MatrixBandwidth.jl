@@ -45,15 +45,50 @@ CurrentModule = MatrixBandwidth
 
 ## Overview
 
-*MatrixBandwidth.jl* offers fast algorithms for matrix bandwidth minimization and recognition, written in Julia. Reordering the rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering and scientific computing. It is a common preprocessing step used to improve performance when solving linear systems, approximating partial differential equations, optimizing circuit layout, and more.
+MatrixBandwidth.jl offers fast algorithms for matrix bandwidth minimization and recognition. The *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative integer ``k \in \{0, 1, \ldots, n - 1\}`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Reordering the rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering and scientific computing: it can improve performance when solving linear systems, approximating partial differential equations, optimizing circuit layout, and more. There are two variants of this problem: *minimization*, which involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized, and *recognition*, which entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is less than or equal to some fixed non-negative integer (an optimal permutation that fully minimizes the bandwidth of ``A`` is not required).
 
-Recall that the *bandwidth* of an ``n \times n`` matrix ``A`` is the minimum non-negative integer ``k \in \{0, 1, \ldots, n - 1\}`` such that ``A_{i,j} = 0`` whenever ``|i - j| > k``. Equivalently, ``A`` has bandwidth *at most* ``k`` if all entries above the ``k^\text{th}`` superdiagonal and below the ``k^\text{th}`` subdiagonal are zero, and ``A`` has bandwidth *at least* ``k`` if there exists any nonzero entry in the ``k^\text{th}`` superdiagonal or subdiagonal.
+Many matrix bandwidth reduction algorithms exist in the literature, but implementations in the open-source ecosystem are scarce, with those that do exist primarily tackling older, less efficient algorithms. The [Boost](https://www.boost.org/) libraries in C++, the [NetworkX](https://networkx.org/) library in Python, and the MATLAB standard library all only implement the reverse Cuthill–McKee algorithm from 1971. This gap in the ecosystem not only makes it difficult for theoretical researchers to benchmark and compare new proposed algorithms but also precludes the application of the most performant modern algorithms in real-life industry settings. MatrixBandwidth.jl aims to bridge this gap by presenting a unified interface for matrix bandwidth reduction algorithms in Julia, designed with extensibility to further methods in mind.
 
-The *matrix bandwidth minimization problem* involves finding a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is minimized; this is known to be NP-complete. Several heuristic algorithms (such as Gibbs–Poole–Stockmeyer) run in polynomial time while still producing near-optimal orderings in practice, but exact methods (like Caprara–Salazar-González) are at least exponential in time complexity and thus are only feasible for relatively small matrices.
+## Algorithms
 
-On the other hand, the *matrix bandwidth recognition problem* entails determining whether there exists a permutation matrix ``P`` such that the bandwidth of ``PAP^\mathsf{T}`` is at most some fixed non-negative integer ``k \in \mathbb{N}``—an optimal permutation that fully minimizes the bandwidth of ``A`` is not required. Unlike the NP-hard minimization problem, this is decidable in ``O(n^k)`` time.
+The following algorithms are currently supported:
 
-Many algorithms for both problems exist in the literature, but implementations in the open-source ecosystem are scarce, with those that do exist primarily tackling older, less efficient algorithms. This not only makes it difficult for theoretical researchers to benchmark and compare new approaches but also precludes the application of more performant alternatives in real-life industry settings. This package aims to bridge this gap, presenting a unified interface for matrix bandwidth reduction algorithms in Julia. In addition to providing optimized implementations of many existing approaches, *MatrixBandwidth.jl* also allows for easy extensibility should researchers wish to test new ideas, filling a crucial niche in the current research landscape.
+- **Minimization**
+  - *Exact*
+    - Del Corso–Manzini
+    - Del Corso–Manzini with perimeter search
+    - Caprara–Salazar-González
+    - Saxe–Gurari–Sudborough
+    - Brute-force search
+  - *Heuristic*
+    - Gibbs–Poole–Stockmeyer
+    - Cuthill–McKee
+    - Reverse Cuthill–McKee
+- **Recognition**
+  - Del Corso–Manzini
+  - Del Corso–Manzini with perimeter search
+  - Caprara–Salazar-González
+  - Saxe–Gurari–Sudborough
+  - Brute-force search
+
+Recognition algorithms determine whether any row-and-column permutation of a matrix induces bandwidth less than or equal to some fixed integer. Exact minimization algorithms always guarantee optimal orderings to minimize bandwidth, while heuristic minimization algorithms produce near-optimal solutions more quickly. Metaheuristic minimization algorithms employ iterative search frameworks to find better solutions than heuristic methods (albeit more slowly); no such algorithms are already implemented, but several are currently under development:
+
+- Greedy randomized adaptive search procedure (GRASP)
+- Particle swarm optimization with hill climbing (PSO-HC)
+- Simulated annealing
+- Genetic algorithm
+- Ant colony optimization
+- Tabu search
+
+An index of all available algorithms by submodule (not including the unfinished metaheuristic algorithms) may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
+
+```julia-repl
+julia> MatrixBandwidth.ALGORITHMS
+Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
+[...]
+```
+
+To extend the interface with a new matrix bandwidth minimization algorithm, define a new concrete subtype of `AbstractSolver` (or of one of its abstract subtypes like `MetaheuristicSolver`) then implement a corresponding `Minimization._minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Similarly, to implement a new bandwidth recognition algorithm, define a new concrete subtype of `AbstractDecider` then implement a corresponding `Recognition._has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)` method. Do *not* attempt to directly implement new `minimize_bandwidth` or `has_bandwidth_k_ordering` methods, as these functions contain common preprocessing logic independent of the specific algorithm used.
 
 ## Installation
 
@@ -65,7 +100,7 @@ pkg> add MatrixBandwidth
 
 ## Basic use
 
-*MatrixBandwidth.jl* offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively—the algorithm itself is specified as an argument. For example, to minimize the bandwidth of a random matrix with the reverse Cuthill–McKee algorithm, you can run the following code:
+MatrixBandwidth.jl offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively—the algorithm itself is specified as an argument. For example, to minimize the bandwidth of a random matrix with the reverse Cuthill–McKee algorithm, you can run the following code:
 
 ```julia-repl
 julia> using Random, SparseArrays
@@ -211,7 +246,7 @@ julia> A[res_recognize_default.ordering, res_recognize_default.ordering]
 ⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
 ```
 
-Complementing our various bandwidth minimization and recognition algorithms, *MatrixBandwidth.jl* exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix:
+Complementing our various bandwidth minimization and recognition algorithms, MatrixBandwidth.jl exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix:
 
 ```julia-repl
 julia> using Random, SparseArrays
@@ -243,47 +278,6 @@ julia> profile(A) # Profile prior to any reordering of rows and columns
 
 (Closely related to bandwidth, the *column profile* of a matrix is the sum of the distances from each diagonal entry to the farthest nonzero entry in that column, whereas the *row profile* is the sum of the distances from each diagonal entry to the farthest nonzero entry in that row. `profile(A)` computes the column profile of `A` by default, but it can also be used to compute the row profile.)
 
-## Algorithms
-
-The following algorithms are currently supported:
-
-- **Minimization**
-  - *Exact*
-    - Del Corso–Manzini
-    - Del Corso–Manzini with perimeter search
-    - Caprara–Salazar-González
-    - Saxe–Gurari–Sudborough
-    - Brute-force search
-  - *Heuristic*
-    - Gibbs–Poole–Stockmeyer
-    - Cuthill–McKee
-    - Reverse Cuthill–McKee
-- **Recognition**
-  - Del Corso–Manzini
-  - Del Corso–Manzini with perimeter search
-  - Caprara–Salazar-González
-  - Saxe–Gurari–Sudborough
-  - Brute-force search
-
-The following metaheuristic minimization algorithms are currently also under development and will be added in a future release:
-
-- Greedy randomized adaptive search procedure (GRASP)
-- Particle swarm optimization with hill climbing (PSO-HC)
-- Simulated annealing
-- Genetic algorithm
-- Ant colony optimization
-- Tabu search
-
-An index of all available algorithms by submodule (not including the unfinished metaheuristic algorithms) may also be accessed via the `MatrixBandwidth.ALGORITHMS` constant; simply run the following command in the Julia REPL:
-
-```julia-repl
-julia> MatrixBandwidth.ALGORITHMS
-Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
-[...]
-```
-
-To extend the interface with a new matrix bandwidth minimization algorithm, define a new concrete subtype of `AbstractSolver` (or of one of its abstract subtypes like `MetaheuristicSolver`) then implement a corresponding `Minimization._minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Similarly, to implement a new bandwidth recognition algorithm, define a new concrete subtype of `AbstractDecider` then implement a corresponding `Recognition._has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)` method. Do *not* attempt to directly implement new `minimize_bandwidth` or `has_bandwidth_k_ordering` methods, as these functions contain common preprocessing logic independent of the specific algorithm used.
-
 ## Documentation
 
 The full documentation is available at [GitHub Pages](https://luis-varona.github.io/MatrixBandwidth.jl/). Documentation for methods and types is also available via the Julia REPL—for instance, to learn more about the `minimize_bandwidth` function, enter help mode by typing `?`, then run the following command:
@@ -297,10 +291,7 @@ search: minimize_bandwidth bandwidth MatrixBandwidth
   Minimize the bandwidth of A using the algorithm defined by solver.
 
   The bandwidth of an n×n matrix A is the minimum non-negative integer k ∈
-  \{0, 1, …, n - 1\} such that A[i, j] = 0 whenever |i - j| > k. Equivalently,
-  A has bandwidth at most k if all entries above the kᵗʰ superdiagonal and
-  below the kᵗʰ subdiagonal are zero, and A has bandwidth at least k if there
-  exists any nonzero entry in the kᵗʰ superdiagonal or subdiagonal.
+  \{0, 1, …, n - 1\} such that A[i, j] = 0 whenever |i - j| > k.
 
   This function computes a (near-)optimal ordering π of the rows and columns
   of A so that the bandwidth of PAPᵀ is minimized, where P is the permutation
@@ -318,13 +309,15 @@ search: minimize_bandwidth bandwidth MatrixBandwidth
 
 ## Citing
 
-I encourage you to cite this work if you have found any of the algorithms herein useful for your research. Starring the *MatrixBandwidth.jl* repository on GitHub is also appreciated.
+I encourage you to cite this work if you have found any of the algorithms herein useful for your research. Starring the MatrixBandwidth.jl repository on GitHub is also appreciated.
 
 The latest citation information may be found in the [CITATION.bib](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CITATION.bib) file within the repository.
 
 ## Project status
 
-The latest stable release of *MatrixBandwidth.jl* is v0.2.0. Although several metaheuristic algorithms are still under development, the rest of the package is fully functional and covered by unit tests.
+The latest stable release of MatrixBandwidth.jl is v0.2.0. Although several metaheuristic algorithms are still under development, the rest of the package is fully functional and covered by unit tests.
+
+Currently, MatrixBandwidth.jl's core functions generically accept any input of the type `AbstractMatrix{<:Number}`, not behaving any differently when given sparsely stored matrices (e.g., from the [SparseArrays.jl](https://github.com/JuliaSparse/SparseArrays.jl) standard library package). Capabilities for directly handling graph inputs (aiming to reduce the matrix bandwidth of a graph's adjacency) are also not available. Given that bandwidth reduction is often applied to sparse matrices and graphs, these limitations will be addressed in a future release of the package.
 
 ## Index
 

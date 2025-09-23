@@ -17,8 +17,8 @@ Although metaheuristic approaches are often slower than heuristic ones (but cert
 faster than exact ones), they shine in complex cases where the latter may get trapped in
 poor-quality local minima.
 
-No metaheuristic algorithms are currently supported, but several are under development and
-will be added in a future release.
+No metaheuristic matrix bandwidth minimization algorithms are already implemented, but
+several (e.g., simulated annealing) are currently under development.
 
 This submodule is part of the `MatrixBandwidth.Minimization` submodule of the
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) package.

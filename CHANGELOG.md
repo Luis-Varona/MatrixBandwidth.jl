@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Edited `README.md` to better align with a pending submission to the *Journal of Open Source Software* (#161).
+- Reworded/clarified various minor things in several package-wide docstrings (#161).
+
 ## [0.2.0] - 2025-09-20
 
 ### Added
