@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Added the MatrixBandwidth.jl logo by Rebekka (#162).
+- Added the MatrixBandwidth.jl logo by Rebekka (#162, #163).
 
 ### Changed
 
