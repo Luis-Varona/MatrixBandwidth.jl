@@ -7,7 +7,7 @@
   <tr>
     <td>Metadata</td>
     <td>
-      <img src="https://img.shields.io/badge/version-v0.2.0-pink.svg" alt="Version">
+      <img src="https://img.shields.io/badge/version-v0.2.1-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
     </td>
@@ -312,6 +312,6 @@ The latest citation information may be found in the [CITATION.bib](https://raw.g
 
 ## Project status
 
-The latest stable release of MatrixBandwidth.jl is v0.2.0. Although several metaheuristic algorithms are still under development, the rest of the package is fully functional and covered by unit tests.
+The latest stable release of MatrixBandwidth.jl is v0.2.1. Although several metaheuristic algorithms are still under development, the rest of the package is fully functional and covered by unit tests.
 
 Currently, MatrixBandwidth.jl's core functions generically accept any input of the type `AbstractMatrix{<:Number}`, not behaving any differently when given sparsely stored matrices (e.g., from the [SparseArrays.jl](https://github.com/JuliaSparse/SparseArrays.jl) standard library package). Capabilities for directly handling graph inputs (aiming to reduce the matrix bandwidth of a graph's adjacency) are also not available. Given that bandwidth reduction is often applied to sparse matrices and graphs, these limitations will be addressed in a future release of the package.
