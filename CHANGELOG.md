@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Added the MatrixBandwidth.jl logo by Rebekka (#162).
+
 ### Changed
 
 - Edited `README.md` to better align with a pending submission to the *Journal of Open Source Software* (#161).

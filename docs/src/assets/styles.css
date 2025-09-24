@@ -16,6 +16,16 @@ html.theme--catppuccin-latte {
   }
 }
 
+figure img {
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+figure figcaption {
+  font-size: 0.75em;
+}
+
 table {
   width: auto;
   border-collapse: collapse;

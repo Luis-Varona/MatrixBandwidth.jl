@@ -5,6 +5,13 @@ CurrentModule = MatrixBandwidth
 # MatrixBandwidth.jl
 
 ```@raw html
+<figure style="text-align: left; margin-left: 0;">
+  <img src="https://github.com/Luis-Varona/MatrixBandwidth.jl/raw/main/docs/src/assets/logo.png" alt="MatrixBandwidth.jl logo by Rebekka Jonasson">
+  <figcaption>
+    MatrixBandwidth.jl logo by <a href="https://github.com/RebekkaJonasson">Rebekka Jonasson</a>
+  </figcaption>
+</figure>
+
 <table>
   <tr>
     <td>Metadata</td>
