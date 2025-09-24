@@ -1,3 +1,6 @@
+<img src="https://github.com/Luis-Varona/MatrixBandwidth.jl/raw/main/docs/src/assets/logo.png" alt="MatrixBandwidth.jl logo by Rebekka Jonasson" height="200"/>
+<sup>MatrixBandwidth.jl logo by <a href="https://github.com/RebekkaJonasson">Rebekka Jonasson</a></sup>
+
 # MatrixBandwidth.jl
 
 <table>
