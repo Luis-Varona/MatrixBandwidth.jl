@@ -66,8 +66,8 @@ some fixed integer (\autoref{fig:A_rec}) and actually minimize the bandwidth of 
   \end{minipage}
 \end{figure}
 
-(Note that since Gibbs&ndash;Poole&ndash;Stockmeyer is a heuristic algorithm, $5$ may not be the
-*true* minimum bandwidth of $A$, but it is likely close.)
+Note that since Gibbs&ndash;Poole&ndash;Stockmeyer is a heuristic algorithm, $5$ may not be the
+*true* minimum bandwidth of $A$, but it is likely close.
 
 ## Algorithms
 
@@ -98,6 +98,10 @@ near-optimal solutions more quickly. Metaheuristic minimization algorithms emplo
 frameworks to find better solutions than heuristic methods (albeit more slowly); no such algorithms
 are already implemented, but several (e.g., simulated annealing) are currently under development.
 
+Thus far, the Caprara&ndash;Salazar-González algorithms are the only ones implemented that require
+integer linear programming; it is for these that the [JuMP.jl](https://github.com/jump-dev/JuMP.jl)
+package [@LDD+23] is included as a dependency.
+
 # Statement of need
 
 Many matrix bandwidth reduction algorithms exist in the literature, but implementations in the
@@ -105,9 +109,10 @@ open-source ecosystem are scarce, with those that do exist primarily tackling ol
 algorithms. The [Boost](https://www.boost.org/) libraries in C++ [@LLS+01], the
 [NetworkX](https://networkx.org/) library in Python [@Net25], and the MATLAB standard library
 [@MAT25] all only implement the aforementioned reverse Cuthill&ndash;McKee algorithm from 1971.
-In Julia, the only other relevant package identified by the author is
-[SymRCM.jl](https://github.com/PetrKryslUCSD/SymRCM.jl) [@Krys20], which also only implements
-reverse Cuthill&ndash;McKee.
+In Julia, the only other relevant packages identified by the author are
+[BandedMatrices.jl](https://github.com/JuliaLinearAlgebra/BandedMatrices.jl) [@Jul16] and
+[SymRCM.jl](https://github.com/PetrKryslUCSD/SymRCM.jl) [@Krys20], both of which also only implement
+reverse Cuthill&ndash;McKee as their sole bandwidth reduction algorithm.
 
 Furthermore, not enough attention is given to recognition algorithms or exact minimization
 algorithms. Although more performant modern alternatives are often neglected, at least reverse
