@@ -10,6 +10,7 @@
       <img src="https://img.shields.io/badge/version-v0.2.1-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
+      <a href="https://joss.theoj.org/papers/9677739548a4f05ab398b427df1c78b9"><img src="https://joss.theoj.org/papers/9677739548a4f05ab398b427df1c78b9/status.svg" alt="JOSS: Under Review"></a>
     </td>
   </tr>
   <tr>
