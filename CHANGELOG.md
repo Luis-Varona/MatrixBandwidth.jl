@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Added a *Journal of Open Source Software* (JOSS) badge to `README.md` and `docs/src/index.md` indicating that the package is currently under review by JOSS (#174).
+
 ## [0.2.1] - 2025-09-24
 
 ### Added
