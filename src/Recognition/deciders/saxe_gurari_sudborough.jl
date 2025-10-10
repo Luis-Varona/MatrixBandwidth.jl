@@ -43,34 +43,15 @@ for larger ``k``, given that their aggressive pruning strategies keep their effe
 space very small in practice.
 
 # Examples
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(274);
-
-julia> (n, p) = (20, 0.08);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> (k_false, k_true) = (3, 5);
-
-julia> has_bandwidth_k_ordering(A, k_false, Recognition.SaxeGurariSudborough())
-Results of Bandwidth Recognition Algorithm
- * Algorithm: Saxe–Gurari–Sudborough
- * Bandwidth Threshold k: 3
- * Has Bandwidth ≤ k Ordering: false
- * Original Bandwidth: 12
- * Matrix Size: 20×20
-
-julia> has_bandwidth_k_ordering(A, k_true, Recognition.SaxeGurariSudborough())
-Results of Bandwidth Recognition Algorithm
- * Algorithm: Saxe–Gurari–Sudborough
- * Bandwidth Threshold k: 5
- * Has Bandwidth ≤ k Ordering: true
- * Original Bandwidth: 12
- * Matrix Size: 20×20
+```@repl
+using Random, SparseArrays
+Random.seed!(274);
+(n, p) = (20, 0.08);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+(k_false, k_true) = (3, 5);
+has_bandwidth_k_ordering(A, k_false, Recognition.SaxeGurariSudborough())
+has_bandwidth_k_ordering(A, k_true, Recognition.SaxeGurariSudborough())
 ```
 
 # Notes
