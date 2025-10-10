@@ -27,42 +27,15 @@ Given an ``n×n`` input matrix, this relatively simple algorithm runs in ``O(n²
 # Examples
 `bandwidth` correctly identifies the bandwidth of a pentadiagonal matrix as ``2`` and does
 not attempt to find a minimizing permutation upon shuffling of its rows and columns:
-```jldoctest
-julia> using Random
-
-julia> Random.seed!(242622);
-
-julia> (n, k) = (8, 2);
-
-julia> perm = randperm(n);
-
-julia> A = (!iszero).(MatrixBandwidth.random_banded_matrix(n, k))
-8×8 BitMatrix:
- 1  0  0  0  0  0  0  0
- 0  1  0  1  0  0  0  0
- 0  0  0  1  1  0  0  0
- 0  1  1  1  0  1  0  0
- 0  0  1  0  0  0  0  0
- 0  0  0  1  0  0  0  0
- 0  0  0  0  0  0  0  0
- 0  0  0  0  0  0  0  0
-
-julia> bandwidth(A)
-2
-
-julia> A_shuffled = A[perm, perm]
-8×8 BitMatrix:
- 0  0  0  0  0  0  1  0
- 0  0  0  0  0  0  0  0
- 0  0  0  1  0  0  0  0
- 0  0  1  0  0  0  1  0
- 0  0  0  0  1  0  0  0
- 0  0  0  0  0  1  1  0
- 1  0  0  1  0  1  1  0
- 0  0  0  0  0  0  0  0
-
-julia> bandwidth(A_shuffled)
-6
+```@repl
+using Random
+Random.seed!(242622);
+(n, k) = (8, 2);
+perm = randperm(n);
+A = (!iszero).(MatrixBandwidth.random_banded_matrix(n, k))
+bandwidth(A)
+A_shuffled = A[perm, perm]
+bandwidth(A_shuffled)
 ```
 
 # Notes
@@ -126,50 +99,23 @@ Given an ``n×n`` input matrix, this relatively simple algorithm runs in ``O(n²
 
 # Examples
 `profile` computes the column profile of a matrix by default:
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(2287);
-
-julia> (n, p) = (25, 0.05);
-
-julia> A = sprand(n, n, p)
-25×25 SparseMatrixCSC{Float64, Int64} with 29 stored entries:
-⎡⠀⠀⠀⠀⠀⠀⠐⠀⠒⠀⡀⠀⠀⎤
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠐⠂⎥
-⎢⠀⠀⠀⢀⠌⠀⠀⠀⢀⠈⠀⠀⠀⎥
-⎢⠠⢄⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠂⡀⠀⠀⠌⠀⠈⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠢⡀⢄⡈⠀⠀⠀⎥
-⎣⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
-
-julia> profile(A)
+```@repl
+using Random, SparseArrays
+Random.seed!(2287);
+(n, p) = (25, 0.05);
+A = sprand(n, n, p)
+profile(A)
 211
 ```
 
 The dimension (`:row` or `:col`) can also be explicitly specified:
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(3647);
-
-julia> (n, p) = (25, 0.05);
-
-julia> A = sprand(n, n, p)
-25×25 SparseMatrixCSC{Float64, Int64} with 31 stored entries:
-⎡⠄⠀⠀⠀⠀⠀⠀⠘⠀⠀⠀⠁⠀⎤
-⎢⠄⢀⠀⠀⠁⠀⠀⠀⠀⢀⠀⠀⠀⎥
-⎢⠀⢀⡂⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⎥
-⎢⠀⠀⠀⠀⠀⡀⠂⠀⠀⠀⠀⠀⠀⎥
-⎢⠁⠀⠁⠀⠁⠀⠀⠁⠄⢀⠈⠀⠀⎥
-⎢⠂⠐⠐⠐⠠⠀⠄⠀⠀⠀⠠⣀⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
-
-julia> profile(A, dim=:row)
-147
-
-julia> profile(A, dim=:col)
-175
+```@repl
+using Random, SparseArrays
+Random.seed!(3647);
+(n, p) = (25, 0.05);
+A = sprand(n, n, p)
+profile(A, dim=:row)
+profile(A, dim=:col)
 ```
 
 # References
@@ -244,27 +190,14 @@ in ``O(n²)`` time).
     cases but not universally so.)
 
 # Examples
-```jldoctest
-julia> using Random, SparseArrays, Combinatorics
-
-julia> Random.seed!(21);
-
-julia> (n, p) = (9, 0.4);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> minimize_bandwidth(A, Minimization.BruteForceSearch())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Brute-force search
- * Approach: exact
- * Minimum Bandwidth: 5
- * Original Bandwidth: 8
- * Matrix Size: 9×9
-
-julia> bandwidth_lower_bound(A) # Always less than or equal to the true minimum bandwidth
-4
+```@repl
+using Random, SparseArrays, Combinatorics
+Random.seed!(21);
+(n, p) = (9, 0.4);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+minimize_bandwidth(A, Minimization.BruteForceSearch())
+bandwidth_lower_bound(A) # Always less than or equal to the true minimum bandwidth
 ```
 
 # Notes
