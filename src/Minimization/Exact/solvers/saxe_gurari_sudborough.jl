@@ -56,32 +56,14 @@ aggressive pruning strategies keep their effective search space very small in pr
 # Examples
 We verify the optimality of the ordering found by Saxe–Gurari–Sudborough for a random
 ``9×9`` matrix via a brute-force search over all possible permutations up to reversal:
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(52452);
-
-julia> (n, p) = (9, 0.5);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Brute-force search
- * Approach: exact
- * Minimum Bandwidth: 5
- * Original Bandwidth: 8
- * Matrix Size: 9×9
-
-julia> res_sgs = minimize_bandwidth(A, Minimization.SaxeGurariSudborough())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Saxe–Gurari–Sudborough
- * Approach: exact
- * Minimum Bandwidth: 5
- * Original Bandwidth: 8
- * Matrix Size: 9×9
+```@repl
+using Random, SparseArrays
+Random.seed!(52452);
+(n, p) = (9, 0.5);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
+res_sgs = minimize_bandwidth(A, Minimization.SaxeGurariSudborough())
 ```
 
 We now generate (and shuffle) a random ``25×25`` matrix with minimum bandwidth ``5`` using
@@ -91,32 +73,16 @@ cases, `random_banded_matrix(n, k)` generates matrices with minimum bandwidth `<
 appears to be one such case. Although we do not explicitly verify exact optimality—which
 *is* guaranteed by the original paper [GS84]—here via brute-force search, this example
 demonstrates that Saxe–Gurari–Sudborough at the very least finds a quite good ordering.)
-```jldoctest
-julia> using Random
-
-julia> Random.seed!(937497);
-
-julia> (n, k, p) = (25, 5, 0.25);
-
-julia> A = MatrixBandwidth.random_banded_matrix(n, k; p=p);
-
-julia> perm = randperm(n);
-
-julia> A_shuffled = A[perm, perm];
-
-julia> bandwidth(A)
-5
-
-julia> bandwidth(A_shuffled) # Much larger after shuffling
-19
-
-julia> minimize_bandwidth(A_shuffled, Minimization.SaxeGurariSudborough())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Saxe–Gurari–Sudborough
- * Approach: exact
- * Minimum Bandwidth: 4
- * Original Bandwidth: 19
- * Matrix Size: 25×25
+```@repl
+using Random
+Random.seed!(937497);
+(n, k, p) = (25, 5, 0.25);
+A = MatrixBandwidth.random_banded_matrix(n, k; p=p);
+perm = randperm(n);
+A_shuffled = A[perm, perm];
+bandwidth(A)
+bandwidth(A_shuffled) # Much larger after shuffling
+minimize_bandwidth(A_shuffled, Minimization.SaxeGurariSudborough())
 ```
 
 # Notes
