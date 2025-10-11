@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Added a *Journal of Open Source Software* (JOSS) badge to `README.md` and `docs/src/index.md` indicating that the package is currently under review by JOSS (#174).
 
+### Changed
+
+- Made examples in the docstrings runnable (thus avoiding hardcoding output) by switching from `jldoctest` to `@repl` (#176).
+
 ## [0.2.1] - 2025-09-24
 
 ### Added
