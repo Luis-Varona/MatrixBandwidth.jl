@@ -40,151 +40,41 @@ than heuristic methods, but even more slowly).
 Certainly, exact solvers will always produce the same optimal bandwidth (but likely
 different orderings):
 
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(38);
-
-julia> (n, p) = (20, 0.05);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A .+ A' # Ensure structural symmetry
-20×20 SparseMatrixCSC{Float64, Int64} with 36 stored entries:
-⎡⠀⠀⠀⠀⠀⣎⠁⠈⠀⠂⎤
-⎢⠀⠀⠀⠀⡀⠐⠀⠀⠀⠠⎥
-⎢⡠⢤⢀⠈⠠⠂⠀⠀⠔⠀⎥
-⎢⡁⠀⠀⠀⠀⠀⠀⠀⡀⠐⎥
-⎣⠠⠀⠀⡀⠐⠁⢀⠈⢐⠔⎦
-
-julia> res_dcm = minimize_bandwidth(A, Minimization.DelCorsoManzini())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Del Corso–Manzini
- * Approach: exact
- * Minimum Bandwidth: 3
- * Original Bandwidth: 17
- * Matrix Size: 20×20
-
-julia> A[res_dcm.ordering, res_dcm.ordering]
-20×20 SparseMatrixCSC{Float64, Int64} with 36 stored entries:
-⎡⠠⠂⠤⡀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⠣⡁⠈⠀⡀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠠⡤⠋⠤⡀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠣⡀⡨⠢⡀⎥
-⎣⠀⠀⠀⠀⠀⠀⠈⠢⠁⠀⎦
-
-julia> res_sgs = minimize_bandwidth(A, Minimization.SaxeGurariSudborough())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Saxe–Gurari–Sudborough
- * Approach: exact
- * Minimum Bandwidth: 3
- * Original Bandwidth: 17
- * Matrix Size: 20×20
-
-julia> A[res_sgs.ordering, res_sgs.ordering]
-20×20 SparseMatrixCSC{Float64, Int64} with 36 stored entries:
-⎡⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⠀⠔⣡⠢⡀⠀⠀⠀⠀⎥
-⎢⠀⠀⠈⠢⡀⡨⣀⡀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠸⡀⠈⢂⡀⎥
-⎣⠀⠀⠀⠀⠀⠀⠈⠰⠄⡡⎦
+```@repl
+using Random, SparseArrays
+Random.seed!(38);
+(n, p) = (20, 0.05);
+A = sprand(n, n, p);
+A = A .+ A' # Ensure structural symmetry
+res_dcm = minimize_bandwidth(A, Minimization.DelCorsoManzini())
+A[res_dcm.ordering, res_dcm.ordering]
+res_sgs = minimize_bandwidth(A, Minimization.SaxeGurariSudborough())
+A[res_sgs.ordering, res_sgs.ordering]
 ```
 
 However, the answers of (meta)heuristic solvers may differ from each other:
 
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(405);
-
-julia> (n, p) = (400, 0.002);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A .+ A' # Ensure structural symmetry;
-
-julia> minimize_bandwidth(A, Minimization.GibbsPooleStockmeyer())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Gibbs–Poole–Stockmeyer
- * Approach: heuristic
- * Minimum Bandwidth: 31
- * Original Bandwidth: 380
- * Matrix Size: 400×400
-
-julia> minimize_bandwidth(A, Minimization.ReverseCuthillMcKee())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Reverse Cuthill–McKee
- * Approach: heuristic
- * Minimum Bandwidth: 37
- * Original Bandwidth: 380
- * Matrix Size: 400×400
+```@repl
+using Random, SparseArrays
+Random.seed!(405);
+(n, p) = (400, 0.002);
+A = sprand(n, n, p);
+A = A .+ A' # Ensure structural symmetry;
+minimize_bandwidth(A, Minimization.GibbsPooleStockmeyer())
+minimize_bandwidth(A, Minimization.ReverseCuthillMcKee())
 ```
 
 If no solver is specified, then the heuristic Gibbs–Poole–Stockmeyer algorithm is used by
 default:
 
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(80);
-
-julia> (n, p) = (500, 0.001);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A .+ A' # Ensure structural symmetry
-500×500 SparseMatrixCSC{Float64, Int64} with 496 stored entries:
-⎡⠀⠀⠁⠐⠀⠀⠀⠄⠠⢐⠄⠀⡈⠀⠀⡆⠠⠑⠀⠰⠀⠀⠀⠐⠀⠄⠀⠀⡠⠀⠀⠀⠆⠐⠀⠄⢠⡈⠈⠀⎤
-⎢⢁⠀⠄⠁⠠⠊⠀⠀⠂⠀⡀⠂⠀⢀⠀⠀⠀⠈⠠⠠⠀⠠⠠⠀⠀⡀⠀⠁⡀⠀⡀⠐⠀⠄⠀⠀⠄⠂⡈⠠⎥
-⎢⠀⠀⡠⠂⠅⠁⠀⠀⠀⠀⠐⡁⠀⡀⠈⢈⠀⠐⠀⠀⠀⠀⠃⢀⠀⠀⠀⠀⠀⠀⠐⠀⠤⠁⠀⠁⠀⠀⠀⡀⎥
-⎢⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠀⠀⠠⠀⠂⠁⠀⠀⡐⠔⠂⠂⠀⠠⠀⠐⠀⠀⠄⠀⠄⠀⠀⡀⠀⢀⠁⠀⎥
-⎢⢀⢂⠈⠀⠀⠀⠀⠀⠎⠁⠄⠂⠀⠁⣀⠁⠈⠠⠀⠀⠂⠄⢀⠄⠀⠠⠀⠀⠉⠈⠀⠀⠀⠀⠠⠀⠀⠀⠀⡀⎥
-⎢⠀⠁⠠⠈⠔⠠⠠⠀⠠⠁⠊⠄⠀⢀⠀⠀⠠⠀⠠⡌⠀⠈⠀⠀⠀⠠⠈⠀⠀⠀⠂⠀⠀⠀⠀⠡⠀⠠⠠⢂⎥
-⎢⠂⠈⠀⢀⠀⠠⠀⠀⠄⠀⠀⢀⡐⠈⠀⠀⠀⠀⠀⠈⠐⠠⠀⠀⠀⠀⠀⡠⠑⠀⠂⠀⠀⠀⡀⠀⡐⠀⠄⠁⎥
-⎢⠠⠤⠀⠀⡂⢀⠀⠂⠄⠘⠀⠀⠀⠀⠀⠀⠀⠑⠀⠂⡄⠀⠄⠀⡁⡐⠁⠠⠂⠀⠀⠐⠀⠀⠁⠀⠀⠁⠈⠀⎥
-⎢⢄⠂⡀⠀⢀⠀⠌⠀⠂⡀⠀⠂⠀⠀⢄⠀⠀⠀⠀⢀⠀⠀⢀⠄⡀⠂⠂⠀⠅⠀⠀⠀⠀⠁⠀⢀⠄⠀⠀⠀⎥
-⎢⢀⡀⠀⡂⠀⠀⠀⠀⠀⠀⡀⠦⡀⠀⠠⠀⠀⢀⠀⠀⠀⠀⠐⠀⠀⠀⠀⠀⠀⡐⢀⢀⠁⠔⠆⠀⠀⠀⢀⠅⎥
-⎢⠀⠀⠀⡀⠀⠀⢐⠌⠈⠄⡀⠀⠐⡀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠌⡀⠀⠀⠀⠀⠀⠀⠂⎥
-⎢⢀⠀⠀⠂⠉⢀⠨⠀⠀⠔⠀⠀⠀⠀⠀⠁⠀⠔⠐⠀⠀⠀⠀⡠⠠⠀⠰⠀⠠⠘⠀⠐⠀⡀⠁⠠⠀⡑⠀⠀⎥
-⎢⠀⠄⠀⠠⠀⠀⠀⡀⠀⡀⠀⡀⠀⠀⢁⠨⠠⠈⠀⠀⠀⠀⠀⠂⠀⠀⠁⠀⠁⠂⠄⠀⠠⠀⠀⠀⠀⠀⡀⠀⎥
-⎢⠀⠀⠄⠀⠀⠀⢀⠀⠀⠀⠂⠀⠀⡠⠁⡀⠈⠀⠀⠀⠀⠠⠐⠂⠁⠀⠀⠀⢁⠊⠠⠀⢀⠀⠀⠀⠰⠌⠀⠀⎥
-⎢⠀⠊⠀⠈⠀⠀⠀⠀⡃⠀⠀⠀⠑⠀⠈⠀⠁⠁⢀⠠⠀⠀⣀⠂⠡⠀⡡⠐⠀⠀⠀⠐⠂⠰⠀⠠⠀⠀⠂⠀⎥
-⎢⠀⠀⢀⠈⠐⠀⠀⠁⠀⠀⠈⠀⠈⠀⢀⠀⠀⠀⠀⢐⡀⠄⢀⠀⠀⠁⠀⠂⢀⠀⠤⠃⠀⠐⠀⠀⠀⠈⠀⠀⎥
-⎢⢈⠁⠀⠄⠄⠃⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⢁⠄⠀⠈⠀⠠⠀⠂⠀⠐⢈⡀⢀⠀⠄⠁⠀⠈⠀⠆⠀⠀⎥
-⎢⠀⠄⠀⠀⠄⠀⠀⠠⠀⠂⠄⡀⠀⠈⠁⠀⠀⢀⠈⠁⠀⠀⠁⡀⠀⠀⠀⠀⠀⡀⠀⠀⡀⠀⢠⠒⠈⠀⠀⠀⎥
-⎢⡀⠲⠠⠁⠀⠀⠀⢀⠀⠀⠀⡀⠐⠈⠄⠀⠀⠁⠀⠀⠀⠀⢄⠠⠀⠀⡐⠆⠀⠀⡀⠀⠠⠄⠂⠀⠤⠃⠀⠁⎥
-⎣⠂⠀⠂⡈⠀⠠⠁⠀⠀⠠⠠⢂⠄⠁⠂⠀⠀⠀⠄⠔⠠⠀⠀⠀⠀⠈⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠄⠀⠁⠀⎦
-
-julia> res = minimize_bandwidth(A)
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Gibbs–Poole–Stockmeyer
- * Approach: heuristic
- * Minimum Bandwidth: 6
- * Original Bandwidth: 487
- * Matrix Size: 500×500
-
-julia> A[res.ordering, res.ordering]
-500×500 SparseMatrixCSC{Float64, Int64} with 496 stored entries:
-⎡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠈⠑⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠊⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢆⡀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢆⡀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⎦
+```@repl
+using Random, SparseArrays
+Random.seed!(80);
+(n, p) = (500, 0.001);
+A = sprand(n, n, p);
+A = A .+ A' # Ensure structural symmetry
+res = minimize_bandwidth(A)
+A[res.ordering, res.ordering]
 ```
 
 # Notes

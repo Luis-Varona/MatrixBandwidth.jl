@@ -54,32 +54,14 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 # Examples
 We verify the optimality of the ordering found by Del Corso–Manzini for a random ``9×9``
 matrix via a brute-force search over all possible permutations up to reversal:
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(0117);
-
-julia> (n, p) = (9, 0.5);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Brute-force search
- * Approach: exact
- * Minimum Bandwidth: 5
- * Original Bandwidth: 8
- * Matrix Size: 9×9
-
-julia> res_dcm = minimize_bandwidth(A, Minimization.DelCorsoManzini())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Del Corso–Manzini
- * Approach: exact
- * Minimum Bandwidth: 5
- * Original Bandwidth: 8
- * Matrix Size: 9×9
+```@repl
+using Random, SparseArrays
+Random.seed!(0117);
+(n, p) = (9, 0.5);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
+res_dcm = minimize_bandwidth(A, Minimization.DelCorsoManzini())
 ```
 
 We now generate (and shuffle) a random ``40×40`` matrix with minimum bandwidth ``10`` using
@@ -89,32 +71,16 @@ cases, `random_banded_matrix(n, k)` *does* generate matrices with minimum bandwi
 Nevertheless, this example demonstrates that Del Corso–Manzini at the very least finds a
 quite good ordering, even though exact optimality—which *is* guaranteed by the original
 paper [DM99]—is not explicitly verified.)
-```jldoctest
-julia> using Random
-
-julia> Random.seed!(0201);
-
-julia> (n, k) = (40, 10);
-
-julia> A = MatrixBandwidth.random_banded_matrix(n, k);
-
-julia> perm = randperm(n);
-
-julia> A_shuffled = A[perm, perm];
-
-julia> bandwidth(A)
-10
-
-julia> bandwidth(A_shuffled) # Much larger after shuffling
-36
-
-julia> minimize_bandwidth(A_shuffled, Minimization.DelCorsoManzini())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Del Corso–Manzini
- * Approach: exact
- * Minimum Bandwidth: 10
- * Original Bandwidth: 36
- * Matrix Size: 40×40
+```@repl
+using Random
+Random.seed!(0201);
+(n, k) = (40, 10);
+A = MatrixBandwidth.random_banded_matrix(n, k);
+perm = randperm(n);
+A_shuffled = A[perm, perm];
+bandwidth(A)
+bandwidth(A_shuffled) # Much larger after shuffling
+minimize_bandwidth(A_shuffled, Minimization.DelCorsoManzini())
 ```
 
 # Notes
@@ -218,32 +184,14 @@ for a random ``9×9`` matrix via a brute-force search over all possible permutat
 reversal. The depth parameter is not explicitly set; instead, some near-optimal value is
 automatically computed upon the first
 [`MatrixBandwidth.Minimization.minimize_bandwidth`](@ref) function call.
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(548836);
-
-julia> (n, p) = (9, 0.2);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Brute-force search
- * Approach: exact
- * Minimum Bandwidth: 3
- * Original Bandwidth: 8
- * Matrix Size: 9×9
-
-julia> res_dcm_ps = minimize_bandwidth(A, Minimization.DelCorsoManziniWithPS())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Del Corso–Manzini with perimeter search
- * Approach: exact
- * Minimum Bandwidth: 3
- * Original Bandwidth: 8
- * Matrix Size: 9×9
+```@repl
+using Random, SparseArrays
+Random.seed!(548836);
+(n, p) = (9, 0.2);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
+res_dcm_ps = minimize_bandwidth(A, Minimization.DelCorsoManziniWithPS())
 ```
 
 We now generate (and shuffle) a random ``30×30`` matrix with minimum bandwidth ``8`` using
@@ -255,32 +203,16 @@ finds a quite good ordering, even though exact optimality—which *is* guarantee
 original paper [DM99]—is not explicitly verified.) In this case, we set the depth parameter
 to ``4`` beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
 
-```jldoctest
-julia> using Random
-
-julia> Random.seed!(78779);
-
-julia> (n, k, depth) = (30, 8, 4);
-
-julia> A = MatrixBandwidth.random_banded_matrix(n, k);
-
-julia> perm = randperm(n);
-
-julia> A_shuffled = A[perm, perm];
-
-julia> bandwidth(A)
-8
-
-julia> bandwidth(A_shuffled) # Much larger after shuffling
-25
-
-julia> minimize_bandwidth(A_shuffled, Minimization.DelCorsoManziniWithPS(depth))
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Del Corso–Manzini with perimeter search
- * Approach: exact
- * Minimum Bandwidth: 8
- * Original Bandwidth: 25
- * Matrix Size: 30×30
+```@repl
+using Random
+Random.seed!(78779);
+(n, k, depth) = (30, 8, 4);
+A = MatrixBandwidth.random_banded_matrix(n, k);
+perm = randperm(n);
+A_shuffled = A[perm, perm];
+bandwidth(A)
+bandwidth(A_shuffled) # Much larger after shuffling
+minimize_bandwidth(A_shuffled, Minimization.DelCorsoManziniWithPS(depth))
 ```
 
 # Notes

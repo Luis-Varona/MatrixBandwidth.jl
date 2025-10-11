@@ -33,24 +33,13 @@ is not *exactly* ``Θ(n²)``, although it is close.)
 The algorithm always iterates over all possible permutations, so it is infeasible to go
 above ``9×9`` or ``10×10`` without incurring multiple-hour runtimes. Nevertheless, we see
 that it is quite effective for, say, ``8×8``:
-```jldoctest
-julia> using Random, SparseArrays
-
-julia> Random.seed!(628318);
-
-julia> (n, p) = (8, 0.2);
-
-julia> A = sprand(n, n, p);
-
-julia> A = A + A' # Ensure structural symmetry;
-
-julia> minimize_bandwidth(A, Minimization.BruteForceSearch())
-Results of Bandwidth Minimization Algorithm
- * Algorithm: Brute-force search
- * Approach: exact
- * Minimum Bandwidth: 3
- * Original Bandwidth: 6
- * Matrix Size: 8×8
+```@repl
+using Random, SparseArrays
+Random.seed!(628318);
+(n, p) = (8, 0.2);
+A = sprand(n, n, p);
+A = A + A' # Ensure structural symmetry;
+minimize_bandwidth(A, Minimization.BruteForceSearch())
 ```
 
 # Notes
