@@ -71,7 +71,7 @@ Note that since Gibbs&ndash;Poole&ndash;Stockmeyer is a heuristic algorithm, $5$
 
 ## Algorithms
 
-As of version 0.2.1, the following matrix bandwidth reduction algorithms are available:
+The following matrix bandwidth reduction algorithms are currently available:
 
 - Minimization
   - Exact
