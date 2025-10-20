@@ -11,6 +11,14 @@ const STATIC_ANALYZERS = ["Aqua", "JET"]
 const TEST_GROUPS = ["core", "utils"]
 const NESTED_TEST_SUITES = ["Minimization/Minimization.jl", "Recognition/Recognition.jl"]
 
+#= The exact orderings generated on 32-bit architectures may differ, although as verified by
+many other unit tests, they still produce valid results. =#
+if Sys.ARCH in (:x86_64, :aarch64)
+    @info "Testing `README.md` example code blocks"
+    include("readme_example.jl")
+    println()
+end
+
 # Run static analysis
 for analyzer in STATIC_ANALYZERS
     @info "Running static analysis with $analyzer"
