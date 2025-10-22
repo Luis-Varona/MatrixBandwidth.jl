@@ -108,7 +108,9 @@ pkg> add MatrixBandwidth
 
 ## Basic use
 
-MatrixBandwidth.jl offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively—the algorithm itself is specified as an argument. For example, to minimize the bandwidth of a random matrix with the reverse Cuthill–McKee algorithm, you can run the following code:
+MatrixBandwidth.jl offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively—the algorithm itself is specified as an argument. Comprehensive documentation for these two methods is available [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Minimization.minimize_bandwidth) and [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Recognition.has_bandwidth_k_ordering), and further details about their respective output structs can be found [here](http://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Minimization.MinimizationResult) and [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Recognition.RecognitionResult). We go over some basic examples below.
+
+To minimize the bandwidth of a random matrix with, say, the reverse Cuthill&ndash;McKee algorithm, you can run the following code:
 
 ```julia-repl
 julia> using Random, SparseArrays
