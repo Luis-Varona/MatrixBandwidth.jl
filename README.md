@@ -86,7 +86,7 @@ Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
 [...]
 ```
 
-To extend the interface with a new matrix bandwidth minimization algorithm, define a new concrete subtype of `AbstractSolver` (or of one of its abstract subtypes like `MetaheuristicSolver`) then implement a corresponding `Minimization._minimize_bandwidth_impl(::AbstractMatrix{Bool}, ::NewSolverType)` method. Similarly, to implement a new bandwidth recognition algorithm, define a new concrete subtype of `AbstractDecider` then implement a corresponding `Recognition._has_bandwidth_k_ordering_impl(::AbstractMatrix{Bool}, ::Integer, ::NewDeciderType)` method. Do *not* attempt to directly implement new `minimize_bandwidth` or `has_bandwidth_k_ordering` methods, as these functions contain common preprocessing logic independent of the specific algorithm used.
+If you wish to extend the interface with a new matrix bandwidth reduction algorithm, please refer to the [CONTRIBUTING.md](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CONTRIBUTING.md) file for detailed instructions.
 
 ## Installation
 
@@ -309,9 +309,13 @@ search: minimize_bandwidth bandwidth MatrixBandwidth
 
 ## Citing
 
-I encourage you to cite this work if you have found any of the algorithms herein useful for your research. Starring the MatrixBandwidth.jl repository on GitHub is also appreciated.
+We encourage you to cite this work if you have found any of the algorithms herein useful for your research. Starring the MatrixBandwidth.jl repository on GitHub is also appreciated.
 
 The latest citation information may be found in the [CITATION.bib](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CITATION.bib) file within the repository.
+
+## Contributing
+
+We welcome all bug reports, feature requests, and contributions! Please refer to the [CONTRIBUTING.md](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CONTRIBUTING.md) file for guidelines on how to open issues and submit pull requests.
 
 ## Project status
 
