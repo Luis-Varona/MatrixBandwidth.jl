@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Added a `CONTRIBUTING.md` file with contributing guidelines (#183).
 - Added clear links to the documentation on `minimize_bandwidth`, `has_bandwidth_k_ordering`, and their respective output structs in `README.md` and `docs/src/index.md` (#180).
 - Updated the GitHub Actions CI workflow to include Julia 1.12 in the testing matrix (#179).
 - Added a unit test in `test/readme_example.jl` to ensure that the example code blocks in `README.md` and `docs/src/index.md` (which corresponds to the homepage of the Documenter.jl-generated documentation) align with the actual output of the package on 64-bit architectures (#178).
