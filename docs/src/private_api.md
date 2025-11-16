@@ -9,42 +9,42 @@ Documentation for [MatrixBandwidth](https://github.com/Luis-Varona/MatrixBandwid
 !!! note
     The following documentation covers only the private API of the package. For public details, see the [public API documentation](public_api.md).
 
-## `MatrixBandwidth`
+## `MatrixBandwidth` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth]
 Public = false
 ```
 
-## `MatrixBandwidth.Minimization`
+## `MatrixBandwidth.Minimization` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth.Minimization]
 Public = false
 ```
 
-## `MatrixBandwidth.Minimization.Exact`
+## `MatrixBandwidth.Minimization.Exact` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth.Minimization.Exact]
 Public = false
 ```
 
-## `MatrixBandwidth.Minimization.Heuristic`
+## `MatrixBandwidth.Minimization.Heuristic` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth.Minimization.Heuristic]
 Public = false
 ```
 
-## `MatrixBandwidth.Minimization.Metaheuristic`
+## `MatrixBandwidth.Minimization.Metaheuristic` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth.Minimization.Metaheuristic]
 Public = false
 ```
 
-## `MatrixBandwidth.Recognition`
+## `MatrixBandwidth.Recognition` (Private)
 
 ```@autodocs
 Modules = [MatrixBandwidth.Recognition]
