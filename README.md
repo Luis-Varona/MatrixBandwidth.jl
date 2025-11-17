@@ -47,6 +47,14 @@ MatrixBandwidth.jl offers fast algorithms for matrix bandwidth minimization and 
 
 Many matrix bandwidth reduction algorithms exist in the literature, but implementations in the open-source ecosystem are scarce, with those that do exist primarily tackling older, less efficient algorithms. The [Boost](https://www.boost.org/) libraries in C++, the [NetworkX](https://networkx.org/) library in Python, and the MATLAB standard library all only implement the reverse Cuthill&ndash;McKee algorithm from 1971. This gap in the ecosystem not only makes it difficult for theoretical researchers to benchmark and compare new proposed algorithms but also precludes the application of the most performant modern algorithms in real-life industry settings. MatrixBandwidth.jl aims to bridge this gap by presenting a unified interface for matrix bandwidth reduction algorithms in Julia, designed with extensibility to further methods in mind.
 
+## Installation
+
+The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:
+
+```julia-repl
+pkg> add MatrixBandwidth
+```
+
 ## Algorithms
 
 The following matrix bandwidth reduction algorithms are currently available:
@@ -88,14 +96,6 @@ Dict{Symbol, Union{Dict{Symbol}, Vector}} with 2 entries:
 
 If you wish to extend the interface with a new matrix bandwidth reduction algorithm, please refer to the [CONTRIBUTING.md](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CONTRIBUTING.md) file for detailed instructions.
 
-## Installation
-
-The only prerequisite is a working Julia installation (v1.10 or later). First, enter Pkg mode by typing `]` in the Julia REPL, then run the following command:
-
-```julia-repl
-pkg> add MatrixBandwidth
-```
-
 ## Basic use
 
 MatrixBandwidth.jl offers unified interfaces for both bandwidth minimization and bandwidth recognition via the `minimize_bandwidth` and `has_bandwidth_k_ordering` functions, respectively&mdash;the algorithm itself is specified as an argument. Comprehensive documentation for these two methods is available [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Minimization.minimize_bandwidth) and [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Recognition.has_bandwidth_k_ordering), and further details about their respective output structs can be found [here](http://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Minimization.MinimizationResult) and [here](https://luis-varona.github.io/MatrixBandwidth.jl/stable/public_api/#MatrixBandwidth.Recognition.RecognitionResult). We go over some basic examples below.
@@ -103,6 +103,8 @@ MatrixBandwidth.jl offers unified interfaces for both bandwidth minimization and
 To minimize the bandwidth of a random matrix with, say, the reverse Cuthill&ndash;McKee algorithm, you can run the following code:
 
 ```julia-repl
+julia> using MatrixBandwidth
+
 julia> using Random, SparseArrays
 
 julia> Random.seed!(8675309);
@@ -249,6 +251,8 @@ julia> A[res_recognize_default.ordering, res_recognize_default.ordering]
 Complementing our various bandwidth minimization and recognition algorithms, MatrixBandwidth.jl exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix prior to any reordering:
 
 ```julia-repl
+julia> using MatrixBandwidth
+
 julia> using Random, SparseArrays
 
 julia> Random.seed!(1234);
