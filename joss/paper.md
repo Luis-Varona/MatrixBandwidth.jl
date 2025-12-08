@@ -17,7 +17,7 @@ affiliations:
     index: 2
   - name: Department of Economics, Mount Allison University
     index: 3
-date: 27 October 2025
+date: 7 December 2025
 bibliography: paper.bib
 ---
 
