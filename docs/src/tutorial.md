@@ -36,7 +36,7 @@ julia> A = sprand(60, 60, 0.01); A = A + A' # Ensure structural symmetry
 
 ## Bandwidth minimization
 
-To minimize the bandwidth of this matrix, we can use the `minimize_bandwidth` function along with any of the available minimization algorithms (a full list can be found in the [home page's **Algorithms** section](index.md#algorithms)). For example, to use the reverse Cuthill&ndash;McKee algorithm, we can run:
+To minimize the bandwidth of this matrix, we can use the `minimize_bandwidth` function along with any of the available minimization algorithms (a full list can be found in the [home page's **Algorithms** section](index.md#Algorithms)). For example, to use the reverse Cuthill&ndash;McKee algorithm, we can run:
 
 ```julia-repl
 julia> using MatrixBandwidth
@@ -102,7 +102,7 @@ julia> A[res_minimize_default.ordering, res_minimize_default.ordering]
 
 ## Bandwidth recognition
 
-Similarly, we can use the `has_bandwidth_k_ordering` function to determine whether a given matrix has bandwidth at most some fixed integer $k$, via any of the available recognition algorithms (again, a full list can be found in the [home page's **Algorithms** section](index.md#algorithms)). For example, to determine whether our example matrix has bandwidth *at most* 3 via the Del Corso–Manzini algorithm, we can run:
+Similarly, we can use the `has_bandwidth_k_ordering` function to determine whether a given matrix has bandwidth at most some fixed integer $k$, via any of the available recognition algorithms (again, a full list can be found in the [home page's **Algorithms** section](index.md#Algorithms)). For example, to determine whether our example matrix has bandwidth *at most* 3 via the Del Corso–Manzini algorithm, we can run:
 
 ```julia-repl
 julia> res_recognize = has_bandwidth_k_ordering(A, 3, Recognition.SaxeGurariSudborough())
