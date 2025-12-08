@@ -26,15 +26,15 @@ bibliography: paper.bib
 The *bandwidth* of an $n \times n$ matrix $A$ is the minimum non-negative integer $k \in
 \{0, 1, \ldots, n - 1\}$ such that $A_{i,j} = 0$ whenever $\lvert i - j \rvert > k$. Reordering the
 rows and columns of a matrix to reduce its bandwidth has many practical applications in engineering
-and scientific computing: it can improve performance when solving linear systems, approximating
+and scientific computing: It can improve performance when solving linear systems, approximating
 partial differential equations, optimizing circuit layout, and more [@Maf14]. There are two variants
-of this problem: *minimization*, which involves finding a permutation matrix $P$ such that the
+of this problem: *Minimization*, which involves finding a permutation matrix $P$ such that the
 bandwidth of $PAP^\mathsf{T}$ is minimized, and *recognition*, which entails determining whether
 there exists a permutation matrix $P$ such that the bandwidth of $PAP^\mathsf{T}$ is less than or
 equal to some fixed non-negative integer (an optimal permutation that fully minimizes the bandwidth
 of $A$ is not required). Accordingly,
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) offers fast algorithms for
-matrix bandwidth minimization and recognition. Julia's combination of easy syntax and high
+matrix bandwidth minimization and recognition. Julia's [@julia] combination of easy syntax and high
 performance, along with its rapidly growing ecosystem for scientific computing, made it the ideal
 language of choice for this project.
 
