@@ -11,9 +11,13 @@ const STATIC_ANALYZERS = ["Aqua", "JET"]
 const TEST_GROUPS = ["core", "utils"]
 const NESTED_TEST_SUITES = ["Minimization/Minimization.jl", "Recognition/Recognition.jl"]
 
-#= The exact orderings generated on 32-bit architectures may differ, although as verified by
-many other unit tests, they still produce valid results. =#
-if Sys.ARCH in (:x86_64, :aarch64)
+#= The exact orderings generated on nightly builds and on 32-bit architectures may differ,
+although as verified by many other unit tests, they still produce valid results. =#
+if !(Sys.ARCH in (:x86_64, :aarch64))
+    @info "Skipping `README.md` example code blocks test: incompatible with architecture $(Sys.ARCH)"
+elseif (VERSION.major, VERSION.minor) > (1, 12)
+    @info "Skipping `README.md` example code blocks test: incompatible with Julia $(VERSION)"
+else
     @info "Testing `README.md` example code blocks"
     include("readme_example.jl")
     println()
@@ -40,10 +44,10 @@ end
 
 # Check that all public names in the package have docstrings
 @testset "Docstrings" begin
-    if VERSION >= v"1.11" # `Docs.undocumented_names` was only introduced in Julia 1.11
+    if VERSION < v"1.11" # `Docs.undocumented_names` was only introduced in Julia 1.11
+        @info "Skipping `Docs.undocumented_names` test: not available on Julia $(VERSION)"
+    else
         @info "Checking for undocumented names"
         @test isempty(Docs.undocumented_names(MatrixBandwidth))
-    else
-        @info "Skipping `Docs.undocumented_names` test: not available on Julia $(VERSION)"
     end
 end
