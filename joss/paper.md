@@ -17,7 +17,7 @@ affiliations:
     index: 2
   - name: Department of Economics, Mount Allison University
     index: 3
-date: 7 December 2025
+date: 8 December 2025
 bibliography: paper.bib
 ---
 
@@ -34,7 +34,7 @@ there exists a permutation matrix $P$ such that the bandwidth of $PAP^\mathsf{T}
 equal to some fixed non-negative integer (an optimal permutation that fully minimizes the bandwidth
 of $A$ is not required). Accordingly,
 [MatrixBandwidth.jl](https://github.com/Luis-Varona/MatrixBandwidth.jl) offers fast algorithms for
-matrix bandwidth minimization and recognition. Julia's combination of easy syntax and high
+matrix bandwidth minimization and recognition. Julia's [@BEKS17] combination of easy syntax and high
 performance, along with its rapidly growing ecosystem for scientific computing, made it the ideal
 language of choice for this project.
 
