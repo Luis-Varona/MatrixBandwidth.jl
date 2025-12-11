@@ -10,7 +10,7 @@
       <img src="https://img.shields.io/badge/version-v0.2.2-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
-      <a href="https://joss.theoj.org/papers/9677739548a4f05ab398b427df1c78b9"><img src="https://joss.theoj.org/papers/9677739548a4f05ab398b427df1c78b9/status.svg" alt="JOSS: Under Review"></a>
+      <a href="https://doi.org/10.21105/joss.09136"><img src="https://joss.theoj.org/papers/10.21105/joss.09136/status.svg" alt="DOI"></a>
     </td>
   </tr>
   <tr>
@@ -315,7 +315,7 @@ search: minimize_bandwidth bandwidth MatrixBandwidth
 
 We encourage you to cite this work if you have found any of the algorithms herein useful for your research. Starring the MatrixBandwidth.jl repository on GitHub is also appreciated.
 
-The latest citation information may be found in the [CITATION.bib](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CITATION.bib) file within the repository.
+The latest citation information may be found in the [CITATION.cff](https://raw.githubusercontent.com/Luis-Varona/MatrixBandwidth.jl/main/CITATION.cff) file within the repository.
 
 ## Contributing
 
