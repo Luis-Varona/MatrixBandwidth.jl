@@ -17,8 +17,10 @@ affiliations:
     index: 2
   - name: Department of Economics, Mount Allison University
     index: 3
-date: 8 December 2025
+date: 11 December 2025
 bibliography: paper.bib
+header-includes:
+  - \usepackage{multicol}
 ---
 
 # Summary
@@ -53,20 +55,23 @@ MatrixBandwidth.jl can both recognize whether the minimum bandwidth of $A$ is le
 some fixed integer (\autoref{fig:A_rec}) and actually minimize the bandwidth of $A$
 (\autoref{fig:A_min}):
 
-\begin{figure}[H]
-  \begin{minipage}[b]{.475\textwidth}
+\begin{multicols}{2}
+  \begin{figure}[H]
     \centering
     \includegraphics[height=1.5in]{assets/A_rec.png}
-    \caption{The matrix with bandwidth recognized as $\le 6$ via the Del Corso--Manzini algorithm}
+    \caption{The matrix with bandwidth recognized as $\le 6$ via the
+    Del Corso--Manzini algorithm}
     \label{fig:A_rec}
-  \end{minipage}\hfill
-  \begin{minipage}[b]{.475\textwidth}
+  \end{figure}
+
+  \begin{figure}[H]
     \centering
     \includegraphics[height=1.5in]{assets/A_min.png}
-    \caption{The matrix with bandwidth minimized to $5$ via the Gibbs--Poole--Stockmeyer algorithm}
+    \caption{The matrix with bandwidth minimized to $5$ via the
+    Gibbs--Poole--Stockmeyer algorithm}
     \label{fig:A_min}
-  \end{minipage}
-\end{figure}
+  \end{figure}
+\end{multicols}
 
 Note that since Gibbs&ndash;Poole&ndash;Stockmeyer is a heuristic algorithm, $5$ may not be the
 *true* minimum bandwidth of $A$, but it is likely close.
