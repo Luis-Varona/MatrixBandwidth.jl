@@ -11,11 +11,11 @@ authors:
     orcid: 0009-0003-7784-5415
     affiliation: "1,2,3"
 affiliations:
-  - name: Department of Politics and International Relations, Mount Allison University
+  - name: Department of Politics and International Relations, Mount Allison University, Canada
     index: 1
-  - name: Department of Mathematics and Computer Science, Mount Allison University
+  - name: Department of Mathematics and Computer Science, Mount Allison University, Canada
     index: 2
-  - name: Department of Economics, Mount Allison University
+  - name: Department of Economics, Mount Allison University, Canada
     index: 3
 date: 11 December 2025
 bibliography: paper.bib
