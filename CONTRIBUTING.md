@@ -26,13 +26,15 @@ When introducing new features to the package, unit tests are of paramount import
 
 Equally crucial is proper documentation. Judicious use of inline comments in complex sections is encouraged to enhance code readability, regardless of whether the method/struct is public or private. For public methods/structs, please also include docstrings matching the style of existing documentation. At bare minimum, methods should have a one-liner summary of their purpose along with descriptions of all arguments and return values, and structs should have a one-liner summary of their purpose along with descriptions of all fields. Less trivial methods/structs should have more extensive documentation&mdash;examples in particular are highly recommended.
 
+Moreover, we maintain [a changelog](CHANGELOG.md) documenting all the nontrivial changes made to this repository with each new release. After submitting a PR and obtaining the corresponding PR number from GitHub, please add a note referencing this number to the changelog and push the update to your branch. This note should go under the `Added`, `Changed`, `Fixed`, or `Removed` subsection (as appropriate) of the `Unreleased` section. For instance, the creation of this file was logged under the `Added` subsection with the entry `- Added a CONTRIBUTING.md file with contributing guidelines (#183).`
+
 ### Style
 
 Format your code with [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl) in the package's environment before pushing; our [`.JuliaFormatter.toml`](.JuliaFormatter.toml) file will automatically enforce Invenia's [BlueStyle](https://github.com/invenia/BlueStyle), with a few modifications.
 
 ### Efficiency
 
-While not always necessary, strive to write efficient code, especially for performance-critical sections. Moreover, try to avoid adding unncessary dependencies to the package; if you absolutely *must*, please justify its inclusion in your PR description.
+While not always necessary, strive to write efficient code, especially for performance-critical sections. Moreover, try to avoid adding unnecessary dependencies to the package; if you absolutely *must*, please justify its inclusion in your PR description.
 
 ### New algorithms
 
