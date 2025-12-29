@@ -1,0 +1,50 @@
+html {
+  --table-border-color: white;
+  --table-row-shade: rgba(255, 255, 255, 0.1);
+}
+
+html.theme--documenter-light,
+html.theme--catppuccin-latte {
+  --table-border-color: black;
+  --table-row-shade: rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    --table-border-color: black;
+    --table-row-shade: rgba(0, 0, 0, 0.1);
+  }
+}
+
+figure img {
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
+
+figure figcaption {
+  font-size: 0.75em;
+}
+
+table {
+  width: auto;
+  border-collapse: collapse;
+}
+
+table tr:nth-child(even) {
+  background-color: var(--table-row-shade);
+}
+
+tr, th, td {
+  border: 1px solid var(--table-border-color);
+}
+
+table > tbody > tr > th:first-child,
+table > tbody > tr > td:first-child {
+  border-right: 1px solid var(--table-border-color) !important;
+}
+
+table > tbody > tr > th:last-child,
+table > tbody > tr > td:last-child {
+  border-left: 1px solid var(--table-border-color) !important;
+}
