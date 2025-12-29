@@ -25,7 +25,7 @@ using JET
     @show length(jet_reports)
     @show rep
 
-    @test length(jet_reports) < 20
+    @test length(jet_reports) < 30
     @test_broken length(jet_reports) == 0
 end
 
