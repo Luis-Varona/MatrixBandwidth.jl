@@ -273,7 +273,7 @@ function _sgs_dangling_new(
         dangling, Iterators.map(u -> _pot_edge(u, v), neighbors_in_region)
     )
     additional_edges = Iterators.map(
-        u -> _pot_edge(u, v), Iterators.filter(u -> u != v && !(u in region), adj_list)
+        u -> _pot_edge(u, v), Iterators.filter(!in(region), adj_list)
     )
     return union!(dangling_new, additional_edges)
 end
