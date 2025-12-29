@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- Eliminated an unnecessary `u != v` check when filtering adjacent nodes in the Saxe–Gurari–Sudborough recognition decider's `_sgs_dangling_new` function, since the core `has_bandwidth_k_ordering` function that dispatches to the decider already ensures that no self-loops exist in the input graph (#204).
+- Made a few micro-optimizations to the Saxe–Gurari–Sudborough recognition decider (e.g., avoiding unnecessary duplicate checks/moving computations to later in the control flow when appropriate) (#204, #205).
 - Replaced `processed` and `visited` sets in the Saxe–Gurari–Sudborough recognition decider with boolean arrays to improve performance (#203).
 - Updated `CONTRIBUTING.md` with a paragraph about adding to the changelog, as well as a minor typo fix (#202).
 - Raised the threshold for number of JET reports in static analysis testing from 20 to 30 (#201).

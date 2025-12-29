@@ -180,9 +180,8 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
             region_new = _sgs_region_new(region_extended, dangling_new, k)
 
             if !isnothing(region_new)
-                key_new = _sgs_key(region_new, dangling_new)
-
                 if _sgs_layout_is_plausible(region_new, dangling_new, k)
+                    key_new = _sgs_key(region_new, dangling_new)
                     num_placed_new = num_placed + 1
 
                     if num_placed_new == n
@@ -283,10 +282,7 @@ function _sgs_region_new(
     region_extended::Vector{Int}, dangling_new::Set{Tuple{Int,Int}}, k::Integer
 )
     first_idx_in_region = Dict{Int,Int}()
-    foreach(
-        ((i, v),) -> first_idx_in_region[v] = get(first_idx_in_region, v, i),
-        enumerate(region_extended),
-    )
+    foreach(((i, v),) -> first_idx_in_region[v] = i, enumerate(region_extended))
     region_extended_set = Set(region_extended)
     active_new = Set(
         Iterators.filter(in(region_extended_set), Iterators.flatten(dangling_new))
