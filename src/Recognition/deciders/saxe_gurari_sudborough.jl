@@ -122,6 +122,14 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     n = size(A, 1)
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
+    edge_idxs = Dict{Tuple{Int,Int},Int}()
+    num_edges = 0
+
+    for (u, neighbors) in enumerate(adj_lists), v in Iterators.filter(w -> w > u, neighbors)
+        edge = (u, v)
+        edge_idxs[edge] = (num_edges += 1)
+    end
+
     KeyType = Tuple{Tuple{Vararg{Int}},Tuple{Vararg{Tuple{Int,Int}}}}
     parent = Dict{KeyType,Tuple{Union{Nothing,KeyType},Union{Nothing,Int}}}()
     nums_placed = Dict{KeyType,Int}()
@@ -134,6 +142,9 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     push!(queue, empty_key)
     push!(visited, empty_key)
 
+    nodes_visited = falses(n)
+    edges_visited = falses(num_edges)
+
     while !isempty(queue)
         key = popfirst!(queue)
         num_placed = nums_placed[key]
@@ -145,7 +156,9 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
             complexity down from `O(nᵏ⁺¹)` to `O(nᵏ)` by only considering extensions with
             vertices reachable by a path beginning with a dangling edge that never again
             traverses a dangling edge. =#
-            candidates = _sgs_unassigned(region, dangling, adj_lists)
+            candidates = _sgs_unassigned(
+                region, dangling, adj_lists, nodes_visited, edges_visited, edge_idxs
+            )
         else
             u = region[1]
             #= Indeed, there should be exactly one such edge; the lazy evaluation of
@@ -203,27 +216,36 @@ end
 beginning with a dangling edge that never again traverse a dangling edge. (If `dangling` is
 empty, then of course, all unassigned vertices are reachable.) =#
 function _sgs_unassigned(
-    region::Vector{Int}, dangling::Set{Tuple{Int,Int}}, adj_lists::Vector{Vector{Int}}
+    region::Vector{Int},
+    dangling::Set{Tuple{Int,Int}},
+    adj_lists::Vector{Vector{Int}},
+    nodes_visited::BitVector,
+    edges_visited::BitVector,
+    edge_idxs::Dict{Tuple{Int,Int},Int},
 )
     if isempty(dangling)
         return Set(eachindex(adj_lists))
     end
 
     unassigned = Set{Int}()
-    processed = Set{Tuple{Int,Int}}(dangling)
+    fill!(nodes_visited, false)
+    fill!(edges_visited, false)
+    foreach(edge -> edges_visited[edge_idxs[edge]] = true, dangling)
+
     queue = Queue{Tuple{Int,Int}}()
     foreach(edge -> push!(queue, edge), dangling)
-    visited = Set(region)
+    nodes_visited[region] .= true
 
     @inline function _update_state!(node::Int)
         push!(unassigned, node)
-        push!(visited, node)
+        nodes_visited[node] = true
 
         for neighbor in adj_lists[node]
             edge = _pot_edge(node, neighbor)
+            edge_idx = edge_idxs[edge]
 
-            if !(edge in processed)
-                push!(processed, edge)
+            if !edges_visited[edge_idx]
+                edges_visited[edge_idx] = true
                 push!(queue, edge)
             end
         end
@@ -232,9 +254,9 @@ function _sgs_unassigned(
     while !isempty(queue)
         (u, v) = popfirst!(queue)
 
-        if !(u in visited)
+        if !nodes_visited[u]
             _update_state!(u)
-        elseif !(v in visited)
+        elseif !nodes_visited[v]
             _update_state!(v)
         end
     end

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Replaced `processed` and `visited` sets in the Saxe–Gurari–Sudborough recognition decider with boolean arrays to improve performance (#203).
 - Updated `CONTRIBUTING.md` with a paragraph about adding to the changelog, as well as a minor typo fix (#202).
 - Raised the threshold for number of JET reports in static analysis testing from 20 to 30 (#201).
 - Updated the metadata in the documentation (including changing `CITATION.bib` to `CITATION.cff`) to reflect JOSS publication (#198).
