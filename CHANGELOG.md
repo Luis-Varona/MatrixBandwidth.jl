@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.3] - 2025-12-29
+
 ### Changed
 
 - Made a few micro-optimizations to the Saxe–Gurari–Sudborough recognition decider (e.g., avoiding unnecessary duplicate checks/moving computations to later in the control flow when appropriate) (#204, #205).
@@ -136,7 +138,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Released the initial stable version of the package.
 
-[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.2.2...HEAD
+[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.3
 [0.2.2]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.2
 [0.2.1]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.0
