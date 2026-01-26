@@ -208,7 +208,7 @@ function _pseudo_diameter_endpoints(A::AbstractMatrix{Bool}, node_finder::Functi
         depth_next = maximum(depths_next)
     end
 
-    widths = Iterators.map(node -> length(_level_structure(A, node)[end]), last_level)
+    widths = Iterators.map(node -> maximum(length, _level_structure(A, node)), last_level)
     v = last_level[argmin(widths)]
 
     return u, v
@@ -277,10 +277,7 @@ function _combine_level_structures(
         assigned[node] = true
     end
 
-    components = connected_components(A_working)
-    sort!(components; by=length, rev=true)
-
-    for component in connected_components(A_working)
+    for component in sort!(connected_components(A_working); by=length, rev=true)
         sizes_curr = length.(levels)
         pot_sizes_u = copy(sizes_curr)
         pot_sizes_v = copy(sizes_curr)
@@ -288,8 +285,11 @@ function _combine_level_structures(
         component_level_pairs = map(node -> level_pairs[node], component)
         component_level_pairs_u = first.(component_level_pairs)
         component_level_pairs_v = last.(component_level_pairs)
-        pot_sizes_u[component_level_pairs_u] .+= 1
-        pot_sizes_v[component_level_pairs_v] .+= 1
+
+        #= Indexing with `pot_sizes_u[component_level_pairs_u] .+= 1` (and similarly for
+        `v`) would fail to increment more than once at repeated indices. =#
+        foreach(level -> pot_sizes_u[level] += 1, component_level_pairs_u)
+        foreach(level -> pot_sizes_v[level] += 1, component_level_pairs_v)
 
         if !isempty(component_level_pairs_u)
             max_size_u = maximum(view(pot_sizes_u, component_level_pairs_u))
@@ -303,7 +303,7 @@ function _combine_level_structures(
             max_size_v = 0
         end
 
-        if max_size_u < max_size_v || (max_size_u == max_size_v && width_u <= width_v)
+        if max_size_u < max_size_v || (max_size_u == max_size_v && width_v <= width_u)
             target_idx = 1
         else
             target_idx = 2
@@ -340,25 +340,14 @@ function _number_nodes!(
     num_placed = 1
 
     for (i, level) in enumerate(levels)
-        placed_nodes = view(ordering, 1:num_placed)
         unvisited = Set(level)
 
         if i == 1
             delete!(unvisited, start) # `start` is guaranteed to be in `levels[1]`
-            #= Just a placeholder value for the sorting step, since `nums_dangling` is not
-            actually needed for the first level. =#
-            nums_dangling = falses(n)
-        else
-            nums_dangling = sum(view(A, placed_nodes, :); dims=1)
         end
 
         while !isempty(unvisited)
-            #= While placing the nodes of the first level, we update `placed_nodes`
-            simultaneously as we go. =#
-            if i == 1
-                placed_nodes = view(ordering, 1:num_placed)
-            end
-
+            placed_nodes = view(ordering, 1:num_placed)
             lowest_prev_with_unvisited_neighbor = 0
             min_ordering_num = n + 1
             res = iterate(placed_nodes)
@@ -386,7 +375,7 @@ function _number_nodes!(
                 unvisited_adj = intersect(
                     findall(view(A, :, lowest_prev_with_unvisited_neighbor)), unvisited
                 )
-                sort!(unvisited_adj; by=node -> (-nums_dangling[node], degrees[node]))
+                sort!(unvisited_adj; by=node -> degrees[node])
 
                 copyto!(ordering, num_placed + 1, unvisited_adj)
                 num_placed += length(unvisited_adj)
