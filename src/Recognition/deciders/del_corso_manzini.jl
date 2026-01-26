@@ -436,7 +436,7 @@ function _dcm_order_is_reversed(
         max_last_label = maximum(unselected)
     end
 
-    return max_last_label <= first_label
+    return max_last_label < first_label
 end
 
 function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Integer)
@@ -524,7 +524,7 @@ function _dcm_is_compatible(
         compat = false
     else
         placed_nodes = view(ordering_buf, 1:num_placed)
-        constraints = (1:l) .+ num_placed
+        constraints = (1:l) .+ (num_placed + 1)
 
         latest_positions = Iterators.map(
             neighbor -> findfirst(node -> A[node, neighbor], placed_nodes), adj_list

@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Fixed off-by-one bug in the expiration-time pruning of the Del Corso–Manzini algorithm(s) (did not affect correctness, only performance) (#211).
 - Fixed several discrepancies between the Gibbs–Poole–Stockmeyer minimization algorithm as described in the original paper and its implementation (the `README` and tutorial examples was also updated accordingly) (#209).
 
 ## [0.2.3] - 2025-12-29
