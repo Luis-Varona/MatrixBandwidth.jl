@@ -6,14 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-### Removed
+### Changed
 
-- Removed nightly CI runs (on `pre`) from the GitHub Actions CI workflow, since they often fail due to incompatibilities with dependencies in the testing matrix (#212).
+- Updated the `_blb_connected` helper (used in `bandwidth_lower_bound`) to avoid unnecessary allocations, now requiring only `O(n)` auxiliary space instead of `O(n^2)` (#213).
 
 ### Fixed
 
 - Fixed off-by-one bug in the expiration-time pruning of the Del Corso–Manzini algorithm(s) (did not affect correctness, only performance) (#211).
 - Fixed several discrepancies between the Gibbs–Poole–Stockmeyer minimization algorithm as described in the original paper and its implementation (the `README` and tutorial examples was also updated accordingly) (#209).
+
+### Removed
+
+- Removed nightly CI runs (on `pre`) from the GitHub Actions CI workflow, since they often fail due to incompatibilities with dependencies in the testing matrix (#212).
 
 ## [0.2.3] - 2025-12-29
 
