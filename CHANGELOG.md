@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Switched from recomputing Del Corso–Manzini placement deadlines from scratch each step to maintaining them incrementally as nodes are placed, incorporating the last missing optimization from the paper (#216).
 - Changed the default recognition decider from Del Corso–Manzini to Caprara–Salazar-González, which is now considerably faster after the performance fixes (#214).
 - Updated the `_blb_connected` helper (used in `bandwidth_lower_bound`) to avoid unnecessary allocations, now requiring only `O(n)` auxiliary space instead of `O(n^2)` (#213).
 
