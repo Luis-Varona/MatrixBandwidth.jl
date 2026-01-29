@@ -34,24 +34,57 @@ permutation inducing a minimum bandwidth less than `k`, especially for small val
 
 # Examples
 Generate a ``6×6`` matrix with bandwidth ``1`` and the maximum number of nonzero entries:
-```@repl
-using Random
-A = MatrixBandwidth.random_banded_matrix(6, 1; p=1, rng=MersenneTwister(1228))
-bandwidth(A)
+```jldoctest
+julia> using Random
+
+julia> A = MatrixBandwidth.random_banded_matrix(6, 1; p=1, rng=MersenneTwister(1228))
+6×6 Matrix{Float64}:
+ 0.310239  0.346413  0.0       0.0        0.0       0.0
+ 0.509981  0.917073  0.390771  0.0        0.0       0.0
+ 0.0       0.760045  0.808396  0.0195686  0.0       0.0
+ 0.0       0.0       0.222338  0.853164   0.806888  0.0
+ 0.0       0.0       0.0       0.421603   0.132165  0.805813
+ 0.0       0.0       0.0       0.0        0.305339  0.0799183
+
+julia> bandwidth(A)
+1
 ```
 
 Generate a ``7×7`` matrix with bandwidth ``3`` and band density ``0.3``:
-```@repl
-using Random
-A = MatrixBandwidth.random_banded_matrix(7, 3; p=0.3, rng=MersenneTwister(0402))
-bandwidth(A)
+```jldoctest
+julia> using Random
+
+julia> A = MatrixBandwidth.random_banded_matrix(7, 3; p=0.3, rng=MersenneTwister(0402))
+7×7 Matrix{Float64}:
+ 0.0       0.132699  0.0       0.0       0.0  0.0       0.0
+ 0.869352  0.0       0.324319  0.926496  0.0  0.0       0.0
+ 0.0       0.891878  0.0       0.658102  0.0  0.0       0.0
+ 0.0       0.88859   0.399559  0.0       0.0  0.284285  0.703377
+ 0.0       0.0       0.0       0.0       0.0  0.0       0.0
+ 0.0       0.0       0.0       0.489594  0.0  0.0       0.393573
+ 0.0       0.0       0.0       0.412412  0.0  0.47063   0.0
+
+julia> bandwidth(A)
+3
 ```
 
 Generate an ``8×8`` diagonal (bandwidth ``0``) matrix with default band density (``0.5``):
-```@repl
-using Random
-A = MatrixBandwidth.random_banded_matrix(8, 0; rng=MersenneTwister(0102))
-bandwidth(A)
+```jldoctest
+julia> using Random
+
+julia> A = MatrixBandwidth.random_banded_matrix(8, 0; rng=MersenneTwister(0102))
+8×8 Matrix{Float64}:
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0762399  0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.373113  0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.726309  0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.41974  0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.0
+ 0.0  0.0        0.0       0.0       0.0  0.0      0.0  0.293132
+
+julia> bandwidth(A)
+0
 ```
 
 # Notes
@@ -127,11 +160,29 @@ Find the indices of all connected components of the graph whose adjacency matrix
     indices belonging to a connected component.
 
 # Examples
-```@repl
-using Graphs
-g = complement(complete_multipartite_graph([3, 4, 2]))
-A = Bool.(adjacency_matrix(g))
-MatrixBandwidth.connected_components(A)
+```jldoctest
+julia> using Graphs
+
+julia> g = complement(complete_multipartite_graph([3, 4, 2]))
+{9, 10} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+9×9 SparseArrays.SparseMatrixCSC{Bool, Int64} with 20 stored entries:
+ ⋅  1  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ 1  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  1  1  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  1  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  1  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+
+julia> MatrixBandwidth.connected_components(A)
+3-element Vector{Vector{Int64}}:
+ [1, 2, 3]
+ [4, 5, 6, 7]
+ [8, 9]
 ```
 """
 function connected_components(A::AbstractMatrix{Bool})
@@ -189,19 +240,67 @@ that each level in the triple-nested loop iterates over ``O(n)`` entries.
 
 # Examples
 Floyd–Warshall finds the shortest distances between all pairs of nodes in a connected graph:
-```@repl
-using Graphs
-g = ladder_graph(5)
-A = Bool.(adjacency_matrix(g))
-Int.(MatrixBandwidth.floyd_warshall_shortest_paths(A))
+```jldoctest
+julia> using Graphs
+
+julia> g = ladder_graph(5)
+{10, 13} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+10×10 SparseArrays.SparseMatrixCSC{Bool, Int64} with 26 stored entries:
+ ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  1  ⋅  ⋅  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ 1  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅  1
+ ⋅  ⋅  ⋅  ⋅  1  ⋅  ⋅  ⋅  1  ⋅
+
+julia> Int.(MatrixBandwidth.floyd_warshall_shortest_paths(A))
+10×10 Matrix{Int64}:
+ 0  1  2  3  4  1  2  3  4  5
+ 1  0  1  2  3  2  1  2  3  4
+ 2  1  0  1  2  3  2  1  2  3
+ 3  2  1  0  1  4  3  2  1  2
+ 4  3  2  1  0  5  4  3  2  1
+ 1  2  3  4  5  0  1  2  3  4
+ 2  1  2  3  4  1  0  1  2  3
+ 3  2  1  2  3  2  1  0  1  2
+ 4  3  2  1  2  3  2  1  0  1
+ 5  4  3  2  1  4  3  2  1  0
 ```
 
 Floyd–Warshall assigns `Inf` to pairs of nodes in different connected components:
-```@repl
-using Graphs
-g = complement(wheel_graph(8))
-A = Bool.(adjacency_matrix(g))
-MatrixBandwidth.floyd_warshall_shortest_paths(A)
+```jldoctest
+julia> using Graphs
+
+julia> g = complement(wheel_graph(8))
+{8, 14} undirected simple Int64 graph
+
+julia> A = Bool.(adjacency_matrix(g))
+8×8 SparseArrays.SparseMatrixCSC{Bool, Int64} with 28 stored entries:
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  1  1  ⋅
+ ⋅  ⋅  ⋅  ⋅  1  1  1  1
+ ⋅  1  ⋅  ⋅  ⋅  1  1  1
+ ⋅  1  1  ⋅  ⋅  ⋅  1  1
+ ⋅  1  1  1  ⋅  ⋅  ⋅  1
+ ⋅  1  1  1  1  ⋅  ⋅  ⋅
+ ⋅  ⋅  1  1  1  1  ⋅  ⋅
+
+julia> MatrixBandwidth.floyd_warshall_shortest_paths(A)
+8×8 Matrix{Float64}:
+  0.0  Inf   Inf   Inf   Inf   Inf   Inf   Inf
+ Inf    0.0   2.0   1.0   1.0   1.0   1.0   2.0
+ Inf    2.0   0.0   2.0   1.0   1.0   1.0   1.0
+ Inf    1.0   2.0   0.0   2.0   1.0   1.0   1.0
+ Inf    1.0   1.0   2.0   0.0   2.0   1.0   1.0
+ Inf    1.0   1.0   1.0   2.0   0.0   2.0   1.0
+ Inf    1.0   1.0   1.0   1.0   2.0   0.0   2.0
+ Inf    2.0   1.0   1.0   1.0   1.0   2.0   0.0
 ```
 """
 function floyd_warshall_shortest_paths(A::AbstractMatrix{Bool})
@@ -239,11 +338,25 @@ Check whether `A[i, j]` is nonzero if and only if `A[j, i]` is nonzero for all `
 - `::Bool`: whether `A` is structurally symmetric.
 
 # Examples
-```@repl
-A = [4 0 9 -2; 0 0 1 0; 3 -1 5 0; 4 0 0 3]
-MatrixBandwidth.is_structurally_symmetric(A)
-B = [1.12 2.36 0.00; 5.99 0.0 0.0; 0.0 3.1 -7.49]
-MatrixBandwidth.is_structurally_symmetric(B)
+```jldoctest
+julia> A = [4 0 9 -2; 0 0 1 0; 3 -1 5 0; 4 0 0 3]
+4×4 Matrix{Int64}:
+ 4   0  9  -2
+ 0   0  1   0
+ 3  -1  5   0
+ 4   0  0   3
+
+julia> MatrixBandwidth.is_structurally_symmetric(A)
+true
+
+julia> B = [1.12 2.36 0.00; 5.99 0.0 0.0; 0.0 3.1 -7.49]
+3×3 Matrix{Float64}:
+ 1.12  2.36   0.0
+ 5.99  0.0    0.0
+ 0.0   3.1   -7.49
+
+julia> MatrixBandwidth.is_structurally_symmetric(B)
+false
 ```
 
 # Notes
@@ -269,9 +382,20 @@ Convert `A` to a boolean matrix and set all its diagonal entries to `false`.
     `false`.
 
 # Examples
-```@repl
-A = [0 2 0 7; 0 -8 0 3; -1 9 0 0; 0 0 0 5]
-MatrixBandwidth.offdiag_nz_support(A)
+```jldoctest
+julia> A = [0 2 0 7; 0 -8 0 3; -1 9 0 0; 0 0 0 5]
+4×4 Matrix{Int64}:
+  0   2  0  7
+  0  -8  0  3
+ -1   9  0  0
+  0   0  0  5
+
+julia> MatrixBandwidth.offdiag_nz_support(A)
+4×4 BitMatrix:
+ 0  1  0  1
+ 0  0  0  1
+ 1  1  0  0
+ 0  0  0  0
 ```
 
 # Notes
@@ -298,18 +422,33 @@ Identify the highest supertype of `subtype` that is also a subtype of `abstractt
 - `::Type`: the direct subtype of `abstracttype` that is a supertype of `subtype`.
 
 # Examples
-```@repl
-abstract type Parent end
-abstract type Child1 <: Parent end
-abstract type Grandchild1 <: Child1 end
-struct Grandchild2 <: Child1 end
-abstract type Child2 <: Parent end
-struct Child3 <: Parent end
-MatrixBandwidth.find_direct_subtype(Parent, Child1)
-MatrixBandwidth.find_direct_subtype(Parent, Grandchild1)
-MatrixBandwidth.find_direct_subtype(Parent, Grandchild2)
-MatrixBandwidth.find_direct_subtype(Parent, Child2)
-MatrixBandwidth.find_direct_subtype(Parent, Child3)
+```jldoctest
+julia> abstract type Parent end
+
+julia> abstract type Child1 <: Parent end
+
+julia> abstract type Grandchild1 <: Child1 end
+
+julia> struct Grandchild2 <: Child1 end
+
+julia> abstract type Child2 <: Parent end
+
+julia> struct Child3 <: Parent end
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child1)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Grandchild1)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Grandchild2)
+Child1
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child2)
+Child2
+
+julia> MatrixBandwidth.find_direct_subtype(Parent, Child3)
+Child3
 ```
 """
 function find_direct_subtype(abstracttype::Type, subtype::Type)

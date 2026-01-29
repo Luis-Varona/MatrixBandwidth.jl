@@ -37,15 +37,34 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 ``n ≈ 100`` or so.
 
 # Examples
-```@repl
-using Random, SparseArrays
-Random.seed!(7878);
-(n, p) = (40, 0.1);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-(k_false, k_true) = (13, 26);
-has_bandwidth_k_ordering(A, k_false, Recognition.DelCorsoManzini())
-has_bandwidth_k_ordering(A, k_true, Recognition.DelCorsoManzini())
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(7878);
+
+julia> (n, p) = (40, 0.1);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (13, 26);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.DelCorsoManzini())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * Bandwidth Threshold k: 13
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 34
+ * Matrix Size: 40×40
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.DelCorsoManzini())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini
+ * Bandwidth Threshold k: 26
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 34
+ * Matrix Size: 40×40
 ```
 
 # Notes
@@ -136,30 +155,54 @@ Based on experimental results, the algorithm is feasible for ``n×n`` matrices u
 
 # Examples
 Here, Del Corso–Manzini with perimeter search ascertains that A random ``30×30`` matrix has
-a minimum bandwidth greater than ``9``. The depth parameter is not explicitly set; instead,
+a minimum bandwidth greater than ``6``. The depth parameter is not explicitly set; instead,
 some near-optimal value is automatically computed upon the first
 [`has_bandwidth_k_ordering`](@ref) function call.
-```@repl
-using Random, SparseArrays
-Random.seed!(5847);
-(n, p) = (30, 0.05);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-k = 6;
-has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS())
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(5847);
+
+julia> (n, p) = (30, 0.05);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> k = 6;
+
+julia> has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini with perimeter search
+ * Bandwidth Threshold k: 6
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 27
+ * Matrix Size: 30×30
 ```
 
 Now, Del Corso–Manzini with perimeter search recognizes that a random ``35×35`` matrix has a
 minimum bandwidth at most ``8``. In this case, we explicitly set the depth parameter to
 ``4`` beforehand instead of relying on [`Recognition.dcm_ps_optimal_depth`](@ref).
-```@repl
-using Random, SparseArrays
-Random.seed!(23552);
-(n, p, depth) = (35, 0.02, 4);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-k = 8;
-has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS(depth))
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(23552);
+
+julia> (n, p, depth) = (35, 0.02, 4);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> k = 8;
+
+julia> has_bandwidth_k_ordering(A, k, Recognition.DelCorsoManziniWithPS(depth))
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Del Corso–Manzini with perimeter search
+ * Bandwidth Threshold k: 8
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 32
+ * Matrix Size: 35×35
 ```
 
 # Notes

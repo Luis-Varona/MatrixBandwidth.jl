@@ -41,28 +41,87 @@ Multiple algorithms to decide whether a given matrix has bandwidth at most `k` a
 available. Naturally, they will always agree, but the final orderings produced (in the case
 of an affirmative) may differ:
 
-```@repl
-using Random, SparseArrays
-Random.seed!(52);
-(n, p) = (8, 0.2);
-A = sprand(Bool, n, n, p);
-A = A .|| A' # Ensure structural symmetry
-k = 3;
-res_csg = has_bandwidth_k_ordering(A, k, Recognition.CapraraSalazarGonzalez())
-A[res_csg.ordering, res_csg.ordering]
-res_sgs = has_bandwidth_k_ordering(A, k, Recognition.SaxeGurariSudborough())
-A[res_sgs.ordering, res_sgs.ordering]
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(52);
+
+julia> (n, p) = (8, 0.2);
+
+julia> A = sprand(Bool, n, n, p);
+
+julia> A = A .|| A' # Ensure structural symmetry
+8×8 SparseMatrixCSC{Bool, Int64} with 22 stored entries:
+ 1  ⋅  ⋅  1  ⋅  1  1  ⋅
+ ⋅  ⋅  ⋅  ⋅  1  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1
+ 1  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+ ⋅  1  ⋅  ⋅  ⋅  ⋅  1  1
+ 1  1  ⋅  ⋅  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  ⋅  1  1  ⋅  ⋅  1
+ ⋅  ⋅  1  ⋅  1  ⋅  1  1
+
+julia> k = 3;
+
+julia> res_csg = has_bandwidth_k_ordering(A, k, Recognition.CapraraSalazarGonzalez())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 6
+ * Matrix Size: 8×8
+
+julia> A[res_csg.ordering, res_csg.ordering]
+8×8 SparseMatrixCSC{Bool, Int64} with 22 stored entries:
+ ⋅  ⋅  1  1  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  1  ⋅  1  ⋅  ⋅  ⋅
+ 1  1  1  1  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  ⋅  1  1  ⋅
+ ⋅  1  ⋅  ⋅  ⋅  1  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  ⋅  1  ⋅
+ ⋅  ⋅  ⋅  1  ⋅  1  1  1
+ ⋅  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+
+julia> res_sgs = has_bandwidth_k_ordering(A, k, Recognition.SaxeGurariSudborough())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Saxe–Gurari–Sudborough
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 6
+ * Matrix Size: 8×8
+
+julia> A[res_sgs.ordering, res_sgs.ordering]
+8×8 SparseMatrixCSC{Bool, Int64} with 22 stored entries:
+ ⋅  1  ⋅  1  ⋅  ⋅  ⋅  ⋅
+ 1  ⋅  1  ⋅  1  ⋅  ⋅  ⋅
+ ⋅  1  1  ⋅  1  1  ⋅  ⋅
+ 1  ⋅  ⋅  ⋅  ⋅  ⋅  1  ⋅
+ ⋅  1  1  ⋅  ⋅  ⋅  1  1
+ ⋅  ⋅  1  ⋅  ⋅  ⋅  ⋅  ⋅
+ ⋅  ⋅  ⋅  1  1  ⋅  1  1
+ ⋅  ⋅  ⋅  ⋅  1  ⋅  1  ⋅
 ```
 
 If no decider is specified, then the Caprara–Salazar-González algorithm is used by default:
 
-```@repl
-using Random, SparseArrays
-Random.seed!(174);
-(n, p, k) = (20, 0.1, 4);
-A = sprand(n, n, p);
-A = A .+ A' # Ensure structural symmetry;
-has_bandwidth_k_ordering(A, k)
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(174);
+
+julia> (n, p, k) = (20, 0.1, 4);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A .+ A' # Ensure structural symmetry;
+
+julia> has_bandwidth_k_ordering(A, k)
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 4
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 15
+ * Matrix Size: 20×20
 ```
 
 # Notes

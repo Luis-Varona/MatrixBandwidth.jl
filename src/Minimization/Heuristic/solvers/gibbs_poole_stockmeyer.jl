@@ -66,44 +66,143 @@ it hard to verify whether Gibbs–Poole–Stockmeyer finds a truly optimal order
 near-optimal one. Nevertheless, the results are still very good in practice.
 
 Gibbs–Poole–Stockmeyer finds a good ordering for a ``40×40`` matrix:
-```@repl
-using Random
-Random.seed!(561);
-(n, k) = (40, 7);
-A = MatrixBandwidth.random_banded_matrix(n, k);
-perm = randperm(n);
-A_shuffled = A[perm, perm];
-bandwidth(A)
-bandwidth(A_shuffled)
-minimize_bandwidth(A_shuffled, Minimization.GibbsPooleStockmeyer())
+```jldoctest
+julia> using Random
+
+julia> Random.seed!(561);
+
+julia> (n, k) = (40, 7);
+
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
+
+julia> perm = randperm(n);
+
+julia> A_shuffled = A[perm, perm];
+
+julia> bandwidth(A)
+7
+
+julia> bandwidth(A_shuffled)
+37
+
+julia> minimize_bandwidth(A_shuffled, Minimization.GibbsPooleStockmeyer())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Gibbs–Poole–Stockmeyer
+ * Approach: heuristic
+ * Minimum Bandwidth: 8
+ * Original Bandwidth: 37
+ * Matrix Size: 40×40
 ```
 
-Gibbs–Poole–Stockmeyer finds a good ordering for a ``748×748`` matrix with multiple
+Gibbs–Poole–Stockmeyer finds a good ordering for a ``733×733`` matrix with multiple
 (separate) connected components:
-```
-using Random, SparseArrays
-Random.seed!(271828);
-(max_cc_size, max_band, p, num_ccs) = (120, 13, 0.3, 11);
-components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+```jldoctest
+julia> using Random, SparseArrays
 
-for i in 1:num_ccs # Some components may themselves be disconnected
-    cc_size = rand(1:max_cc_size);
-    cc_band = rand(0:min(max_band, cc_size - 1));
-    components[i] = sparse(
-        MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
-    );
-end
+julia> Random.seed!(271828);
 
-A = blockdiag(components...); # `A` has least 8 connected components
-perm = randperm(sum(map(cc -> size(cc, 1), components)));
-A_shuffled = A[perm, perm];
-res = minimize_bandwidth(A_shuffled, Minimization.GibbsPooleStockmeyer());
-A # The original matrix
-A_shuffled # A far-from-optimal ordering of `A`
-A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
-bandwidth(A)
-bandwidth(A_shuffled) # Much larger after shuffling
-res # Gets very close to the original bandwidth
+julia> (max_cc_size, max_band, p, num_ccs) = (120, 13, 0.3, 11);
+
+julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+
+julia> for i in 1:num_ccs # Some components may themselves be disconnected
+           cc_size = rand(1:max_cc_size);
+           cc_band = rand(0:min(max_band, cc_size - 1));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
+       end
+
+julia> A = blockdiag(components...); # `A` has least 8 connected components
+
+julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
+
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, Minimization.GibbsPooleStockmeyer());
+
+julia> A # The original matrix
+733×733 SparseMatrixCSC{Float64, Int64} with 2864 stored entries:
+⎡⠿⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠘⠻⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠙⢻⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢆⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⣦⡀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⎦
+
+julia> A_shuffled # A far-from-optimal ordering of `A`
+733×733 SparseMatrixCSC{Float64, Int64} with 2864 stored entries:
+⎡⠑⢄⠐⣆⡇⠂⡒⠆⠄⠅⠒⠜⡥⠠⢂⡒⠢⢈⢑⠐⠰⢤⠒⠀⢰⢠⠂⢢⡀⠪⠂⡀⢂⠔⡗⡔⠂⣴⠄⢀⎤
+⎢⠰⢤⠱⠆⡐⠃⠠⡀⢱⡊⣜⢖⡈⡐⢀⠀⢎⣈⡹⢠⣭⡜⡌⢄⠰⠂⠌⢧⢉⣂⢁⡥⠈⢘⡄⢕⣙⠬⡐⠓⎥
+⎢⠩⠉⠴⠈⠟⢅⢊⠴⠔⠎⠘⠿⢼⡈⡁⠚⠘⠲⠽⠉⡯⠐⡫⢛⡈⠀⠂⠥⠠⠘⢂⣅⡬⡢⢫⡀⢈⡌⡔⠀⎥
+⎢⠸⠌⠀⠢⢊⡔⠑⣤⠀⠃⠬⠈⠤⢠⠁⢐⡦⢒⢸⠄⠵⢧⢸⠉⠤⠂⠖⠀⣉⢭⠔⢦⠐⠖⢯⠠⠆⡈⠀⠆⎥
+⎢⠄⠅⡱⠲⡰⠅⠤⠀⡕⢍⠀⠀⣏⠘⡄⠰⢉⢡⢒⠊⠭⡧⠾⢸⣣⣔⡈⡄⢜⡯⠄⠁⡐⠤⠆⢎⢳⡀⠀⣀⎥
+⎢⣘⠄⢲⢝⣶⡄⡂⠃⠀⠀⢴⣷⡑⠪⡠⢆⢰⣨⢻⠀⣰⣬⠋⠔⣛⡈⠪⠄⢼⢵⠀⠅⢁⣤⠀⣥⣅⣳⣰⠄⎥
+⎢⠁⡋⢂⠨⡒⠳⠀⣃⣋⠙⡱⡈⡛⣬⠖⡄⢊⠸⢩⢽⡙⢏⠊⢔⠩⠋⢘⣀⠈⡕⡅⣠⠈⡋⠨⡓⣺⣫⠓⠀⎥
+⎢⢨⠰⠀⠐⣡⠈⢁⢀⢀⡉⠠⢎⠘⠥⠑⢄⡁⠈⢁⠀⠒⠺⠬⠋⠠⠒⠄⡀⠊⢠⠡⠠⠒⢌⢂⠀⢪⢫⠡⠂⎥
+⎢⡈⢂⡊⢱⢲⡀⢨⢋⠇⣐⡐⣲⣊⡐⡁⠈⠰⣦⠸⣢⠑⢛⡔⠁⢎⡽⡅⢠⠠⡖⢆⣂⢠⠀⢓⠤⡜⡮⠺⠔⎥
+⎢⢑⠐⠓⣊⡗⠃⠒⠖⡸⠐⠛⠒⣇⣖⠁⠐⠲⣢⢑⢔⡪⣈⡋⢀⣙⣔⠂⣒⠻⡜⠁⡇⢅⠕⠂⢰⣅⣐⢈⡋⎥
+⎢⠐⣆⣃⠿⢋⠋⠵⣇⠧⡧⡐⣾⡷⢌⣸⡀⣵⢀⡊⢪⠻⣦⠪⡌⢹⠁⠂⡔⣐⡨⠇⡆⠪⣋⡶⡅⡘⡡⠂⠑⎥
+⎢⠘⠀⠂⢍⣯⢊⡖⠒⣚⣃⢋⠄⢊⢄⡦⠃⠔⠉⠋⢈⡊⠦⠫⢆⡈⠁⠀⣈⠒⢘⠍⢂⡙⡙⠤⡠⡝⠌⠄⢀⎥
+⎢⠐⣒⠰⠂⠂⠈⠠⠃⢉⢾⡛⠸⡧⠂⢠⠂⣎⡵⢓⢼⠗⠒⠆⠈⠱⣦⠆⣼⠠⢐⠀⠂⢸⢠⡃⡫⢀⠳⠣⣀⎥
+⎢⠨⣀⠦⣅⠌⡄⠘⠁⠂⠬⠊⠆⠒⢰⠀⠡⠁⣉⢨⢠⢈⠤⡀⢠⣈⣥⠑⣤⣚⠄⡄⡖⠐⠩⣬⠄⠆⠀⠁⡄⎥
+⎢⡠⡈⠣⢰⣀⠂⡇⣜⡶⡵⢖⣗⢆⠤⠊⣀⢠⠦⣛⠦⡐⡸⣘⢀⢀⢂⠚⠜⠑⣤⠚⡈⢄⠈⡤⢲⠐⣔⣉⢄⎥
+⎢⠈⠠⠅⡴⠌⢴⠰⣅⠄⠁⠄⠄⠁⣩⠁⡂⠨⢱⠥⠤⠩⠥⠣⢁⠠⠀⢠⠭⡚⠠⠑⢄⠼⠷⠉⠗⣎⠅⣐⠀⎥
+⎢⢈⠔⣂⢀⠢⡫⢰⠄⠐⡌⠁⣴⡦⠠⡘⢄⠀⠒⢅⠕⡮⢢⣗⠨⠒⣒⡔⡀⡀⠑⢶⡇⡑⢌⢀⢳⡫⠀⠲⠐⎥
+⎢⢙⠭⢄⢍⠋⠲⠋⡓⡨⢅⠄⣤⢦⠢⠈⠐⠙⡔⢈⣀⠜⠯⠀⡣⡭⡨⠂⠟⢠⣋⢧⠄⢤⣐⢏⢕⡭⣍⢀⠄⎥
+⎢⢈⣤⡓⡜⡂⠴⡈⠡⠙⠲⢥⣹⡾⣺⡮⣒⡲⡭⢁⢹⠖⡨⡓⠍⢤⡐⠈⠁⢐⢤⠎⠝⠋⠊⡇⢯⠛⢄⢐⡆⎥
+⎣⠀⢁⢴⠈⠐⠉⠠⠄⠀⢠⠐⠞⠙⠀⠡⠂⢚⠆⡦⠰⢌⠀⠀⢁⠉⢢⠁⠤⠃⢜⠐⠘⢘⠂⠀⠔⠰⠴⠛⣤⎦
+
+julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
+733×733 SparseMatrixCSC{Float64, Int64} with 2864 stored entries:
+⎡⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠛⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠑⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣧⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢻⣶⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣷⡀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⣷⣄⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢻⣶⣄⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣷⎦
+
+julia> bandwidth(A)
+12
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+703
+
+julia> res # Gets very close to the original bandwidth
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Gibbs–Poole–Stockmeyer
+ * Approach: heuristic
+ * Minimum Bandwidth: 15
+ * Original Bandwidth: 703
+ * Matrix Size: 733×733
 ```
 
 # Notes
