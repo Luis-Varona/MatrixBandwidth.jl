@@ -272,7 +272,7 @@ function _has_bandwidth_k_ordering_impl(
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
-    adj_list = Set{Int}()
+    adj_list = Tuple{Int,Int}[]
     #= Sentinel value for a nonempty perimeter just so the common logic between DCM and
     DCM-PS still runs. =#
     perimeter = [(Int[], Int[])]
@@ -280,7 +280,7 @@ function _has_bandwidth_k_ordering_impl(
     ps_depth = 0
 
     return _dcm_add_node!(
-        ordering_buf, A, k, adj_lists, unselected, adj_list, perimeter, num_placed, ps_depth
+        ordering_buf, k, adj_lists, unselected, adj_list, perimeter, num_placed, ps_depth
     )
 end
 
@@ -307,7 +307,7 @@ function _has_bandwidth_k_ordering_impl(
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
-    adj_list = Set{Int}()
+    adj_list = Tuple{Int,Int}[]
     num_placed = 0
     perimeter = [
         (lpo, _dcm_lpo_time_stamps(lpo, A, k)) for
@@ -315,17 +315,16 @@ function _has_bandwidth_k_ordering_impl(
     ]
 
     return _dcm_add_node!(
-        ordering_buf, A, k, adj_lists, unselected, adj_list, perimeter, num_placed, ps_depth
+        ordering_buf, k, adj_lists, unselected, adj_list, perimeter, num_placed, ps_depth
     )
 end
 
 function _dcm_add_node!(
     ordering_buf::Vector{Int},
-    A::AbstractMatrix{Bool},
     k::Integer,
     adj_lists::Vector{Vector{Int}},
     unselected::Set{Int},
-    adj_list::Set{Int},
+    adj_list::Vector{Tuple{Int,Int}},
     perimeter::Vector{Tuple{Vector{Int},Vector{Int}}},
     num_placed::Int,
     ps_depth::Int,
@@ -334,7 +333,7 @@ function _dcm_add_node!(
         return nothing
     end
 
-    n = size(A, 1)
+    n = length(ordering_buf)
 
     #= The original Del Corso and Manzini (1999) paper makes two bold claims:
     - Once `num_placed` reaches `n - ps_depth`, only one LPO will remain in `perimeter`.
@@ -360,11 +359,10 @@ function _dcm_add_node!(
 
     while (!isnothing(res) && isnothing(ordering))
         (candidate, state) = res
-        far_nodes = view(ordering_buf, 1:(num_placed - k))
 
         #= Ensure that no placed node at least `k` positions before `candidate` is adjacent
         to `candidate` (otherwise, the bandwidth would be at least `k + 1`). =#
-        if !any(view(A, far_nodes, candidate))
+        if _dcm_candidate_is_compatible(ordering_buf, adj_lists, candidate, k, num_placed)
             unselected_new = setdiff(unselected, [candidate])
 
             if !_dcm_order_is_reversed(
@@ -375,15 +373,14 @@ function _dcm_add_node!(
                 )
 
                 if !isempty(perimeter_new)
-                    adj_list_new = intersect(
-                        union(adj_list, adj_lists[candidate]), unselected_new
+                    adj_list_new = _dcm_updated_adj_list(
+                        adj_list, adj_lists[candidate], unselected_new, num_placed + 1, k
                     )
 
-                    if _dcm_is_compatible(ordering_buf, A, adj_list_new, k, num_placed)
+                    if _dcm_adj_list_is_compatible(adj_list_new, k, num_placed)
                         ordering_buf[num_placed + 1] = candidate
                         ordering = _dcm_add_node!(
                             ordering_buf,
-                            A,
                             k,
                             adj_lists,
                             unselected_new,
@@ -466,6 +463,63 @@ function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Inte
     return time_stamps
 end
 
+function _dcm_candidate_is_compatible(
+    ordering_buf::Vector{Int},
+    adj_lists::Vector{Vector{Int}},
+    candidate::Int,
+    k::Integer,
+    num_placed::Int,
+)
+    #= If we have not yet placed at least `k` nodes, then any candidate is trivially
+    compatible (there are no "far nodes" to violate the bandwidth constraint). =#
+    if num_placed < k
+        compatible = true
+    else
+        far_nodes = view(ordering_buf, 1:(num_placed - k))
+        candidate_neighbors = adj_lists[candidate]
+        compatible = !any(node -> node in candidate_neighbors, far_nodes)
+    end
+
+    return compatible
+end
+
+function _dcm_adj_list_is_compatible(
+    adj_list::Vector{Tuple{Int,Int}}, k::Integer, num_placed::Int
+)
+    #= If more than `k` unplaced nodes are adjacent to some already placed node, we cannot
+    place them all within `k` positions of that node. =#
+    if length(adj_list) > k
+        compatible = false
+    else
+        compatible = all(
+            ((i, (_, expiration)),) -> expiration >= num_placed + 1 + i, enumerate(adj_list)
+        )
+    end
+
+    return compatible
+end
+
+function _dcm_updated_adj_list(
+    adj_list::Vector{Tuple{Int,Int}},
+    candidate_neighbors::Vector{Int},
+    unselected_new::Set{Int},
+    new_position::Int,
+    k::Integer,
+)
+    adj_list_filtered = filter(((node, _),) -> node in unselected_new, adj_list)
+    existing_nodes = Set(node for (node, _) in adj_list_filtered)
+
+    new_entries = Tuple{Int,Int}[
+        (neighbor, new_position + k) for neighbor in candidate_neighbors if
+        neighbor in unselected_new && !(neighbor in existing_nodes)
+    ]
+
+    adj_list_new = vcat(adj_list_filtered, new_entries)
+    sort!(adj_list_new; by=last)
+
+    return adj_list_new
+end
+
 function _dcm_pruned_perimeter(
     perimeter::Vector{Tuple{Vector{Int},Vector{Int}}},
     candidate::Int,
@@ -502,44 +556,4 @@ function _dcm_pruned_perimeter(
     end
 
     return perimeter_new
-end
-
-#= With the usual bandwidth-`k` constraint for already placed nodes checked inline in
-`_dcm_add_node!`, this implements the expiration-time pruning (for both DCM and DCM-PS). =#
-function _dcm_is_compatible(
-    ordering_buf::Vector{Int},
-    A::AbstractMatrix{Bool},
-    adj_list::Set{Int},
-    k::Integer,
-    num_placed::Int,
-)
-    l = length(adj_list)
-
-    if l > k
-        #= If more than `k` nodes are adjacent to any node (not just the most recent one)
-        already placed, then it is impossible to place them all from `num_placed + 1` to
-        `num_placed + k`, thus forcing a violation of the bandwidth-`k` constraint. =#
-        #= If more than `k` unplaced nodes are adjacent to our candidate, we cannot place
-        them all after said candidate without violating the bandwidth-`k` constraint. =#
-        compat = false
-    else
-        placed_nodes = view(ordering_buf, 1:num_placed)
-        constraints = (1:l) .+ (num_placed + 1)
-
-        latest_positions = Iterators.map(
-            neighbor -> findfirst(node -> A[node, neighbor], placed_nodes), adj_list
-        )
-        #= We must add `k` to the latest allowed positions to account for the bandwidth
-        constraint. To handle cases where some `neighbor` is only adjacent to the candidate
-        and not to any already placed `node` (and thus the `findfirst` call returns
-        `nothing`), we use the sentinel value `typemax(Int)`. =#
-        latest_positions = Iterators.map(
-            pos -> isnothing(pos) ? typemax(Int) : pos + k, latest_positions
-        )
-        latest_positions = sort!(collect(latest_positions))
-
-        compat = all(latest_positions .>= constraints)
-    end
-
-    return compat
 end

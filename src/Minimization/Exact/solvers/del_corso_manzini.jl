@@ -260,7 +260,7 @@ function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, ::DelCor
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
-    adj_list = Set{Int}()
+    adj_list = Tuple{Int,Int}[]
     #= Sentinel value for a nonempty perimeter just so the common logic between DCM and
     DCM-PS still runs. =#
     perimeter = [(Int[], Int[])]
@@ -272,7 +272,6 @@ function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, ::DelCor
     while isnothing(ordering)
         ordering = Recognition._dcm_add_node!(
             ordering_buf,
-            A,
             k,
             adj_lists,
             unselected,
@@ -311,7 +310,7 @@ function Minimization._minimize_bandwidth_impl(
     adj_lists = map(node -> findall(view(A, :, node)), 1:n)
 
     unselected = Set(1:n)
-    adj_list = Set{Int}()
+    adj_list = Tuple{Int,Int}[]
     num_placed = 0
     lpos = Iterators.flatmap(permutations, combinations(1:n, ps_depth))
 
@@ -321,7 +320,6 @@ function Minimization._minimize_bandwidth_impl(
         perimeter = map(lpo -> (lpo, Recognition._dcm_lpo_time_stamps(lpo, A, k)), lpos)
         ordering = Recognition._dcm_add_node!(
             ordering_buf,
-            A,
             k,
             adj_lists,
             unselected,
