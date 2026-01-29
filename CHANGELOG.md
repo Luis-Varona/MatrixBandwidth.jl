@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-### Changed
+### Removed
 
-- Updated the GitHub Actions CI workflow to allow nightly CI runs (on `pre`) to fail without affecting the overall status of the workflow (#210).
+- Removed nightly CI runs (on `pre`) from the GitHub Actions CI workflow, since they often fail due to incompatibilities with dependencies in the testing matrix (#212).
 
 ### Fixed
 
