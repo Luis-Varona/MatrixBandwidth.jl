@@ -152,13 +152,20 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
         dangling = Set{Tuple{Int,Int}}(key[2])
 
         if length(region) < k
-            #= The Gurari–Sudborough refinement of the original Saxe algorithm cuts time
-            complexity down from `O(nᵏ⁺¹)` to `O(nᵏ)` by only considering extensions with
-            vertices reachable by a path beginning with a dangling edge that never again
-            traverses a dangling edge. =#
-            candidates = _sgs_unassigned(
-                region, dangling, adj_lists, nodes_visited, edges_visited, edge_idxs
-            )
+            #= If any node has exactly its maximum allowed dangling edges, the next node
+            must be adjacent to it (placing a non-adjacent node would leave the dangling
+            count unchanged while the allowed maximum decreases). =#
+            saturated = _sgs_saturated_candidates(region, dangling, k)
+
+            if !isnothing(saturated)
+                candidates = saturated
+            else
+                #= We only consider nodes reachable by a path beginning with a dangling edge
+                that never again traverses a dangling edge. =#
+                candidates = _sgs_unassigned(
+                    region, dangling, adj_lists, nodes_visited, edges_visited, edge_idxs
+                )
+            end
         else
             u = region[1]
             #= Indeed, there should be exactly one such edge; the lazy evaluation of
@@ -211,9 +218,46 @@ function _sgs_connected_ordering(A::AbstractMatrix{Bool}, k::Integer)
     return nothing
 end
 
-#= Return the set of vertices not yet in `region` reachable from `region` via paths
-beginning with a dangling edge that never again traverse a dangling edge. (If `dangling` is
-empty, then of course, all unassigned vertices are reachable.) =#
+#= If any node in `region` is at its maximum allowed dangling edge count, return the set of
+unplaced nodes adjacent to all such "saturated" nodes. =#
+function _sgs_saturated_candidates(
+    region::Vector{Int}, dangling::Set{Tuple{Int,Int}}, k::Integer
+)
+    endpoint_sets = Vector{Set{Int}}()
+
+    for (idx, node) in enumerate(region)
+        max_allowed = k - length(region) + idx
+        incident = filter(edge -> node in edge, dangling)
+
+        if length(incident) == max_allowed
+            endpoints = Set{Int}()
+
+            for edge in incident
+                if node == edge[1]
+                    neighbor = edge[2]
+                else
+                    neighbor = edge[1]
+                end
+
+                push!(endpoints, neighbor)
+            end
+
+            push!(endpoint_sets, endpoints)
+        end
+    end
+
+    if isempty(endpoint_sets)
+        candidates = nothing
+    else
+        candidates = reduce(intersect, endpoint_sets)
+    end
+
+    return candidates
+end
+
+#= Return the set of nodes not yet in `region` reachable from `region` via paths beginning
+with a dangling edge that never again traverse a dangling edge. (If `dangling` is empty,
+then of course, all unassigned nodes are reachable.) =#
 function _sgs_unassigned(
     region::Vector{Int},
     dangling::Set{Tuple{Int,Int}},
