@@ -34,10 +34,10 @@ extensibility to further methods in mind.
 The following matrix bandwidth reduction algorithms are currently available:
 - **Minimization**
     - *Exact*
+        - Caprara–Salazar-González ([`Minimization.CapraraSalazarGonzalez`](@ref))
         - Del Corso–Manzini ([`Minimization.DelCorsoManzini`](@ref))
         - Del Corso–Manzini with perimeter search
             ([`Minimization.DelCorsoManziniWithPS`](@ref))
-        - Caprara–Salazar-González ([`Minimization.CapraraSalazarGonzalez`](@ref))
         - Saxe–Gurari–Sudborough ([`Minimization.SaxeGurariSudborough`](@ref))
         - Brute-force search ([`Minimization.BruteForceSearch`](@ref))
     - *Heuristic*
@@ -45,9 +45,9 @@ The following matrix bandwidth reduction algorithms are currently available:
         - Cuthill–McKee ([`Minimization.CuthillMcKee`](@ref))
         - Reverse Cuthill–McKee ([`Minimization.ReverseCuthillMcKee`](@ref))
 - **Recognition**
+    - Caprara–Salazar-González ([`Recognition.CapraraSalazarGonzalez`](@ref))
     - Del Corso–Manzini ([`Recognition.DelCorsoManzini`](@ref))
     - Del Corso–Manzini with perimeter search ([`Recognition.DelCorsoManziniWithPS`](@ref))
-    - Caprara–Salazar-González ([`Recognition.CapraraSalazarGonzalez`](@ref))
     - Saxe–Gurari–Sudborough ([`Recognition.SaxeGurariSudborough`](@ref))
     - Brute-force search ([`Recognition.BruteForceSearch`](@ref))
 

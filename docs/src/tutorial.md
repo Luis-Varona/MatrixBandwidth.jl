@@ -134,12 +134,12 @@ julia> A[res_recognize.ordering, res_recognize.ordering]
 
 (In this case, though, it turns out that 3 *is* the true minimum bandwidth of the matrix, as can be verified by running `minimize_bandwidth` with any exact algorithm.)
 
-As with `minimize_bandwidth`, if no algorithm is explicitly specified, `has_bandwidth_k_ordering` defaults to the Del Corso–Manzini algorithm:
+As with `minimize_bandwidth`, if no algorithm is explicitly specified, `has_bandwidth_k_ordering` defaults to the Caprara–Salazar-González algorithm:
 
 ```julia-repl
 julia> res_recognize_default = has_bandwidth_k_ordering(A, 6)
 Results of Bandwidth Recognition Algorithm
- * Algorithm: Del Corso–Manzini
+ * Algorithm: Caprara–Salazar-González
  * Bandwidth Threshold k: 6
  * Has Bandwidth ≤ k Ordering: true
  * Original Bandwidth: 51
@@ -147,21 +147,21 @@ Results of Bandwidth Recognition Algorithm
 
 julia> A[res_recognize_default.ordering, res_recognize_default.ordering]
 60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
-⎡⠀⠀⠄⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⢄⠁⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⢄⠀⠀⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠑⠀⡀⠀⠀⠌⠑⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠈⢆⠁⠀⠀⠀⠲⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠘⢠⡀⠐⠀⠀⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠄⠠⠀⠀⠐⢂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⢀⡀⠈⠀⡐⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢀⠠⠀⠀⠀⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⢤⠀⠀⠀⠔⠄⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠄⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠂⠀⠀⠀⠁⢀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠠⠂⢀⠑⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠐⠀⠀⠀⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
+⎡⠀⠀⠐⠡⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠔⡀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠑⢀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠑⢀⠀⠠⠂⠈⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠈⢆⠀⠀⢀⠀⠲⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠑⢠⡀⡀⠈⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠄⠀⠀⠀⠐⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢐⠀⠄⠁⡉⠁⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⠈⡀⠈⠈⠑⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢆⠀⠀⠀⠈⣀⣀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠂⢠⠀⠀⠀⠐⠄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠀⠄⠁⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⢐⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠠⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠀⠀⎦
 ```
 
 ## Additional utilities

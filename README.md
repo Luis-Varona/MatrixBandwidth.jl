@@ -61,9 +61,9 @@ The following matrix bandwidth reduction algorithms are currently available:
 
 - **Minimization**
   - *Exact*
+    - Caprara&ndash;Salazar-González
     - Del Corso&ndash;Manzini
     - Del Corso&ndash;Manzini with perimeter search
-    - Caprara&ndash;Salazar-González
     - Saxe&ndash;Gurari&ndash;Sudborough
     - Brute-force search
   - *Heuristic*
@@ -71,9 +71,9 @@ The following matrix bandwidth reduction algorithms are currently available:
     - Cuthill&ndash;McKee
     - Reverse Cuthill&ndash;McKee
 - **Recognition**
+  - Caprara&ndash;Salazar-González
   - Del Corso&ndash;Manzini
   - Del Corso&ndash;Manzini with perimeter search
-  - Caprara&ndash;Salazar-González
   - Saxe&ndash;Gurari&ndash;Sudborough
   - Brute-force search
 
@@ -218,12 +218,12 @@ julia> A[res_minimize_default.ordering, res_minimize_default.ordering]
 
 (We default to Gibbs&ndash;Poole&ndash;Stockmeyer because it is one of the most accurate heuristic algorithms&mdash;note how in this case, it produced a lower-bandwidth ordering than reverse Cuthill&ndash;McKee. Of course, if true optimality is required, an exact algorithm should be used instead.)
 
-`has_bandwidth_k_ordering` similarly defaults to the Del Corso&ndash;Manzini algorithm:
+`has_bandwidth_k_ordering` similarly defaults to the Caprara&ndash;Salazar-González algorithm:
 
 ```julia-repl
 julia> res_recognize_default = has_bandwidth_k_ordering(A, 6)
 Results of Bandwidth Recognition Algorithm
- * Algorithm: Del Corso–Manzini
+ * Algorithm: Caprara–Salazar-González
  * Bandwidth Threshold k: 6
  * Has Bandwidth ≤ k Ordering: true
  * Original Bandwidth: 51
@@ -231,21 +231,21 @@ Results of Bandwidth Recognition Algorithm
 
 julia> A[res_recognize_default.ordering, res_recognize_default.ordering]
 60×60 SparseMatrixCSC{Float64, Int64} with 93 stored entries:
-⎡⠀⠀⠄⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
-⎢⢄⠁⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⢄⠀⠀⠀⠀⠠⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠑⠀⡀⠀⠀⠌⠑⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠈⢆⠁⠀⠀⠀⠲⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠘⢠⡀⠐⠀⠀⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠄⠠⠀⠀⠐⢂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⢀⡀⠈⠀⡐⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢀⠠⠀⠀⠀⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⢤⠀⠀⠀⠔⠄⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠄⠀⠀⠠⠀⠀⠀⠀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠂⠀⠀⠀⠁⢀⠀⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⠀⠠⠂⢀⠑⠀⠀⎥
-⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠐⠀⠀⠀⠀⎥
-⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎦
+⎡⠀⠀⠐⠡⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠔⡀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠑⢀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠑⢀⠀⠠⠂⠈⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠈⢆⠀⠀⢀⠀⠲⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠑⢠⡀⡀⠈⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠄⠀⠀⠀⠐⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢐⠀⠄⠁⡉⠁⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⠈⡀⠈⠈⠑⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢆⠀⠀⠀⠈⣀⣀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠂⢠⠀⠀⠀⠐⠄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢀⠀⠄⠁⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⢐⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠠⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⠀⠀⎦
 ```
 
 Complementing our various bandwidth minimization and recognition algorithms, MatrixBandwidth.jl exports several additional core functions, including (but not limited to) `bandwidth` and `profile` to compute the original bandwidth and profile of a matrix prior to any reordering:

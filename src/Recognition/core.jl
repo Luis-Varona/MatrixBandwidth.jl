@@ -54,7 +54,7 @@ res_sgs = has_bandwidth_k_ordering(A, k, Recognition.SaxeGurariSudborough())
 A[res_sgs.ordering, res_sgs.ordering]
 ```
 
-If no decider is specified, then the Del Corso–Manzini algorithm is used by default:
+If no decider is specified, then the Caprara–Salazar-González algorithm is used by default:
 
 ```@repl
 using Random, SparseArrays

@@ -8,10 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Changed the default recognition decider from Del Corso–Manzini to Caprara–Salazar-González, which is now considerably faster after the performance fixes (#214).
 - Updated the `_blb_connected` helper (used in `bandwidth_lower_bound`) to avoid unnecessary allocations, now requiring only `O(n)` auxiliary space instead of `O(n^2)` (#213).
 
 ### Fixed
 
+- Significantly refactored the Caprara–Salazar-González logic to fix several bugs severely affecting performance (although not correctness); this also allowed us to remove *JuMP.jl* and *HiGHS.jl* as dependencies (#214).
 - Fixed off-by-one bug in the expiration-time pruning of the Del Corso–Manzini algorithm(s) (did not affect correctness, only performance) (#211).
 - Fixed several discrepancies between the Gibbs–Poole–Stockmeyer minimization algorithm as described in the original paper and its implementation (the `README` and tutorial examples was also updated accordingly) (#209).
 
