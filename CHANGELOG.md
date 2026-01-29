@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- Fixed minor discrepancy (not affecting correctness, only performance) between the Saxe–Gurari–Sudborough implementation and the original paper; now, candidates are pruned early when a node in the active region is already at its maximum number of allowed dangling edges (and so the next node must be adjacent to it) (#215).
 - Significantly refactored the Caprara–Salazar-González logic to fix several bugs severely affecting performance (although not correctness); this also allowed us to remove *JuMP.jl* and *HiGHS.jl* as dependencies (#214).
 - Fixed off-by-one bug in the expiration-time pruning of the Del Corso–Manzini algorithm(s) (did not affect correctness, only performance) (#211).
 - Fixed several discrepancies between the Gibbs–Poole–Stockmeyer minimization algorithm as described in the original paper and its implementation (the `README` and tutorial examples was also updated accordingly) (#209).
