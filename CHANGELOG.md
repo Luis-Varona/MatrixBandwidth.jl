@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-01-29
+
 ### Changed
 
 - Switched back from `@repl` blocks to `jldoctest` blocks in the docstrings, since *Documenter.jl* stopped executing `@repl` blocks in the generated documentation (#217).
@@ -156,7 +158,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Released the initial stable version of the package.
 
-[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.2.3...HEAD
+[unreleased]: https://github.com/Luis-Varona/MatrixBandwidth.jl/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.3.0
 [0.2.3]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.3
 [0.2.2]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.2
 [0.2.1]: https://github.com/Luis-Varona/MatrixBandwidth.jl/releases/tag/v0.2.1
