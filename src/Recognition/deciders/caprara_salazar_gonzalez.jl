@@ -27,19 +27,11 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 
 # Performance
 Given an ``n×n`` input matrix and threshold bandwidth ``k``, the Caprara–Salazar-González
-algorithm runs in ``O(n! ⋅ Tᵢₗₚ(n, n²))`` time, where ``Tᵢₗₚ(n, m)`` is the time taken to
-solve an integer linear programming (ILP) problem with ``O(n)`` variables and ``O(m)``
-constraints:
+algorithm runs in ``O(n! ⋅ mn)`` time in the worst case:
 
 - We perform a depth-first search of ``O(n!)`` partial orderings.
-- At each search node, we solve ILP relaxations with ``n`` variables and ``O(n²)``
-    constraints (given by the number of nonzero entries in the computed distance matrix),
-    taking ``Tᵢₗₚ(n, n²)`` time. (This dominates the ``O(n²)`` auxiliary computations needed
-    to set up the ILP.)
-- Therefore, the overall time complexity is ``O(n! ⋅ Tᵢₗₚ(n, n²))``.
-
-Note that ``Tᵢₗₚ(n, n²)`` has worst-case complexity ``O(2ⁿ)``, although this ultimately
-depends on the ILP solver used. (Here, we use the HiGHS solver from the `HiGHS.jl` package.)
+- At each search node, we compute first and last feasible positions for all free nodes in
+    ``O(mn)`` time using the formulas from Propositions 11 and 14 of [CS05].
 
 Of course, this is all but an upper bound on the time complexity of
 Caprara–Salazar-González, achieved only in the most pathological of cases. In practice,
@@ -77,9 +69,6 @@ in the original paper, which actually never explicitly tackles matrix bandwidth 
 *minimization* does repeatedly call a recognition subroutine—this is precisely the logic we
 implement here. (We do, however, also implement said minimization algorithm in
 [`MatrixBandwidth.Minimization.Exact.CapraraSalazarGonzalez`](@ref).)
-
-A final implementation detail worth noting is that we use HiGHS as our solver; it is one of
-the fastest open-source solvers available for mixed-integer linear programming.
 
 # References
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with
@@ -122,10 +111,11 @@ function _csg_layout_left_to_right!(
         return ordering_buf
     end
 
-    earliest_positions = _csg_solve_relaxation(A, k, dist_matrix, fixed, unselected)
+    earliest_positions, latest_positions = _csg_compute_positions(
+        A, k, dist_matrix, fixed, unselected
+    )
 
-    if isnothing(earliest_positions) ||
-        !_csg_feasible_positions(earliest_positions, fixed, unselected, n)
+    if !_csg_feasible_positions(earliest_positions, latest_positions, fixed, unselected, n)
         return nothing
     end
 
@@ -148,120 +138,105 @@ function _csg_layout_left_to_right!(
     return ordering
 end
 
-#= Use integer-linear programming to determine the earliest feasible position of each node
-not yet placed in the ordering. =#
-function _csg_solve_relaxation(
+function _csg_compute_positions(
     A::AbstractMatrix{Bool},
     k::Integer,
     dist_matrix::Matrix{Float64},
     fixed::Vector{Int},
     unselected::Set{Int},
 )
-    earliest_positions = Dict{Int,Int}()
+    n = size(A, 1)
+    fixed_set = Set(fixed) # For multiple `O(1)` membership checks below
     dists = Dict{Int,Float64}()
 
-    for node in unselected
-        if isempty(fixed)
+    for node in 1:n
+        if node in fixed_set
+            dists[node] = 0.0
+        elseif isempty(fixed)
             dists[node] = Inf
         else
-            dists[node] = minimum(dist_matrix[fixed, node])
+            dists[node] = minimum(dist_matrix[u, node] for u in fixed)
         end
     end
 
-    computed_earliest = Dict{Int,Int}()
+    earliest_positions = Dict{Int,Int}()
+    latest_positions = Dict(u => i for (i, u) in enumerate(fixed))
 
-    for node in sort!(collect(unselected); by=v -> dists[v])
-        earliest_val = _csg_solve_inner_ilp(
-            A, k, dist_matrix, fixed, computed_earliest, node
-        )
+    #= We process in order of increasing distance so closer neighbors (used to compute
+    latest positions) have their latest positions computed first. =#
+    for v in sort!(collect(unselected); by=v -> dists[v])
+        dist_v = dists[v]
+        lower_bound = length(fixed) + 1
 
-        if isnothing(earliest_val)
-            return nothing
+        for (i, u) in enumerate(fixed)
+            dist_uv = dist_matrix[u, v]
+
+            # v must be within `k ⋅ dist(u, v)` positions of each fixed node `u`
+            if isfinite(dist_uv)
+                lower_bound = max(lower_bound, i - Int(dist_uv) * k)
+            end
         end
 
-        earliest_positions[node] = earliest_val
-        computed_earliest[node] = earliest_val
-    end
+        earliest_positions[v] = lower_bound
+        neighbors = Int[]
 
-    return earliest_positions
-end
+        if isfinite(dist_v)
+            for u in 1:n
+                if v != u && A[v, u] && dists[u] == dist_v - 1
+                    push!(neighbors, u)
+                end
+            end
+        end
 
-function _csg_solve_inner_ilp(
-    A::AbstractMatrix{Bool},
-    k::Integer,
-    dist_matrix::Matrix{Float64},
-    fixed::Vector{Int},
-    computed_earliest::Dict{Int,Int},
-    v::Int,
-)
-    n = size(A, 1)
+        if isinf(dist_v) || isempty(neighbors)
+            latest_positions[v] = n
+        else
+            sorted_neighbors = sort(neighbors; by=u -> latest_positions[u], rev=true)
+            #= `running_pos` tracks the last slot where all neighbors can occupy distinct
+            positions. =#
+            running_pos = latest_positions[sorted_neighbors[1]]
 
-    #= `HiGHS` is one of the fastest open-source solvers available for mixed-integer linear
-    programming. =#
-    model = Model(HiGHS.Optimizer)
-    set_silent(model)
+            for u in Iterators.drop(sorted_neighbors, 1)
+                running_pos = min(latest_positions[u], running_pos - 1)
+            end
 
-    @variable(model, pos_v, Int)
-    @objective(model, Min, pos_v)
-
-    #= The next placed node must be placed somewhere after all currently fixed nodes, but
-    (naturally) before the end of the ordering. =#
-    @constraint(model, pos_v >= length(fixed) + 1)
-    @constraint(model, pos_v <= n)
-
-    for (i, u) in enumerate(fixed)
-        dist_temp = dist_matrix[u, v]
-
-        if isfinite(dist_temp)
-            dist = Int(dist_temp)
-            #= The difference in indices of `u` and `v` must be at most `k` times the
-            shortest-path distance between them. If `u` and `v` have distance 1, this
-            simplifies to the standard bandwidth constraint of adjacent nodes being at most
-            `k` indices apart. =#
-            @constraint(model, pos_v <= k * dist + i)
-            @constraint(model, pos_v >= i - k * dist)
+            # `v` must be within `k` positions of its closest neighbors
+            latest_positions[v] = k + running_pos
         end
     end
 
-    for (u, pos_u) in computed_earliest
-        dist_temp = dist_matrix[u, v]
-
-        if isfinite(dist_temp)
-            dist = Int(dist_temp)
-            #= The difference in indices of `u` and `v` must be at most `k` times the
-            shortest-path distance between them. If `u` and `v` have distance 1, this
-            simplifies to the standard bandwidth constraint of adjacent nodes being at most
-            `k` indices apart. =#
-            @constraint(model, pos_v >= pos_u - k * dist)
-            @constraint(model, pos_v <= pos_u + k * dist)
-        end
-    end
-
-    optimize!(model)
-
-    if termination_status(model) == OPTIMAL
-        solution = Int(value(pos_v))
-    else
-        solution = nothing
-    end
-
-    return solution
+    return (earliest_positions, latest_positions)
 end
 
 function _csg_feasible_positions(
-    earliest_positions::Dict{Int,Int}, fixed::Vector{Int}, unselected::Set{Int}, n::Int
+    earliest_positions::Dict{Int,Int},
+    latest_positions::Dict{Int,Int},
+    fixed::Vector{Int},
+    unselected::Set{Int},
+    n::Int,
 )
     remaining = copy(unselected)
+    i = length(fixed) + 1
+    feasible = true
 
-    for i in (length(fixed) + 1):n
-        eligible_nodes = Iterators.filter(v -> earliest_positions[v] <= i, remaining)
+    while (i <= n && feasible)
+        eligible = Iterators.filter(u -> earliest_positions[u] <= i, remaining)
 
-        if isempty(eligible_nodes)
-            return false
+        if isempty(eligible)
+            feasible = false
+        else
+            # Greedily assign the most constrained eligible node to this position
+            v = argmin(u -> latest_positions[u], eligible)
+
+            if latest_positions[v] < i
+                feasible = false
+            else
+                delete!(remaining, v)
+            end
         end
 
-        delete!(remaining, first(eligible_nodes))
+        i += 1
     end
 
-    return true
+    return feasible
 end

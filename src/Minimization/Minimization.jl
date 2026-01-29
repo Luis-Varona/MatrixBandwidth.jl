@@ -16,9 +16,9 @@ bandwidth of ``PAPᵀ`` is minimized.
 
 The following matrix bandwidth minimization algorithms are currently available:
 - *Exact*
+    - Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
     - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
     - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-    - Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
     - Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
     - Brute-force search ([`BruteForceSearch`](@ref))
 - *Heuristic*
@@ -57,9 +57,9 @@ export
     minimize_bandwidth,
 
     # Exact solvers
+    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
-    CapraraSalazarGonzalez,
     SaxeGurariSudborough,
     BruteForceSearch,
 

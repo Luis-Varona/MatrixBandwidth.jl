@@ -17,9 +17,9 @@ therefore, are not feasible for large matrices, but they remain useful when prec
 solutions are required for small-to-medium-sized inputs (say, up to ``100×100``).
 
 The following exact matrix bandwidth minimization algorithms are currently available:
+- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
 - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
 - Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
 - Brute-force search ([`BruteForceSearch`](@ref))
 
@@ -45,9 +45,9 @@ export
     ExactSolver,
 
     # Exact solvers
+    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
-    CapraraSalazarGonzalez,
     SaxeGurariSudborough,
     BruteForceSearch
 
@@ -55,9 +55,9 @@ MatrixBandwidth.ALGORITHMS[:Minimization][:Exact] = []
 
 include("types.jl")
 
+include("solvers/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("solvers/del_corso_manzini.jl")
-include("solvers/caprara_salazar_gonzalez.jl")
 include("solvers/saxe_gurari_sudborough.jl")
 include("solvers/brute_force_search.jl")
 

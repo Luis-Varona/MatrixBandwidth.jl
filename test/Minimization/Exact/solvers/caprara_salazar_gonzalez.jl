@@ -16,7 +16,7 @@ using MatrixBandwidth.Minimization
 using SparseArrays
 using Test
 
-const MAX_ORDER = 7
+const MAX_ORDER = 8
 const NUM_ITER = 10
 
 @testset "CSG solver – Brute force verification (n ≤ $MAX_ORDER)" begin

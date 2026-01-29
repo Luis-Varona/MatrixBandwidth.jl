@@ -30,24 +30,18 @@ As noted above, the Caprara–Salazar-González algorithm requires structurally 
 `CapraraSalazarGonzalez` <: [`ExactSolver`](@ref) <: [`AbstractSolver`](@ref) <: [`MatrixBandwidth.AbstractAlgorithm`](@ref)
 
 # Performance
-Given an ``n×n`` input matrix, the Caprara–Salazar-González algorithm runs in
-``O(n! ⋅ n ⋅ Tᵢₗₚ(n, n²))`` time, where ``Tᵢₗₚ(n, m)`` is the time taken to solve an  integer
-linear programming (ILP) problem with ``O(n)`` variables and ``O(m)`` constraints:
+Given an ``n×n`` input matrix with ``m`` nonzero entries, the Caprara–Salazar-González
+algorithm runs in ``O(n! ⋅ mn²)`` time in the worst case:
 
 - For each underlying "bandwidth ≤ ``k``" check, we perform a depth-first search of
     ``O(n!)`` partial orderings.
-- At each search node, we solve ILP relaxations with ``n`` variables and ``O(n²)``
-    constraints (given by the number of nonzero entries in the computed distance matrix),
-    taking ``Tᵢₗₚ(n, n²)`` time. (This dominates the ``O(n²)`` auxiliary computations needed
-    to set up the ILP.) Thus, the overall time complexity for each value of ``k`` is
-    ``O(n! ⋅ Tᵢₗₚ(n, n²))``.
+- At each search node, we compute first and last feasible positions for all free nodes in
+    ``O(mn)`` time using the closed-form formulas from Propositions 11 and 14 of [CS05].
+    Thus, the overall time complexity for each value of ``k`` is ``O(n! ⋅ mn)``.
 - The difference between the maximum possible bandwidth (``n - 1``) and our initial lower
-    bound grows linearly in ``n``, so we run the underlying ``O(n! ⋅ Tᵢₗₚ(n, n²))``
-    recognition algorithm ``O(n)`` times.
-- Therefore, the overall time complexity is ``O(n! ⋅ n ⋅ Tᵢₗₚ(n, n²))``.
-
-Note that ``Tᵢₗₚ(n, n²)`` has worst-case complexity ``O(2ⁿ)``, although this ultimately
-depends on the ILP solver used. (Here, we use the HiGHS solver from the `HiGHS.jl` package.)
+    bound grows linearly in ``n``, so we run the underlying ``O(n! ⋅ mn)`` recognition
+    algorithm ``O(n)`` times.
+- Therefore, the overall time complexity is ``O(n! ⋅ mn ⋅ n) = O(n! ⋅ mn²)``.
 
 Of course, this is all but an upper bound on the time complexity of
 Caprara–Salazar-González, achieved only in the most pathological of cases. In practice,
@@ -80,9 +74,6 @@ faster, and the paper states that there is no known heuristic for determining wh
 will be more performant for a given input [CS05, pp. 368--69]. Therefore, we opt to
 implement only `LAYOUT_LEFT_TO_RIGHT` as a matter of practicality, although future
 developers may wish to extend the interface with `LAYOUT_BOTH_WAYS` as well.
-
-A final implementation detail worth noting is that we use HiGHS as our solver; it is one of
-the fastest open-source solvers available for mixed-integer linear programming.
 
 # References
 - [CS05](@cite): A. Caprara and J.-J. Salazar-González. *Laying Out Sparse Graphs with

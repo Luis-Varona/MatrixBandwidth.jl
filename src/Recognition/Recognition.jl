@@ -16,9 +16,9 @@ bandwidth recognition problem* entails determining whether there exists a permut
 optimal permutation that fully minimizes the bandwidth of ``A`` is not required).
 
 The following matrix bandwidth recognition algorithms are currently available:
+- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
 - Del Corso–Manzini ([`DelCorsoManzini`](@ref))
 - Del Corso–Manzini with perimeter search ([`DelCorsoManziniWithPS`](@ref))
-- Caprara–Salazar-González ([`CapraraSalazarGonzalez`](@ref))
 - Saxe–Gurari–Sudborough ([`SaxeGurariSudborough`](@ref))
 - Brute-force search ([`BruteForceSearch`](@ref))
 
@@ -38,8 +38,6 @@ using MatrixBandwidth: _requires_structural_symmetry, _problem
 
 using Combinatorics: combinations, permutations
 using DataStructures: Queue
-using JuMP
-using HiGHS
 
 export
     # Types
@@ -50,9 +48,9 @@ export
     has_bandwidth_k_ordering,
 
     # Deciders
+    CapraraSalazarGonzalez,
     DelCorsoManzini,
     DelCorsoManziniWithPS,
-    CapraraSalazarGonzalez,
     SaxeGurariSudborough,
     BruteForceSearch
 
@@ -61,12 +59,12 @@ MatrixBandwidth.ALGORITHMS[:Recognition] = []
 include("types.jl")
 include("core.jl")
 
+include("deciders/caprara_salazar_gonzalez.jl")
 # Defines both `DelCorsoManzini` and `DelCorsoManziniWithPS`
 include("deciders/del_corso_manzini.jl")
-include("deciders/caprara_salazar_gonzalez.jl")
 include("deciders/saxe_gurari_sudborough.jl")
 include("deciders/brute_force_search.jl")
 
-const DEFAULT_DECIDER = DelCorsoManzini()
+const DEFAULT_DECIDER = CapraraSalazarGonzalez()
 
 end

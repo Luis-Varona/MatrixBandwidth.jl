@@ -71,9 +71,9 @@ The following algorithms are currently supported:
 
 - **Minimization**
   - *Exact*
+    - Caprara–Salazar-González
     - Del Corso–Manzini
     - Del Corso–Manzini with perimeter search
-    - Caprara–Salazar-González
     - Saxe–Gurari–Sudborough
     - Brute-force search
   - *Heuristic*
@@ -81,9 +81,9 @@ The following algorithms are currently supported:
     - Cuthill–McKee
     - Reverse Cuthill–McKee
 - **Recognition**
+  - Caprara–Salazar-González
   - Del Corso–Manzini
   - Del Corso–Manzini with perimeter search
-  - Caprara–Salazar-González
   - Saxe–Gurari–Sudborough
   - Brute-force search
 
@@ -188,7 +188,7 @@ julia> A[res_recognize.ordering, res_recognize.ordering]
 ⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⠊⡠⎦
 ```
 
-Both functions default to fast, effective algorithms when no specific method is provided (Gibbs–Poole–Stockmeyer for minimization and Del Corso–Manzini for recognition). For detailed examples, explanations of the output structures, and coverage of additional helper functions like `bandwidth` and `profile`, see the [Tutorial](tutorial.md) page.
+Both functions default to fast, effective algorithms when no specific method is provided (Gibbs–Poole–Stockmeyer for minimization and Caprara–Salazar-González for recognition). For detailed examples, explanations of the output structures, and coverage of additional helper functions like `bandwidth` and `profile`, see the [Tutorial](tutorial.md) page.
 
 ## Documentation
 
