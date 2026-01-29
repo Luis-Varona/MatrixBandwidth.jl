@@ -10,7 +10,6 @@
       <img src="https://img.shields.io/badge/version-v0.2.3-pink.svg" alt="Version">
       <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-A31F34.svg" alt="License: MIT"></a>
       <a href="https://github.com/JuliaDiff/BlueStyle"><img src="https://img.shields.io/badge/code%20style-blue-4495d1.svg" alt="Code Style: Blue"></a>
-      <a href="https://doi.org/10.21105/joss.09136"><img src="https://joss.theoj.org/papers/10.21105/joss.09136/status.svg" alt="DOI"></a>
     </td>
   </tr>
   <tr>
@@ -31,14 +30,21 @@
     <td>
       <a href="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl"><img src="https://codecov.io/gh/Luis-Varona/MatrixBandwidth.jl/branch/main/graph/badge.svg" alt="Test coverage from codecov"></a>
     </td>
-    </tr>
-    <tr>
-      <td>Static analysis with</td>
-      <td>
-        <a href="https://github.com/JuliaTesting/Aqua.jl"><img src="https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg" alt="Aqua QA"></a>
-        <a href="https://github.com/aviatesk/JET.jl"><img src="https://img.shields.io/badge/%E2%9C%88%20tested%20with-JET.jl%EF%B8%8F-9cf.svg" alt="JET static analysis"></a>
-      </td>
-    </tr>
+  </tr>
+  <tr>
+    <td>Static analysis with</td>
+    <td>
+      <a href="https://github.com/JuliaTesting/Aqua.jl"><img src="https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg" alt="Aqua QA"></a>
+      <a href="https://github.com/aviatesk/JET.jl"><img src="https://img.shields.io/badge/%E2%9C%88%20tested%20with-JET.jl%EF%B8%8F-9cf.svg" alt="JET static analysis"></a>
+    </td>
+  </tr>
+  <tr>
+    <td>Citation</td>
+    <td>
+      <a href="https://doi.org/10.21105/joss.09136"><img src="https://joss.theoj.org/papers/10.21105/joss.09136/status.svg" alt="DOI"></a>
+    </td>
+  </tr>
+  <tr>
 </table>
 
 ## Overview
