@@ -52,14 +52,32 @@ exponential growth in time complexity with respect to ``n``.
 # Examples
 We verify the optimality of the ordering found by Caprara–Salazar-González for a random
 ``8×8`` matrix via a brute-force search over all possible permutations up to reversal:
-```@repl
-using Random, SparseArrays
-Random.seed!(5883);
-(n, p) = (8, 0.25);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
-res_csg = minimize_bandwidth(A, Minimization.CapraraSalazarGonzalez())
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(5883);
+
+julia> (n, p) = (8, 0.25);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> res_bf = minimize_bandwidth(A, Minimization.BruteForceSearch())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Brute-force search
+ * Approach: exact
+ * Minimum Bandwidth: 4
+ * Original Bandwidth: 7
+ * Matrix Size: 8×8
+
+julia> res_csg = minimize_bandwidth(A, Minimization.CapraraSalazarGonzalez())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Approach: exact
+ * Minimum Bandwidth: 4
+ * Original Bandwidth: 7
+ * Matrix Size: 8×8
 ```
 
 # Notes

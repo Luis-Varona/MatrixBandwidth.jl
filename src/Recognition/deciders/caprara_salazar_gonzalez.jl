@@ -39,15 +39,34 @@ efficient pruning techniques and compatibility checks result in approximately ex
 growth in time complexity with respect to ``n``.
 
 # Examples
-```@repl
-using Random, SparseArrays
-Random.seed!(17);
-(n, p) = (10, 0.17);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-(k_false, k_true) = (3, 6);
-has_bandwidth_k_ordering(A, k_false, Recognition.CapraraSalazarGonzalez())
-has_bandwidth_k_ordering(A, k_true, Recognition.CapraraSalazarGonzalez())
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(17);
+
+julia> (n, p) = (10, 0.17);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (3, 6);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.CapraraSalazarGonzalez())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 9
+ * Matrix Size: 10×10
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.CapraraSalazarGonzalez())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Caprara–Salazar-González
+ * Bandwidth Threshold k: 6
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 9
+ * Matrix Size: 10×10
 ```
 
 # Notes

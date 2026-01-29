@@ -52,44 +52,143 @@ it hard to verify whether Cuthill–McKee finds a truly optimal ordering or simp
 near-optimal one. Nevertheless, the results are still very good in practice.
 
 Cuthill–McKee finds a good ordering for a ``30×30`` matrix:
-```@repl
-using Random
-Random.seed!(13);
-(n, k) = (30, 5);
-A = MatrixBandwidth.random_banded_matrix(n, k);
-perm = randperm(n);
-A_shuffled = A[perm, perm];
-bandwidth(A)
-bandwidth(A_shuffled) # Much larger after shuffling
-minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee())
+```jldoctest
+julia> using Random
+
+julia> Random.seed!(13);
+
+julia> (n, k) = (30, 5);
+
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
+
+julia> perm = randperm(n);
+
+julia> A_shuffled = A[perm, perm];
+
+julia> bandwidth(A)
+5
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+25
+
+julia> minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Cuthill–McKee
+ * Approach: heuristic
+ * Minimum Bandwidth: 8
+ * Original Bandwidth: 25
+ * Matrix Size: 30×30
 ```
 
-Cuthill–McKee finds a good ordering for a structurally symmetric ``183×183`` matrix with
+Cuthill–McKee finds a good ordering for a structurally symmetric ``276×276`` matrix with
 multiple (separate) connected components:
-```@repl
-using Random, SparseArrays
-Random.seed!(37452);
-(max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 7);
-components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+```jldoctest
+julia> using Random, SparseArrays
 
-for i in 1:num_ccs # Some components may themselves be disconnected
-    cc_size = rand(1:max_cc_size);
-    cc_band = rand(0:min(max_band, cc_size - 1));
-    components[i] = sparse(
-        MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
-    );
-end
+julia> Random.seed!(37452);
 
-A = blockdiag(components...); # `A` has least 7 connected components
-perm = randperm(sum(map(cc -> size(cc, 1), components)));
-A_shuffled = A[perm, perm];
-res = minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee());
-A # The original matrix
-A_shuffled # A far-from-optimal ordering of `A`
-A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
-bandwidth(A)
-bandwidth(A_shuffled) # Much larger after shuffling
-res # Even better than the original bandwidth (which was, clearly, not yet optimal)
+julia> (max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 7);
+
+julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+
+julia> for i in 1:num_ccs # Some components may themselves be disconnected
+           cc_size = rand(1:max_cc_size);
+           cc_band = rand(0:min(max_band, cc_size - 1));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
+       end
+
+julia> A = blockdiag(components...); # `A` has least 7 connected components
+
+julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
+
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, Minimization.CuthillMcKee());
+
+julia> A # The original matrix
+276×276 SparseMatrixCSC{Float64, Int64} with 464 stored entries:
+⎡⢾⡷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠘⢻⣲⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠘⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠈⠿⡧⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠉⢯⡷⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠚⣤⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢻⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠯⡧⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠱⣢⡀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⡢⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢴⣷⡀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠿⣧⡀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡷⎦
+
+julia> A_shuffled # A far-from-optimal ordering of `A`
+276×276 SparseMatrixCSC{Float64, Int64} with 464 stored entries:
+⎡⠁⢄⠀⢀⠀⠀⠀⢀⠠⠀⠀⠐⠀⠀⠀⠐⢀⡐⠀⠀⠀⢀⠀⠀⠀⠀⠐⠀⢠⠀⠀⠀⡄⠀⠀⠐⠀⠀⠂⠄⎤
+⎢⠀⢀⠱⠂⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⢨⠀⠀⠀⠀⠀⡀⠁⠠⠀⠘⠀⠀⠡⢀⠈⠀⠀⠀⠀⠀⠀⠄⠀⠁⠁⎥
+⎢⠀⠀⠀⠀⠑⢀⠀⠂⠀⠀⠀⠀⢐⠀⠀⠠⠈⠠⠀⠀⠀⠐⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢢⢀⢀⠀⎥
+⎢⠀⢀⡀⠀⠠⠀⠁⠄⠀⠠⠀⠄⠀⠀⠀⠄⠀⠀⠀⠀⢀⠀⠀⢀⠀⠑⠀⠀⠐⠠⠀⠀⠠⠨⠂⠀⠀⠀⠀⠀⎥
+⎢⠀⠂⠀⠀⠀⠀⠀⡀⠱⢆⡀⠂⠀⠀⠀⠀⠀⠀⢀⢊⠀⠐⠐⠈⠀⠈⠀⢀⠄⠀⡀⠀⢁⢀⠠⠀⠃⠀⠊⠀⎥
+⎢⢀⠀⠀⠀⠀⠀⠀⠄⠠⠈⠑⠀⢀⠐⠀⠌⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⢀⠉⢀⠀⠠⠈⠀⠀⣁⠁⎥
+⎢⠀⠀⠀⠀⠐⠐⠀⠀⠀⠀⢀⠐⠁⠄⠈⠀⢌⠀⠆⠠⢀⠀⠄⠐⠰⠀⠀⠀⠁⠰⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⢀⠀⠂⠒⠀⡀⠀⠄⠀⠀⡀⠄⠂⠀⠐⢄⠁⢀⠀⠀⠀⡀⠀⠀⠀⠀⡠⠀⠀⠀⠀⠀⠀⠀⠀⢈⠀⠀⠀⠁⎥
+⎢⢀⠰⠀⠀⠂⡀⠀⠀⠀⠀⠀⠈⠂⠑⠁⢀⠐⠄⠄⠂⠂⠜⠄⠀⠀⠀⡄⠀⠀⢀⠀⠠⠀⢀⠄⠀⢀⠀⠂⡂⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⡠⢐⠀⠀⠈⡁⠀⠀⠠⠁⠀⢀⠀⠀⠀⠀⡀⠀⠀⢀⠀⠈⠃⠀⠸⠈⠠⠀⠀⠀⢄⠂⎥
+⎢⠀⢀⠄⠈⢀⠀⠀⠐⢀⠀⠀⠀⠀⠐⠀⠠⣈⠄⠀⠀⠐⢀⠀⡀⠀⠀⠀⠀⠀⠀⠐⠀⠀⠊⠀⠠⠀⠐⠀⠀⎥
+⎢⠀⠀⠀⠂⢀⠀⠀⢀⡐⠀⠀⠀⢀⠁⠀⠀⠀⠁⠀⠀⠀⠠⠄⣥⠉⠈⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⡀⠀⠀⠀⎥
+⎢⠀⠀⠒⠀⠀⠀⢄⠀⡀⠀⠀⠀⠐⠂⠀⠀⠀⠀⠀⠈⠀⠀⡃⠀⠁⢀⠀⠀⢀⡀⢈⠈⠀⠀⠀⠂⠀⠠⠂⠂⎥
+⎢⠐⠀⠄⡀⠀⠀⠀⠀⠀⢀⠀⠈⠀⠀⠀⠊⠀⠉⠀⢀⠀⠀⠀⠀⠀⠀⠑⠀⠀⠀⠀⠀⢀⠀⠈⠀⠛⠃⢄⠀⎥
+⎢⠀⠒⡀⠐⠀⠀⠐⡀⠀⠁⠀⠀⢁⡀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠰⠀⠀⠀⢄⠀⠰⠀⠠⠠⢀⠀⠀⢂⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡄⠐⠂⠀⠀⠀⠀⡀⠉⠀⠐⠀⠀⠈⡂⠐⠀⠀⢀⡀⠀⣠⠀⠄⠠⠀⠀⡀⠀⠀⎥
+⎢⠀⠉⠀⠀⠀⠀⡀⡂⠁⢐⠀⠐⠀⠀⠀⠀⠀⢀⡒⠂⡠⠀⠀⠀⠀⠀⠀⠐⠀⡀⠀⠄⠑⠄⠀⠀⠀⠀⠀⠀⎥
+⎢⢀⠀⠀⠀⠀⡀⠈⠀⠀⠂⡀⠂⠀⠀⡀⢀⠀⠁⠀⠂⠀⡀⠀⠀⠠⠀⠂⠀⠀⢂⠀⠂⠀⠀⠁⢀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠁⠈⢒⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠐⠀⠀⢀⠀⠀⠈⠀⡀⠿⠀⠀⠀⠀⠠⠀⠀⠀⠀⠱⠆⠀⠀⎥
+⎣⠈⠄⠅⠀⠀⠐⠀⠀⠊⠀⠅⠘⠀⠀⠄⠀⠨⠠⠠⠑⠀⠀⠀⠀⠨⠀⠀⠑⠈⠐⠀⠀⠀⠀⠀⠀⠀⠀⠔⢅⎦
+
+julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
+276×276 SparseMatrixCSC{Float64, Int64} with 464 stored entries:
+⎡⠱⣦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠉⠻⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠘⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⡦⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⡦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠺⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠚⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢄⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢄⠀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⎦
+
+julia> bandwidth(A)
+7
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+266
+
+julia> res # Even better than the original bandwidth (which was, clearly, not yet optimal)
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Cuthill–McKee
+ * Approach: heuristic
+ * Minimum Bandwidth: 5
+ * Original Bandwidth: 266
+ * Matrix Size: 276×276
 ```
 
 # Notes
@@ -171,44 +270,143 @@ it hard to verify whether reverse Cuthill–McKee finds a truly optimal ordering
 near-optimal one. Nevertheless, the results are still very good in practice.
 
 Reverse Cuthill–McKee finds a good ordering for a ``35×35`` matrix:
-```@repl
-using Random
-Random.seed!(87);
-(n, k) = (35, 3);
-A = MatrixBandwidth.random_banded_matrix(n, k);
-perm = randperm(n);
-A_shuffled = A[perm, perm];
-bandwidth(A)
-bandwidth(A_shuffled) # Much larger after shuffling
-minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee())
+```jldoctest
+julia> using Random
+
+julia> Random.seed!(87);
+
+julia> (n, k) = (35, 3);
+
+julia> A = MatrixBandwidth.random_banded_matrix(n, k);
+
+julia> perm = randperm(n);
+
+julia> A_shuffled = A[perm, perm];
+
+julia> bandwidth(A)
+3
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+30
+
+julia> minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee())
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Reverse Cuthill–McKee
+ * Approach: heuristic
+ * Minimum Bandwidth: 3
+ * Original Bandwidth: 30
+ * Matrix Size: 35×35
 ```
 
-Reverse Cuthill–McKee finds a good ordering for a ``235×235`` matrix with multiple
+Reverse Cuthill–McKee finds a good ordering for a ``233×233`` matrix with multiple
 (separate) connected components:
-```@repl
-using Random, SparseArrays
-Random.seed!(5747);
-(max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 8);
-components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+```jldoctest
+julia> using Random, SparseArrays
 
-for i in 1:num_ccs # Some components may themselves be disconnected
-    cc_size = rand(1:max_cc_size);
-    cc_band = rand(0:min(max_band, cc_size - 1));
-    components[i] = sparse(
-        MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
-    );
-end
+julia> Random.seed!(5747);
 
-A = blockdiag(components...); # `A` has least 8 connected components
-perm = randperm(sum(map(cc -> size(cc, 1), components)));
-A_shuffled = A[perm, perm];
-res = minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee());
-A # The original matrix
-A_shuffled # A far-from-optimal ordering of `A`
-A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
-bandwidth(A)
-bandwidth(A_shuffled) # Much larger after shuffling
-res # Gets very close to the original bandwidth
+julia> (max_cc_size, max_band, p, num_ccs) = (60, 9, 0.2, 8);
+
+julia> components = Vector{SparseMatrixCSC{Float64, Int64}}(undef, num_ccs);
+
+julia> for i in 1:num_ccs # Some components may themselves be disconnected
+           cc_size = rand(1:max_cc_size);
+           cc_band = rand(0:min(max_band, cc_size - 1));
+           components[i] = sparse(
+               MatrixBandwidth.random_banded_matrix(cc_size, cc_band; p=p)
+           );
+       end
+
+julia> A = blockdiag(components...); # `A` has least 8 connected components
+
+julia> perm = randperm(sum(map(cc -> size(cc, 1), components)));
+
+julia> A_shuffled = A[perm, perm];
+
+julia> res = minimize_bandwidth(A_shuffled, Minimization.ReverseCuthillMcKee());
+
+julia> A # The original matrix
+233×233 SparseMatrixCSC{Float64, Int64} with 571 stored entries:
+⎡⢾⣳⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠘⢿⡷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠘⠻⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠘⢴⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠙⠻⢂⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣮⣿⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠺⢿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠰⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢡⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠊⠀⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⡄⡭⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣻⣾⡄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠩⢿⣷⣆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠹⣯⡿⡆⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠩⠪⣢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢯⣳⡄⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⢿⣷⣀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠚⡠⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⣠⠀⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⎦
+
+julia> A_shuffled # A far-from-optimal ordering of `A`
+233×233 SparseMatrixCSC{Float64, Int64} with 571 stored entries:
+⎡⠑⠀⠀⠀⠀⠀⡄⠄⠀⠐⠈⠘⠀⠀⠐⠀⠁⠀⠀⠐⠈⢀⡀⠁⠄⠀⡁⠀⢀⠀⠐⢃⢠⠀⡁⠀⡀⠀⠀⠀⎤
+⎢⠀⠀⠁⢄⠀⠐⠀⠀⠈⠀⡐⠀⠈⡀⠀⠡⡀⠀⢀⠀⢀⠔⡂⠀⠀⠂⡀⢂⠅⠀⠀⠀⠀⢀⠀⠀⠄⠀⡀⠀⎥
+⎢⠀⠀⢀⠀⠀⠀⢠⠀⠀⡀⠀⡀⠄⠀⠄⠀⠠⡀⠠⠄⠀⢠⠈⠀⠐⠀⠀⢒⠀⠀⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠍⠀⠀⠀⠒⠐⢄⠀⠀⢀⠠⠄⠀⡠⠀⠀⢂⠂⠀⠩⠘⠀⢠⠠⠀⠄⠐⠀⠀⢀⡀⠀⠀⢀⠀⠀⠀⠀⠂⎥
+⎢⢀⠀⠂⠀⠀⠠⠀⠀⠑⢀⠀⠀⠠⠀⠄⠀⢀⠀⠀⠈⠀⢈⢐⠀⠀⠠⠀⠠⠀⠀⣐⠀⠀⡀⡀⠀⠀⢀⠈⠣⎥
+⎢⣂⠀⠐⠈⠀⠠⠀⡐⠀⠀⢁⢔⠠⠀⡁⠀⠀⠀⠐⠂⠀⠀⠀⠄⠄⠈⠀⠠⢀⠈⠂⠀⢀⠀⠀⠀⢀⠀⠈⠊⎥
+⎢⠀⠀⠂⠠⠀⠁⠀⠁⠀⠂⠀⠂⠀⢀⠂⠀⠀⠐⠁⠀⠠⠀⡀⠡⠀⠁⠀⠀⠀⠀⠀⠀⢂⢂⠐⠀⠄⠀⠀⠀⎥
+⎢⠐⠀⠄⡀⠀⠁⠀⠊⠀⠁⠁⠈⠈⠀⠁⠀⠀⠈⠁⠀⠈⠁⠄⠀⠀⠄⠠⠁⡀⠀⠨⢁⠁⡀⠈⠤⠀⠀⠄⠢⎥
+⎢⠁⠀⠀⠈⠀⠢⠠⢀⠀⠐⠀⠀⢀⠀⡀⠀⠊⠀⠠⠀⠀⠰⠀⢀⠀⠂⠀⠐⠀⠁⠀⠈⠀⠀⠂⠀⠄⠀⠀⠀⎥
+⎢⢀⠀⠀⠐⠀⠆⠈⠀⡀⠀⠰⠀⠁⠀⠁⠀⠀⠂⡐⢈⠠⢀⠀⠁⠀⠐⠀⠐⠠⠀⠌⠄⠂⢀⡀⠠⠀⢀⢄⠐⎥
+⎢⠂⢀⢀⠔⠀⣀⣃⠂⡀⢀⠀⠀⠀⠂⠆⠀⢀⡀⠀⢂⠑⠀⡀⠂⠀⠀⠄⠀⢀⠀⠀⠀⠀⠀⣂⠀⡂⠀⠀⠀⎥
+⎢⠄⠈⠈⠈⠂⠀⠀⣀⠐⠐⠀⠄⠄⡈⠀⠁⠀⢀⠄⠀⠠⠈⠄⢅⡀⢀⠀⠢⠀⠄⠀⠀⠀⠂⠀⢀⠀⢀⠅⠀⎥
+⎢⠀⠁⠠⠀⠐⠀⠀⠂⠀⡀⡀⠁⠄⠀⠀⠄⠠⠀⢀⠀⠀⠀⠀⢈⠀⠄⡀⢀⠐⢀⠀⠖⠀⠀⠀⠀⠀⠀⢐⠀⎥
+⎢⠁⠈⠠⢈⢠⢀⢀⠁⠀⡀⠀⡀⠀⠀⠄⠂⢀⠀⢀⠀⠀⠁⠠⡀⠀⢈⢁⢔⠀⠈⠈⠂⡂⠀⠀⡢⠀⠀⠈⠈⎥
+⎢⠀⠐⠁⠁⠀⠀⠀⠀⠀⠀⡀⠐⠀⠀⠀⠈⠄⠀⠀⠂⠀⠐⠀⠄⠐⢀⡀⠀⠀⠀⠂⠀⠀⠰⡂⠄⠀⠠⢀⠀⎥
+⎢⠴⢀⠀⠀⠁⠀⠀⠰⠐⠘⠈⠀⠀⠀⠆⢂⡀⠀⠂⠅⠀⠀⠀⠀⢠⠄⠢⠀⠈⠀⠁⠀⠀⠀⠀⠊⠀⠈⠀⠀⎥
+⎢⠀⠒⠀⢀⠀⠈⠀⠀⠀⠠⠀⠐⠨⢐⠁⠠⠀⠀⠈⢀⠀⠀⠠⠀⠀⠀⠈⠈⢀⡀⠀⠀⠐⠄⠠⡀⠀⡀⠠⠈⎥
+⎢⠁⠈⠀⠀⠀⠀⠀⠐⠀⠈⠀⠀⠐⠀⠂⡄⠈⠀⠀⡈⠈⠘⠀⢀⠀⠀⠠⡠⠈⠌⡠⠀⠀⠢⠁⠀⠂⠀⠈⠀⎥
+⎢⠀⠈⠀⠁⠀⠀⠀⠀⠀⢀⠀⠐⠀⠁⠀⠀⠀⠁⠀⢀⠈⠈⠀⢀⠀⠀⠀⠀⠀⡀⡀⠀⠀⠠⠈⠀⠊⢀⠀⠀⎥
+⎣⠀⠀⠀⠈⠀⠀⠠⠀⠦⡀⡢⠀⠀⠀⠠⡁⠀⠀⢀⠑⠀⠀⠁⠁⠐⠐⡂⠀⠀⠐⠀⠀⡀⠂⠂⠀⠀⠀⠑⠄⎦
+
+julia> A_shuffled[res.ordering, res.ordering] # A near-optimal reordering of `A_shuffled`
+233×233 SparseMatrixCSC{Float64, Int64} with 571 stored entries:
+⎡⠁⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎤
+⎢⠀⠀⠐⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠐⡠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠡⣢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⡶⣠⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⣾⡻⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣲⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣲⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠿⣧⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⣣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢮⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢾⡷⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⣵⣿⣦⡀⠀⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣤⣿⡄⠀⠀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⡀⠀⠀⠀⎥
+⎢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢯⣷⡄⠀⎥
+⎣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣦⎦
+
+julia> bandwidth(A)
+9
+
+julia> bandwidth(A_shuffled) # Much larger after shuffling
+202
+
+julia> res # Gets very close to the original bandwidth
+Results of Bandwidth Minimization Algorithm
+ * Algorithm: Reverse Cuthill–McKee
+ * Approach: heuristic
+ * Minimum Bandwidth: 11
+ * Original Bandwidth: 202
+ * Matrix Size: 233×233
 ```
 
 # Notes

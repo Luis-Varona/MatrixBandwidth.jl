@@ -35,15 +35,34 @@ minimum) possible permutations—in these cases, it is infeasible to go above ``
 ``10×10`` without incurring multiple-hour runtimes. (Even when ``k`` is considerably larger
 than the true minimum, it is unlikely that a bandwidth-``k`` ordering will be found in a
 reasonable time frame.) Nevertheless, we see that it is quite effective for, say, ``8×8``:
-```@repl
-using Random, SparseArrays
-Random.seed!(314159);
-(n, p) = (8, 0.5);
-A = sprand(n, n, p);
-A = A + A' # Ensure structural symmetry;
-(k_false, k_true) = (3, 5);
-has_bandwidth_k_ordering(A, k_false, Recognition.BruteForceSearch())
-has_bandwidth_k_ordering(A, k_true, Recognition.BruteForceSearch())
+```jldoctest
+julia> using Random, SparseArrays
+
+julia> Random.seed!(314159);
+
+julia> (n, p) = (8, 0.5);
+
+julia> A = sprand(n, n, p);
+
+julia> A = A + A' # Ensure structural symmetry;
+
+julia> (k_false, k_true) = (3, 5);
+
+julia> has_bandwidth_k_ordering(A, k_false, Recognition.BruteForceSearch())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Brute-force search
+ * Bandwidth Threshold k: 3
+ * Has Bandwidth ≤ k Ordering: false
+ * Original Bandwidth: 6
+ * Matrix Size: 8×8
+
+julia> has_bandwidth_k_ordering(A, k_true, Recognition.BruteForceSearch())
+Results of Bandwidth Recognition Algorithm
+ * Algorithm: Brute-force search
+ * Bandwidth Threshold k: 5
+ * Has Bandwidth ≤ k Ordering: true
+ * Original Bandwidth: 6
+ * Matrix Size: 8×8
 ```
 
 # Notes
