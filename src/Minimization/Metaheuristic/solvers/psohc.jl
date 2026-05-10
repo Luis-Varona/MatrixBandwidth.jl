@@ -24,7 +24,7 @@ Base.summary(::PSOHC) = "Particle swarm optimization with hill climbing (PSOHC)"
 
 MatrixBandwidth._requires_structural_symmetry(::PSOHC) = false
 
-function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, Solver::PSOHC)
+function Minimization._minimize_bandwidth_impl(A::AbstractMatrix{Bool}, solver::PSOHC)
     error("TODO: Not yet implemented")
     return nothing
 end
