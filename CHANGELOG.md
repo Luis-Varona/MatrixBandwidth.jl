@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Changed the `earliest_positions` and `latest_positions` data structures in the Caprara–Salazar-González recognition decider from `Dict`s to `Vector`s for efficiency (#220).
+
 ## [0.3.0] - 2026-01-29
 
 ### Changed
