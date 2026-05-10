@@ -315,8 +315,6 @@ function _blb_connected(A::AbstractMatrix{Bool})
     gamma = n - 1 # The maximum possible bandwidth is `n - 1`
 
     dists = Vector{Int}(undef, n)
-    #= Each node is enqueued exactly once per BFS, so we use a preallocated fixed-length
-    array instead of a dynamic queue from `DataStructures.jl` for better performance. =#
     queue = Vector{Int}(undef, n)
     k_hop_nbhd_sizes = Vector{Int}(undef, n)
 

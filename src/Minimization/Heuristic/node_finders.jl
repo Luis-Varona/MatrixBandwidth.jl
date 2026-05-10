@@ -55,7 +55,7 @@ function bi_criteria_node_finder(A::AbstractMatrix{Bool})
     end
 
     distances = Vector{Int}(undef, n)
-    queue = Queue{Int}()
+    queue = Vector{Int}(undef, n)
     degrees = Vector{Int}(undef, n)
     record_width = n + 1
     recorded_node = 0
@@ -138,7 +138,7 @@ function pseudo_peripheral_node_finder(A::AbstractMatrix{Bool})
     end
 
     distances = Vector{Int}(undef, n)
-    queue = Queue{Int}()
+    queue = Vector{Int}(undef, n)
     level, farthest = _farthest!(A, distances, queue, v)
 
     degrees = Vector{Int}(undef, n)
@@ -156,21 +156,22 @@ function pseudo_peripheral_node_finder(A::AbstractMatrix{Bool})
 end
 
 function _farthest!(
-    A::AbstractMatrix{Bool}, distances::Vector{Int}, queue::Queue{Int}, v::Int
+    A::AbstractMatrix{Bool}, distances::Vector{Int}, queue::Vector{Int}, v::Int
 )
     fill!(distances, typemax(Int))
     distances[v] = 0
-    empty!(queue)
-    push!(queue, v)
+    head = tail = 1
+    queue[1] = v
 
-    while !isempty(queue)
-        curr = popfirst!(queue)
+    while head <= tail
+        curr = queue[head]
+        head += 1
         neighbors = findall(view(A, :, curr))
 
         for neighbor in neighbors
             if distances[neighbor] == typemax(Int)
                 distances[neighbor] = distances[curr] + 1
-                push!(queue, neighbor)
+                queue[tail += 1] = neighbor
             end
         end
     end

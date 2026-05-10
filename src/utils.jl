@@ -188,23 +188,25 @@ julia> MatrixBandwidth.connected_components(A)
 function connected_components(A::AbstractMatrix{Bool})
     n = size(A, 1)
     visited = falses(n)
-    queue = Queue{Int}()
+    queue = Vector{Int}(undef, n)
     components = Vector{Int}[]
 
     for i in 1:n
         if !visited[i]
             visited[i] = true
-            push!(queue, i)
+            head = tail = 1
+            queue[1] = i
             component = Int[]
 
-            while !isempty(queue)
-                u = popfirst!(queue)
+            while head <= tail
+                u = queue[head]
+                head += 1
                 push!(component, u)
 
                 for v in findall(view(A, :, u))
                     if !visited[v]
                         visited[v] = true
-                        push!(queue, v)
+                        queue[tail += 1] = v
                     end
                 end
             end

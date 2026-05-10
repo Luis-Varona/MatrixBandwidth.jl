@@ -36,8 +36,6 @@ using MatrixBandwidth: _requires_structural_symmetry
 using MatrixBandwidth.Minimization
 using MatrixBandwidth.Minimization: _approach, _minimize_bandwidth_impl
 
-using DataStructures: Queue
-
 export
     # Types
     HeuristicSolver,
