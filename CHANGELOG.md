@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Changed the `earliest_positions` and `latest_positions` data structures in the Caprara–Salazar-González recognition decider from `Dict`s to `Vector`s for efficiency (#220).
 - Switched from `DataStructures.Queue`s to preallocated `Vector`s wherever a (reasonable and tight) maximum queue size is known throughout the codebase (#220).
+- Switched from looping over indices to `findall` in `_blb_connected` for neighbour iteration, consistent with all other breadth-first search implementations in the codebase (#220).
 
 ### Fixed
 

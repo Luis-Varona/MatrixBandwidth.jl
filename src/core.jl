@@ -329,8 +329,8 @@ function _blb_connected(A::AbstractMatrix{Bool})
             u = queue[head]
             head += 1
 
-            for v in 1:n
-                if A[u, v] && dists[v] == -1
+            for v in findall(view(A, :, u))
+                if dists[v] == -1
                     dists[v] = dists[u] + 1
                     queue[tail += 1] = v
                     max_dist = max(max_dist, dists[v])
