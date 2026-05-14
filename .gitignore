@@ -24,7 +24,7 @@ docs/site/
 Manifest.toml
 
 # Local notes
-**/temp
+temp/
 
 # Local metadata/configuration files
 **/.DS_Store
