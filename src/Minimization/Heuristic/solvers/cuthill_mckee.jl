@@ -480,21 +480,24 @@ function _cm_connected_ordering(A::AbstractMatrix{Bool}, node_finder::Function)
     ordering = Vector{Int}(undef, n)
     visited = falses(n)
     degrees = vec(sum(A; dims=1))
-    queue = Queue{Int}()
+    queue = Vector{Int}(undef, n)
 
     start = node_finder(A)
     visited[start] = true
-    push!(queue, start)
+    head = 1
+    tail = 1
+    queue[1] = start
 
     for i in 1:n
-        parent = popfirst!(queue)
+        parent = queue[head]
+        head += 1
         ordering[i] = parent
 
         unvisited = filter!(node -> !visited[node], findall(view(A, :, parent)))
         sort!(unvisited; by=node -> degrees[node])
 
         visited[unvisited] .= true
-        foreach(neighbor -> push!(queue, neighbor), unvisited)
+        foreach(neighbor -> queue[tail += 1] = neighbor, unvisited)
     end
 
     return ordering

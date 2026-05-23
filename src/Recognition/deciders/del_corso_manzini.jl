@@ -489,18 +489,21 @@ function _dcm_lpo_time_stamps(lpo::Vector{Int}, A::AbstractMatrix{Bool}, k::Inte
     indeed are precisely placed in this ordering). =#
     foreach(((i, node),) -> time_stamps[node] = n - d + i, enumerate(lpo))
 
-    queue = Queue{Int}()
-    foreach(node -> push!(queue, node), lpo)
+    queue = Vector{Int}(undef, n)
+    foreach(((i, node),) -> queue[i] = node, enumerate(lpo))
+    head = 1
+    tail = d
 
     #= The nodes processed here are those which are not fixed in the last `d` positions, so
     we compute loose lower bounds on the earliest positions at which they can be placed. =#
-    while !isempty(queue)
-        node = popfirst!(queue)
+    while head <= tail
+        node = queue[head]
+        head += 1
         unvisited = filter!(
             neighbor -> time_stamps[neighbor] == 0, findall(view(A, :, node))
         )
         time_stamps[unvisited] .= time_stamps[node] - k
-        foreach(neighbor -> push!(queue, neighbor), unvisited)
+        foreach(neighbor -> queue[tail += 1] = neighbor, unvisited)
     end
 
     return time_stamps

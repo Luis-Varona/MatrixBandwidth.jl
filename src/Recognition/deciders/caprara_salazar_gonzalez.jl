@@ -166,7 +166,7 @@ function _csg_compute_positions(
 )
     n = size(A, 1)
     fixed_set = Set(fixed) # For multiple `O(1)` membership checks below
-    dists = Dict{Int,Float64}()
+    dists = Vector{Float64}(undef, n)
 
     for node in 1:n
         if node in fixed_set
@@ -178,8 +178,9 @@ function _csg_compute_positions(
         end
     end
 
-    earliest_positions = Dict{Int,Int}()
-    latest_positions = Dict(u => i for (i, u) in enumerate(fixed))
+    earliest_positions = Vector{Int}(undef, n)
+    latest_positions = Vector{Int}(undef, n)
+    foreach(((i, u),) -> latest_positions[u] = i, enumerate(fixed))
 
     #= We process in order of increasing distance so closer neighbors (used to compute
     latest positions) have their latest positions computed first. =#
@@ -228,8 +229,8 @@ function _csg_compute_positions(
 end
 
 function _csg_feasible_positions(
-    earliest_positions::Dict{Int,Int},
-    latest_positions::Dict{Int,Int},
+    earliest_positions::Vector{Int},
+    latest_positions::Vector{Int},
     fixed::Vector{Int},
     unselected::Set{Int},
     n::Int,
